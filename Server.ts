@@ -13,7 +13,7 @@ io.on('connection', (socket) => {
 		io.emit('test', `success ${data.split(' ').reverse()}`)
 	});
 	socket.on('disconnect', () => {
-		console.log('say goodbye')
+		console.log('say goodbye');
 		io.emit('test', "ru disconnected?")
 	});
 });
