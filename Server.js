@@ -4,13 +4,8 @@ http.listen(process.env.PORT || 48763, function () {
 });
 io.on('connection', function (socket) {
     socket.on('test', function (data) {
-        io.emit('test', data);
-    });
-    socket.on('test1', function (data) {
-        io.emit('test1', data);
-    });
-    socket.on('test2', function (data) {
-        io.emit('test2', data);
+        console.log(data);
+        io.emit('test', "Received");
     });
     socket.on('disconnect', function () {
         console.log('say goodbye');
