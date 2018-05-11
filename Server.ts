@@ -10,7 +10,9 @@ http.listen(process.env.PORT || 48763, () => {
 io.on('connection', (socket) => {
 	socket.on('test', (data) => {
 		console.log(data);
-		io.emit('test', "Received")
+		io.emit('test', function test999(){
+			io.emit('test', data)
+		})
 	});
 	socket.on('disconnect', () => {
 		console.log('say goodbye')
