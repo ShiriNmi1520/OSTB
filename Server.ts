@@ -14,5 +14,6 @@ io.on('connection', (socket) => {
 	});
 	socket.on('disconnect', () => {
 		console.log('say goodbye')
+		io.emit('test', "ru disconnected?")
 	});
 });

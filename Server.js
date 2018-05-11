@@ -9,6 +9,7 @@ io.on('connection', function (socket) {
     });
     socket.on('disconnect', function () {
         console.log('say goodbye');
+        io.emit('test', "ru disconnected?");
     });
 });
 //# sourceMappingURL=Server.js.map
