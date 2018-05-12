@@ -20,13 +20,19 @@ io.on('connection', function (socket) {
         io.emit('test', "ru disconnected?");
     });
     socket.on('auth', function (data) {
-        console.log('get login data\nstart auth process..');
+        console.log('get login data, start auth process..');
     });
     socket.on('register', function (data) {
-        console.log("we've received register signal\nstart register process...");
+        console.log("we've received register signal, start register process...");
         console.log(data);
         console.log(data.email, data.password);
         io.emit('test', "we got it:)");
+        firebase.auth().createUserWithEmailAndPassword(data.email, data.password).catch(function (error) {
+            // 處理錯誤區塊
+            var errorCode = error.code, errorMessage = error.message;
+            io.emit('test', "Register failed! error code " + errorCode + ", error message " + errorMessage);
+        });
+        io.emit('test', "register success :)");
     });
 });
 //# sourceMappingURL=Server.js.map
