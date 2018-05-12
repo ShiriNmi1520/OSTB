@@ -37,6 +37,7 @@ io.on('connection', (socket) => {
 
 	socket.on('register', (data) => {
 		console.log("we've received register signal\nstart register process...");
+		console.log(data);
 		console.log(data.email, data.password);
 		io.emit('test', "we got it:)");
 	})
