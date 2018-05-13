@@ -3,9 +3,10 @@
     "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
-    "types": ["node"]
+    "types": ["node"],
+    "typeRoots": [ "/server/node_modules/@types" ]
   },
   "exclude": [
-    "../node_modules"
+    "/server/node_modules"
   ]
 }

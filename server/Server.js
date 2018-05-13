@@ -27,12 +27,15 @@ io.on('connection', function (socket) {
         console.log(data);
         console.log(data.email, data.password);
         io.emit('test', "we got it:)");
-        firebase.auth().createUserWithEmailAndPassword(data.email, data.password).catch(function (error) {
+        firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
+            .then(function () {
+            io.emit('test', "register success :)");
+        })
+            .catch(function (error) {
             // 處理錯誤區塊
             var errorCode = error.code, errorMessage = error.message;
             io.emit('test', "Register failed! error code " + errorCode + ", error message " + errorMessage);
         });
-        io.emit('test', "register success :)");
     });
 });
 //# sourceMappingURL=Server.js.map
