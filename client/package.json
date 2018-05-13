@@ -1,5 +1,5 @@
 {
-  "name": "my-project",
+  "name": "client",
   "version": "0.0.0",
   "author": "ZilongXu <aa1010111@icloud.com>",
   "description": "An electron-vue project",
@@ -54,9 +54,14 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
+    "bootstrap": "^4.1.1",
+    "bootstrap-vue": "^2.0.0-rc.9",
     "element-ui": "^2.3.8",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",
+    "vue-material": "^1.0.0-beta-7",
     "vue-router": "^2.5.3",
     "vue-socket.io": "^2.1.1-b",
     "vuex": "^2.3.1"

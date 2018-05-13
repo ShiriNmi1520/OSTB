@@ -1,37 +1,39 @@
 <template>
   <div id="app">
-    <el-row>
-      <el-button round @click="test">Round</el-button>
-      <el-button type="primary" round>Primary</el-button>
-      <el-button type="success" round>Success</el-button>
-      <el-button type="info" round>Info</el-button>
-      <el-button type="warning" round>Warning</el-button>
-      <el-button type="danger" round>Danger</el-button>
-    </el-row>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'my-project',
-    sockets: {
-      connect() {
-        console.log('測試成功');
-      },
-      test(data) {
-        console.log(data);
-      },
-    },
-    methods: {
-      test() {
-        const vm = this;
-        vm.$socket.emit('test', '測試');
-      },
-    },
+    name: 'vplu',
   };
 </script>
 
 <style>
   /* CSS */
+  .main-block {
+    position: absolute;
+    height: 30rem;
+    width: 20rem;
+    background-color: rgba(27, 27, 27, 0.5);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .btn-red {
+    background-color: #FF6773;
+    border-color: #FF6773;
+  }
+
+  .btn-red:hover {
+    background-color: #903940;
+    border-color: #903940;
+  }
+
+  .darkTheme {
+    background-color: #303133;
+    color: #F0F8FF;
+  }
 </style>

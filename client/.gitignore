@@ -1,7 +1,4 @@
 .DS_Store
-dist/electron/*
-dist/web/*
-build/*
 !build/icons
 node_modules/
 npm-debug.log
@@ -18,10 +15,8 @@ thumbs.db
 .travis.yml
 README.md
 appveyor.yml
-build/
 dist/electron/.gitkeep
 dist/web/
 package.json
-src/
-static/
 yarn.lock
+dist/electron/main.js
