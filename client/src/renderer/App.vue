@@ -7,6 +7,11 @@
 <script>
   export default {
     name: 'vplu',
+    sockets: {
+      connect() {
+        console.log('login success');
+      },
+    },
   };
 </script>
 
