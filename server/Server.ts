@@ -12,7 +12,6 @@ const express = require('express'),
 		messagingSenderId: "409751210552"
 
 	};
-
 firebase.initializeApp(firebase_config);
 
 http.listen(process.env.PORT || 48763, () => {
@@ -23,7 +22,7 @@ io.on('connection', (socket) => {
 
 	socket.on('test', (data) => {
 		console.log(data);
-		io.emit('test', `success ${data.split(' ').reverse()}`)
+		io.emit('test', `success ${data.split(' ').reverse()}`);
 	});
 
 	socket.on('disconnect', () => {
@@ -35,17 +34,20 @@ io.on('connection', (socket) => {
 		console.log('get login data, start auth process..');
 	});
 
-	socket.on('register', (data) => {
+	socket.on('register', (data: any) => {
 		console.log("we've received register signal, start register process...");
 		console.log(data);
 		console.log(data.email, data.password);
 		io.emit('test', "we got it:)");
-		firebase.auth().createUserWithEmailAndPassword(data.email, data.password).catch(function(error) {
+		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
+        .then(() => {
+          io.emit('test', "register success :)");
+        })
+        .catch((error) => {
 			// 處理錯誤區塊
-			let errorCode     = error.code,
-				errorMessage  = error.message;
-			io.emit('test', `Register failed! error code ${errorCode}, error message ${errorMessage}`);
-		});
-		io.emit('test', "register success :)");
+			    let errorCode = error.code,
+				  let errorMessage = error.message;
+			    io.emit('test', `Register failed! error code ${errorCode}, error message ${errorMessage}`);
+		    });
 	})
 });

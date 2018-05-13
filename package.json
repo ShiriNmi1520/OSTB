@@ -5,7 +5,14 @@
   "main": "Server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check"
   },
   "keywords": [
     "socket-io",
@@ -22,6 +29,8 @@
     "typescript": "^2.8.3"
   },
   "devDependencies": {
-    "@types/node": "^10.0.8"
+    "@types/node": "^10.0.8",
+    "gts": "^0.6.0",
+    "typescript": "~2.8.0"
   }
 }

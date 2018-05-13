@@ -53,7 +53,7 @@
         const vm = this;
         const success = vm.account.search(EMAILRULE);
         if (success !== -1) {
-          vm.$socket.emit('register', { account: vm.account, password: vm.password });
+          vm.$socket.emit('register', { email: vm.account, password: vm.password });
         } else {
           vm.regErr = 'email 格式有誤';
         }

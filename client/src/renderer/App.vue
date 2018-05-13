@@ -11,6 +11,9 @@
       connect() {
         console.log('login success');
       },
+      test(data) {
+        console.log(data);
+      },
     },
   };
 </script>
