@@ -54,6 +54,8 @@
         const success = vm.account.search(EMAILRULE);
         if (success !== -1) {
           vm.$socket.emit('register', { email: vm.account, password: vm.password });
+          vm.view = 'main';
+          vm.$emit('updateViewStatus', vm.view);
         } else {
           vm.regErr = 'email 格式有誤';
         }
