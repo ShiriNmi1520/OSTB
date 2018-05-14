@@ -20,3 +20,4 @@ dist/web/
 package.json
 yarn.lock
 dist/electron/main.js
+!/README.md

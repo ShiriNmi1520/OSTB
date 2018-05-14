@@ -15,7 +15,7 @@
   import firstTimeLogin from './firstTimeLogin';
   import signUp from './signup';
   export default {
-    name: 'main',
+    name: 'battle',
     components: { loginPage, gameMain, gameBattle, signUp, firstTimeLogin },
     data() {
       return {

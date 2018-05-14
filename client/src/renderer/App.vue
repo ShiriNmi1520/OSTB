@@ -29,7 +29,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-
+  .body {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+  }
   .btn-red {
     background-color: #FF6773;
     border-color: #FF6773;

@@ -63,6 +63,8 @@
         vm.$socket.emit('auth', { email: vm.account, password: vm.password });
         if (vm.loginMessage.type === 'success') {
           vm.$emit('UpdateViewStatus', 'main');
+        } else if (vm.loginMessage.type === 'error' && vm.loginMessage.code === 'invalid-email') {
+          vm.logErr = 'mail 格式不正。';
         }
       },
       signUp() {
