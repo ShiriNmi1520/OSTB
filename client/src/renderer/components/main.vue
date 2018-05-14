@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loginPage @updateViewStatus="getViewStatus" v-if="view === 'login'"></loginPage>
+    <loginPage v-bind:login-message="loginStatus" @updateViewStatus="getViewStatus" v-if="view === 'login'"></loginPage>
     <signUp @updateViewStatus="getViewStatus" v-if="view === 'signUp'"></signUp>
     <firstTimeLogin @updateViewStatus="getViewStatus" v-if="view === 'firstTimeLogin'"></firstTimeLogin>
     <gameMain @updateViewStatus="getViewStatus" v-if="view === 'main'"></gameMain>
@@ -21,7 +21,14 @@
       return {
         res: '',
         view: 'login',
+        loginStatus: {},
       };
+    },
+    sockets: {
+      auth(data) {
+        const vm = this;
+        vm.loginStatus = data;
+      },
     },
     computed: {},
     methods: {

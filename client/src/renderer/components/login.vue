@@ -40,7 +40,6 @@
 <script>
   export default {
     name: 'login',
-    props: ['test'],
     data() {
       return {
         view: 'login',
@@ -49,11 +48,22 @@
         logErr: '',
       };
     },
+    props: {
+      loginMessage: {
+        type: Object,
+        default: () => ({
+          type: 'default',
+          code: 'default',
+        }),
+      },
+    },
     methods: {
       login() {
         const vm = this;
         vm.$socket.emit('auth', { email: vm.account, password: vm.password });
-        vm.$emit('updateViewStatus', 'main');
+        if (vm.loginMessage.type === 'success') {
+          vm.$emit('UpdateViewStatus', 'main');
+        }
       },
       signUp() {
         const vm = this;
