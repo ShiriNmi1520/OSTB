@@ -48,14 +48,14 @@ io.on('connection', (socket) => {
 		console.log(data.email, data.password);
 		io.emit('test', "we got it:)");
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
-        .then(() => {
-          io.emit('reg', {type: 'success', code: 'default'});
-        })
-        .catch((error) => {
-			// 處理錯誤區塊
-			    let errorCode = error.code;
-			    io.emit('reg', {type: 'error', code: `${errorCode}`});
-		    });
+			.then(() => {
+				io.emit('reg', {type: 'success', code: 'default'});
+			})
+			.catch((error) => {
+				// 處理錯誤區塊
+				let errorCode = error.code;
+				io.emit('reg', {type: 'error', code: `${errorCode}`});
+			});
 	});
 
 	socket.on('logout', (data) => {
@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
 			.then(() => {
 				io.emit('logout', {type: 'success', code: 'default'});
 			})
-			.catch( (error) => {
+			.catch((error) => {
 				io.emit('logout', {type: 'error', code: `${error.code}`});
 			})
 	});
