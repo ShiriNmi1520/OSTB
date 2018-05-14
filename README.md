@@ -16,3 +16,4 @@ Package that used:
 ## Feature for now ##
 - [x] Login
 - [x] Authentication
+- [x] Logout (not tested yet)

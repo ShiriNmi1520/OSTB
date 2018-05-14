@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('auth', (data) => {
-		console.log('get login data, start auth process..');
+		console.log(`get login data from ${data.email}, start auth process..`);
 		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
 				io.emit('auth', {type: 'success', code: 'default'});
@@ -44,8 +44,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('register', (data) => {
-		console.log("we've received register signal, start register process...");
-		console.log(data);
+		console.log(`we've received register signal from ${data.email}, start register process...`);
 		console.log(data.email, data.password);
 		io.emit('test', "we got it:)");
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
@@ -57,5 +56,16 @@ io.on('connection', (socket) => {
 			    let errorCode = error.code;
 			    io.emit('reg', {type: 'error', code: `${errorCode}`});
 		    });
-	})
+	});
+
+	socket.on('logout', (data) => {
+		console.log(`We've received logout signal from ${data.email}, star logout process...`);
+		firebase.auth().signOut()
+			.then(() => {
+				io.emit('logout', {type: 'success', code: 'default'});
+			})
+			.catch( (error) => {
+				io.emit('logout', {type: 'error', code: `${error.code}`});
+			})
+	});
 });

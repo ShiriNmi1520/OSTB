@@ -20,7 +20,7 @@ io.on('connection', function (socket) {
         io.emit('test', "ru disconnected?");
     });
     socket.on('auth', function (data) {
-        console.log('get login data, start auth process..');
+        console.log("get login data from " + data.email + ", start auth process..");
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
             .then(function () {
             io.emit('auth', { type: 'success', code: 'default' });
@@ -31,8 +31,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('register', function (data) {
-        console.log("we've received register signal, start register process...");
-        console.log(data);
+        console.log("we've received register signal from " + data.email + ", start register process...");
         console.log(data.email, data.password);
         io.emit('test', "we got it:)");
         firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
@@ -43,6 +42,16 @@ io.on('connection', function (socket) {
             // 處理錯誤區塊
             var errorCode = error.code;
             io.emit('reg', { type: 'error', code: "" + errorCode });
+        });
+    });
+    socket.on('logout', function (data) {
+        console.log("We've received logout signal from " + data.email + ", star logout process...");
+        firebase.auth().signOut()
+            .then(function () {
+            io.emit('logout', { type: 'success', code: 'default' });
+        })
+            .catch(function (error) {
+            io.emit('logout', { type: 'error', code: "" + error.code });
         });
     });
 });
