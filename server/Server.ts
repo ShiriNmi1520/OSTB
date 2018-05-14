@@ -68,4 +68,15 @@ io.on('connection', (socket) => {
 				io.emit('logout', {type: 'error', code: `${error.code}`});
 			})
 	});
+
+	socket.on('login_g', (data) => {
+		const provider = new firebase.auth.GoogleAuthProvider_Instance();
+		firebase.auth().signInWithPopup(provider)
+			.then((get) => {
+				io.emit('login_g', {type: 'success', code: 'default', login_user: `${get.user}`, token: `${get.credential.accessToken}`});
+			})
+		.catch((error) => {
+			io.emit('login_g', {type: 'error', code: `${error.code}`, email: `${error.email}`});
+		})
+	});
 });

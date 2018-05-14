@@ -54,5 +54,15 @@ io.on('connection', function (socket) {
             io.emit('logout', { type: 'error', code: "" + error.code });
         });
     });
+    socket.on('login_g', function (data) {
+        var provider = new firebase.auth.GoogleAuthProvider_Instance();
+        firebase.auth().signInWithPopup(provider)
+            .then(function (get) {
+            io.emit('login_g', { type: 'success', code: 'default', login_user: "" + get.user, token: "" + get.credential.accessToken });
+        })
+            .catch(function (error) {
+            io.emit('login_g', { type: 'error', code: "" + error.code, email: "" + error.email });
+        });
+    });
 });
 //# sourceMappingURL=Server.js.map
