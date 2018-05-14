@@ -21,6 +21,14 @@ io.on('connection', function (socket) {
     });
     socket.on('auth', function (data) {
         console.log('get login data, start auth process..');
+        firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+            .then(function () {
+            io.emit('test', "Welcome back, " + data.email + "!!");
+        })
+            .catch(function (error) {
+            var errorCode = error.code, errorMessage = error.message;
+            io.emit('test', "Login failed!! " + errorCode + ", " + errorMessage);
+        });
     });
     socket.on('register', function (data) {
         console.log("we've received register signal, start register process...");

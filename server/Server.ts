@@ -33,6 +33,15 @@ io.on('connection', (socket) => {
 
 	socket.on('auth', (data) => {
 		console.log('get login data, start auth process..');
+		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+			.then(() => {
+				io.emit('test', `Welcome back, ${data.email}!!`);
+			})
+			.catch((error) => {
+				let errorCode = error.code,
+					errorMessage = error.message;
+				io.emit('test', `Login failed!! ${errorCode}, ${errorMessage}`);
+			})
 	});
 
 	socket.on('register', (data) => {
