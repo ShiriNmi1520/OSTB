@@ -55,7 +55,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('login_g', function (data) {
-        var provider = new firebase.auth.GoogleAuthProvider_Instance();
+        var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
             .then(function (get) {
             io.emit('login_g', { type: 'success', code: 'default', login_user: "" + get.user, token: "" + get.credential.accessToken });
