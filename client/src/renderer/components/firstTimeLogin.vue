@@ -9,9 +9,7 @@
   export default {
     name: 'firstTimeLogin',
     data() {
-      return {
-        view: '',
-      };
+      return {};
     },
     methods: {},
   };
