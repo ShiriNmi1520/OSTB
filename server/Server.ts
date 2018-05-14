@@ -35,12 +35,11 @@ io.on('connection', (socket) => {
 		console.log('get login data, start auth process..');
 		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
-				io.emit('test', `Welcome back, ${data.email}!!`);
+				io.emit('auth', {type: 'success', code: 'default'});
 			})
 			.catch((error) => {
-				let errorCode = error.code,
-					errorMessage = error.message;
-				io.emit('test', `Login failed!! ${errorCode}, ${errorMessage}`);
+				let errorCode = error.code;
+				io.emit('auth', {type: 'error', code: `${errorCode}`});
 			})
 	});
 
@@ -51,13 +50,12 @@ io.on('connection', (socket) => {
 		io.emit('test', "we got it:)");
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
         .then(() => {
-          io.emit('test', "register success :)");
+          io.emit('reg', {type: 'success', code: 'default'});
         })
         .catch((error) => {
 			// 處理錯誤區塊
-			    let errorCode = error.code,
-				  errorMessage = error.message;
-			    io.emit('test', `Register failed! error code ${errorCode}, error message ${errorMessage}`);
+			    let errorCode = error.code;
+			    io.emit('reg', {type: 'error', code: `${errorCode}`});
 		    });
 	})
 });

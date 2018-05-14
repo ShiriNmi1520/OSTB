@@ -23,11 +23,11 @@ io.on('connection', function (socket) {
         console.log('get login data, start auth process..');
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
             .then(function () {
-            io.emit('test', "Welcome back, " + data.email + "!!");
+            io.emit('auth', { type: 'success', code: 'default' });
         })
             .catch(function (error) {
-            var errorCode = error.code, errorMessage = error.message;
-            io.emit('test', "Login failed!! " + errorCode + ", " + errorMessage);
+            var errorCode = error.code;
+            io.emit('auth', { type: 'error', code: "" + errorCode });
         });
     });
     socket.on('register', function (data) {
@@ -37,12 +37,12 @@ io.on('connection', function (socket) {
         io.emit('test', "we got it:)");
         firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
             .then(function () {
-            io.emit('test', "register success :)");
+            io.emit('reg', { type: 'success', code: 'default' });
         })
             .catch(function (error) {
             // 處理錯誤區塊
-            var errorCode = error.code, errorMessage = error.message;
-            io.emit('test', "Register failed! error code " + errorCode + ", error message " + errorMessage);
+            var errorCode = error.code;
+            io.emit('reg', { type: 'error', code: "" + errorCode });
         });
     });
 });
