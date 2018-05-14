@@ -1,4 +1,4 @@
-##Vue Socket.IO 
+## Vue Socket.IO 
 A project that test real-time communication between different machine from different network.
 <br><br>With Client-side (Vue based) and Server-side (TypeScript based)
 > We may build a game :)
