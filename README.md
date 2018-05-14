@@ -1,5 +1,5 @@
 
-##The `package.json` under VueSocketIO is for `heroku` deploy.
+## The `package.json` under VueSocketIO is for `heroku` deploy.
 
 If you want run 'npm install' command (Add package, or something...)
 
@@ -8,7 +8,7 @@ Please `cd server`
 
 **Do not run `npm install` under VueSocketIO**
 
-Ps: If you've added package or upadted,
+Ps: If you've added package or updated,
 
 please make sure `package.json` under `VueSocketIO` is **complete same** as `/server/package.json`.
 
@@ -20,7 +20,7 @@ from Y.C.Huang
 
 ------
 
-##VueSocketIO 底下的 `package.json` 是給 `heroku` 進行部屬的
+## VueSocketIO 底下的 `package.json` 是給 `heroku` 進行部屬的
 
 如果有需要執行到 `npm install` (新增套件或者什麼的...)
 
