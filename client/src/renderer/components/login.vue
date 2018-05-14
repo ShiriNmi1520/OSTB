@@ -53,6 +53,7 @@
       login() {
         const vm = this;
         vm.$socket.emit('auth', { email: vm.account, password: vm.password });
+        vm.$emit('updateViewStatus', 'main');
       },
       signUp() {
         const vm = this;
