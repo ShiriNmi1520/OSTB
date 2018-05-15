@@ -1,23 +1,27 @@
 <template>
   <div class="body darkTheme">
     <div class="main-block-battle">
-      <div class="main-char">MAIN</div>
-      <div class="p1-char">P1</div>
-      <div class="p2-char">P2</div>
-      <div class="p3-char">P3</div>
+      <div class="char">MAIN</div>
+      <div class="char char--p1">P1</div>
+      <div class="char char--p2">P2</div>
+      <div class="char char--p3">P3</div>
       <b-btn primary @click="backToMain">back to main</b-btn>
     </div>
-    <b-row class="mainCardContainer">
-      <div v-for="data in test" class="mainCard">{{data}}</div>
+    <b-row class="CardContainer">
+      <b-col class="ml-2" sm="1" center v-for="data in test">
+        <div class="mainCard">{{data}}</div>
+      </b-col>
     </b-row>
-    <b-row class="p1CardContainer">
-      <div v-for='data in test' class="mainCard text-right">{{data}}</div>
+    <b-row class="CardContainer CardContainer--p1">
+      <b-col sm="1" center>
+        <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
+      </b-col>
     </b-row>
-    <b-row class="p2CardContainer">
-      <div v-for="data in test" class="mainCard">{{data}}</div>
+    <b-row class="CardContainer CardContainer--p2">
+      <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
     </b-row>
-    <b-row class="p3CardContainer">
-      <div v-for="data in test" class="mainCard">{{data}}</div>
+    <b-row class="CardContainer CardContainer--p3">
+      <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
     </b-row>
   </div>
 </template>
@@ -52,7 +56,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .main-char {
+  .char {
     position: absolute;
     height: 10rem;
     width: 6rem;
@@ -62,12 +66,12 @@
     transform: translateX(-50%);
     color: #000;
   }
-  .mainCardContainer {
+  .CardContainer {
     position: absolute;
     width: 100%;
     bottom: 0;
     left: 50%;
-    transform: translateX(-25%);
+    transform: translateX(-26%);
   }
   .mainCard {
     height: 10rem;
@@ -76,55 +80,45 @@
     background-color: #fff;
     color: #000;
   }
-  .p1-char {
-    position: absolute;
-    height: 10rem;
-    width: 6rem;
+  .char--p1 {
     top: 50%;
     left: 4%;
-    background-color: #fff;
     transform: translateY(-50%) rotate(-270deg);
-    color: #000;
   }
-  .p1CardContainer {
-    position: absolute;
+  .CardContainer--p1 {
     height: 100%;
+    width: unset;
     top: 50%;
+    bottom: unset;
+    right: unset;
     left: 0;
-    transform: translate(-99%, -50%) rotate(-270deg);
+    transform: translate(-280%, -50%) rotate(-270deg);
   }
-  .p2-char {
-    position: absolute;
-    height: 10rem;
-    width: 6rem;
+  .char--p2 {
     top: 0;
     left: 50%;
-    background-color: #fff;
     transform: translateX(-50%) rotate(-180deg);
-    color: #000;
   }
-  .p2CardContainer {
-    position: absolute;
+  .CardContainer--p2 {
     width: 100%;
+    bottom: unset;
     top: 0;
     left: 50%;
-    transform: translate(-70%, -70%) rotate(-180deg);
+    right: unset;
+    transform: translate(-96%, -50%) rotate(-180deg);
   }
-  .p3-char {
-    position: absolute;
-    height: 10rem;
-    width: 6rem;
+  .char--p3 {
     top: 50%;
-    right: 4%;
-    background-color: #fff;
-    transform: translateY(-50%) rotate(-90deg);
-    color: #000;
-  }
-  .p3CardContainer {
-    position: absolute;
-    height: 100%;
-    top: 50%;
+    left: unset;
     right: 0;
-    transform: translate(99%, -50%) rotate(-90deg);
+    transform: translate(-35%,-50%) rotate(-90deg);
+  }
+  .CardContainer--p3 {
+    height: 100%;
+    width: unset;
+    top: 50%;
+    left: unset;
+    right: 0;
+    transform: translate(345%, -50%) rotate(-90deg);
   }
 </style>
