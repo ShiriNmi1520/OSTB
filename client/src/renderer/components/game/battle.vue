@@ -79,6 +79,10 @@
     margin-left: 10px;
     background-color: #fff;
     color: #000;
+    transition: .2s ease-in;
+  }
+  .mainCard:hover {
+    transform: scale(1.2);
   }
   .char--p1 {
     top: 50%;
