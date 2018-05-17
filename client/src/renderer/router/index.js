@@ -7,8 +7,23 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: '/',
-      component: require('@/components/main').default,
+      name: 'login',
+      component: require('@/components/login').default,
+    },
+    {
+      path: '/main',
+      name: 'main',
+      component: require('@/components/game-main').default,
+    },
+    {
+      path: '/main/firstTimeLogin',
+      name: 'firstTime',
+      component: require('@/components/firstTimeLogin').default,
+    },
+    {
+      path: '/main/battle',
+      name: 'battle',
+      component: require('@/components/game/battle').default,
     },
   ],
 });

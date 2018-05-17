@@ -38,14 +38,13 @@
     methods: {
       backToMain() {
         const vm = this;
-        vm.view = 'main';
-        vm.$emit('updateViewStatus', vm.view);
+        vm.$router.push({ name: 'main' });
       },
     },
   };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .main-block-battle {
     position: absolute;
     height: 30rem;
