@@ -6,6 +6,7 @@ var express = require('express'), app = express(), http = require('http').Server
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
 };
+var room_id;
 firebase.initializeApp(firebase_config);
 http.listen(process.env.PORT || 48763, function () {
     console.log('Computer listening on :' + process.env.PORT);
@@ -53,6 +54,14 @@ io.on('connection', function (socket) {
             .catch(function (error) {
             io.emit('logout', { type: 'error', code: "" + error.code });
         });
+    });
+    socket.on('room', function (room) {
+        socket.join(room);
+        console.log(room);
+        room_id = room;
+    });
+    socket.on('room_heart', function (data) {
+        socket.to(room_id).emit('test', data);
     });
 });
 //# sourceMappingURL=Server.js.map

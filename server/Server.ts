@@ -13,6 +13,8 @@ const express = require('express'),
 
 	};
 
+var room_id;
+
 firebase.initializeApp(firebase_config);
 
 http.listen(process.env.PORT || 48763, () => {
@@ -69,4 +71,13 @@ io.on('connection', (socket) => {
 			})
 	});
 
+	socket.on('room', (room) => {
+		socket.join(room);
+		console.log(room);
+		room_id = room;
+	});
+
+	socket.on('room_heart', (data) => {
+		socket.to(room_id).emit('test', data);
+	});
 });
