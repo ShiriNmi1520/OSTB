@@ -8,8 +8,8 @@
       <b-btn primary @click="backToMain">back to main</b-btn>
     </div>
     <b-row class="CardContainer">
-      <b-col class="ml-2" sm="1" center v-for="data in test">
-        <div class="mainCard">{{data}}</div>
+      <b-col class="ml-2" sm="1" center v-for="(data, index) in test">
+        <div class="mainCard" :id="`Card${index}`">{{data}}</div>
       </b-col>
     </b-row>
     <b-row class="CardContainer CardContainer--p1">
@@ -45,6 +45,9 @@
 </script>
 
 <style lang="less" scoped>
+  @mainRed: #ffa767;
+  @hoverRed: #936236;
+  @mainBlack: #303133;
   .main-block-battle {
     position: absolute;
     height: 30rem;
@@ -82,6 +85,13 @@
   }
   .mainCard:hover {
     transform: scale(1.2);
+  }
+  .mainCardMenu {
+    position: absolute;
+    width: 6rem;
+    height: 10rem;
+    top: -100%;
+    background-color: @mainRed;
   }
   .char--p1 {
     top: 50%;

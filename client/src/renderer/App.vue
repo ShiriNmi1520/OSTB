@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="body darkTheme">
-    <router-view :login-message="loginStatus"></router-view>
+    <router-view @backToMain="getLoginStatus" :login-message="loginStatus"></router-view>
   </div>
 </template>
 
@@ -31,14 +31,18 @@
         const vm = this;
         vm.login = false;
       },
+      getLoginStatus(data) {
+        const vm = this;
+        vm.loginStatus = { type: data.type, code: data.code };
+      },
     },
   };
 </script>
 
 <style lang="less">
-  @mainRed: #ffa767;
-  @hoverRed: #936236;
-  @mainBlack: #303133;
+  @mainRed: #C05C48;
+  @hoverRed: #86430E;
+  @mainBlack: #474747;
   body {
     height: 100%;
     width: 100%;
@@ -73,5 +77,9 @@
   .darkTheme {
     background-color: @mainBlack;
     color: #F0F8FF;
+  }
+
+  .jumbotron {
+    box-shadow: 0 .5px 15px 1px rgba(0,0,0,0.5);
   }
 </style>

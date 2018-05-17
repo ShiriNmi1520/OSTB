@@ -2,12 +2,12 @@
   <div class="body">
     <b-navbar class="nav-red" toggleable>
         <b-navbar-nav>
-          <b-nav-item right href="#"><router-link :to="'/'">登出</router-link></b-nav-item>
+          <b-nav-item right href="#" @click="backToMain">登出</b-nav-item>
         </b-navbar-nav>
     </b-navbar>
     <b-container>
       <b-row class="mt-5">
-        <b-col sm="6"><b-jumbotron class="nav-red btn-click">
+        <b-col sm="6"><b-jumbotron class="nav-red btn-click" @click="gotoComBattle">
           <h1 class="text-center">コンピュータと<br><span class="asobu">遊ぶ</span></h1>
         </b-jumbotron>
         </b-col>
@@ -28,7 +28,17 @@
         view: 'main',
       };
     },
-    methods: {},
+    methods: {
+      gotoComBattle() {
+        const vm = this;
+        vm.$router.push({ name: 'battle' });
+      },
+      backToMain() {
+        const vm = this;
+        vm.$emit('backToMain', { type: '', code: '' });
+        vm.$router.push({ name: 'login' });
+      },
+    },
     watched: {},
   };
 </script>
@@ -42,11 +52,11 @@
     color: #F0F8FF;
   }
   .btn-click{
-    transition: .2s ease;
+    transition: .2s ease-in-out;
   }
   .btn-click:active {
-    background-color: @mainRed;
-    border-color: @mainRed;
+    background-color: @hoverRed;
+    border-color: @hoverRed;
   }
   .body {
     height: 100%;
@@ -56,6 +66,6 @@
     color: #F0F8FF;
   }
   .asobu {
-    font-size: 6rem;
+    font-size: 5rem;
   }
 </style>
