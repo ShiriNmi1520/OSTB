@@ -59,14 +59,19 @@ io.on('connection', function (socket) {
         //加入後將id返回客戶端
         var id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         socket.join(id);
-        io.emit('room', { type: 'joined_room', id: "" + id });
+        io.sockets.socket(id).emit('create_room', "Ceeated room id:" + id);
         //roomID會被存放在每個unique-id底下
         //透過key() 來得到
         var RoomKey = firebase.database().ref('rooms').push({ id: id }).key();
         console.log(RoomKey);
+        //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('join_room', function (RoomId) {
+        //加入其他玩家所創的Room
+        //並將Room內在線人數傳回
         socket.join(RoomId);
+        io.to(RoomId).emit('Player joined!');
+        console.log("Now we have " + io.sockets.clients(RoomId) + " clients in " + RoomId);
     });
 });
 //# sourceMappingURL=Server.js.map
