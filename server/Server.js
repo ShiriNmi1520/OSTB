@@ -57,8 +57,8 @@ io.on('connection', function (socket) {
     socket.on('room', function (room) {
         socket.join(room);
         io.emit('room', { type: 'joined_room', id: "" + room });
-        var GameRoom = firebase.getInstance().getReferenceFromUrl("https://buyao-70f4a.firebaseio.com/Rooms");
-        GameRoom.child("room_id").setValue("" + room);
+        var GameRoomRef = firebase.database().ref(), StoreRoom = GameRoomRef.child('rooms/id'), PushRoom = StoreRoom.push();
+        PushRoom.set({ RoomId: room });
     });
 });
 //# sourceMappingURL=Server.js.map

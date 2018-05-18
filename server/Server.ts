@@ -72,8 +72,10 @@ io.on('connection', (socket) => {
 	socket.on('room', (room) => {
 		socket.join(room);
 		io.emit('room', {type: 'joined_room', id: `${room}`});
-		let GameRoom = firebase.getInstance().getReferenceFromUrl("https://buyao-70f4a.firebaseio.com/Rooms");
-		GameRoom.child("room_id").setValue(`${room}`);
+		let GameRoomRef = firebase.database().ref(),
+			StoreRoom = GameRoomRef.child('rooms/id'),
+			PushRoom = StoreRoom.push();
+		PushRoom.set({RoomId: room});
 	});
 
 });
