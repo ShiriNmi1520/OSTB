@@ -74,11 +74,12 @@ io.on('connection', (socket) => {
 		//加入後將id返回客戶端
 		let id: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		socket.join(id);
-		io.sockets.socket(id).emit('create_room', `Ceeated room id:${id}`);
+		io.sockets.socket(id).emit('create_room', id);
 		//roomID會被存放在每個unique-id底下
 		//透過key() 來得到
 		let RoomKey: string = firebase.database().ref('rooms').push({id: id}).key();
 		console.log(RoomKey);
+		socket.token = RoomKey;
 		//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
 	});
 
