@@ -1,4 +1,4 @@
-var express = require('express'), app = express(), http = require('http').Server(app), io = require('socket.io')(http), firebase = require('firebase'), firebase_config = {
+var express = require('express'), app = express(), http = require('http').Server(app), io = require('socket.io')(http), firebase = require('firebase'), jwt = require('jsonwebtoken'), firebase_config = {
     apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
     authDomain: "buyao-70f4a.firebaseapp.com",
     databaseURL: "https://buyao-70f4a.firebaseio.com",
@@ -23,7 +23,10 @@ io.on('connection', function (socket) {
         console.log("get login data from " + data.email + ", start auth process..");
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
             .then(function () {
-            io.emit('auth', { type: 'success', code: 'default' });
+            var ProfileForToken = { email: data.email, password: data.password }, token = jwt.sign(ProfileForToken, 'token', {
+                expiresIn: 60 * 60 * 24
+            });
+            io.emit('auth', { type: 'success', code: 'default', token: token });
         })
             .catch(function (error) {
             var errorCode = error.code;

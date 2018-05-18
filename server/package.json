@@ -17,6 +17,7 @@
     "express": "^4.16.3",
     "firebase": "^5.0.2",
     "http": "0.0.0",
+    "jsonwebtoken": "^8.2.1",
     "socket.io": "^2.1.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"

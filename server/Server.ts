@@ -3,6 +3,7 @@ const express = require('express'),
 	http = require('http').Server(app),
 	io = require('socket.io')(http),
 	firebase = require('firebase'),
+	jwt = require('jsonwebtoken'),
 	firebase_config = {
 		apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
 		authDomain: "buyao-70f4a.firebaseapp.com",
@@ -35,7 +36,11 @@ io.on('connection', (socket) => {
 		console.log(`get login data from ${data.email}, start auth process..`);
 		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
-				io.emit('auth', {type: 'success', code: 'default'});
+				let ProfileForToken = {email: data.email, password:data.password},
+				token = jwt.sign(ProfileForToken, 'token', {
+					expiresIn: 60*60*24
+				});
+				io.emit('auth', {type: 'success', code: 'default', token: token});
 			})
 			.catch((error) => {
 				let errorCode = error.code;
