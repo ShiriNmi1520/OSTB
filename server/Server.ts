@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('logout', (data) => {
-		console.log(`We've received logout signal from ${data.email}, star logout process...`);
+	  console.log(`We've received logout signal from ${data.email}, star logout process...`);
 		firebase.auth().signOut()
 			.then(() => {
 				io.emit('logout', {type: 'success', code: 'default'});
