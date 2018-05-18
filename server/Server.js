@@ -54,11 +54,19 @@ io.on('connection', function (socket) {
             io.emit('logout', { type: 'error', code: "" + error.code });
         });
     });
-    socket.on('room', function (room) {
-        socket.join(room);
-        io.emit('room', { type: 'joined_room', id: "" + room });
-        var GameRoomRef = firebase.database().ref(), StoreRoom = GameRoomRef.child('rooms/id'), PushRoom = StoreRoom.push();
-        PushRoom.set({ RoomId: room });
+    socket.on('create_room', function () {
+        //創立房間、隨機生成id並加入
+        //加入後將id返回客戶端
+        var id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        socket.join(id);
+        io.emit('room', { type: 'joined_room', id: "" + id });
+        //roomID會被存放在每個unique-id底下
+        //透過key() 來得到
+        var RoomKey = firebase.database().ref('rooms').push({ id: id }).key();
+        console.log(RoomKey);
+    });
+    socket.on('join_room', function (RoomId) {
+        socket.join(RoomId);
     });
 });
 //# sourceMappingURL=Server.js.map
