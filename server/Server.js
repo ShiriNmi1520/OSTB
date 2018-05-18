@@ -6,7 +6,6 @@ var express = require('express'), app = express(), http = require('http').Server
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
 };
-var room_id;
 firebase.initializeApp(firebase_config);
 http.listen(process.env.PORT || 48763, function () {
     console.log('Computer listening on :' + process.env.PORT);
@@ -57,11 +56,9 @@ io.on('connection', function (socket) {
     });
     socket.on('room', function (room) {
         socket.join(room);
-        console.log(room);
-        room_id = room;
-    });
-    socket.on('room_heart', function (data) {
-        socket.to(room_id).emit('test', data);
+        io.emit('room', { type: 'joined_room', id: "" + room });
+        var GameRoom = firebase.getInstance().getReferenceFromUrl("https://buyao-70f4a.firebaseio.com/Rooms");
+        GameRoom.child("room_id").setValue("" + room);
     });
 });
 //# sourceMappingURL=Server.js.map

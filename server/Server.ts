@@ -13,8 +13,6 @@ const express = require('express'),
 
 	};
 
-var room_id;
-
 firebase.initializeApp(firebase_config);
 
 http.listen(process.env.PORT || 48763, () => {
@@ -73,11 +71,9 @@ io.on('connection', (socket) => {
 
 	socket.on('room', (room) => {
 		socket.join(room);
-		console.log(room);
-		room_id = room;
+		io.emit('room', {type: 'joined_room', id: `${room}`});
+		let GameRoom = firebase.getInstance().getReferenceFromUrl("https://buyao-70f4a.firebaseio.com/Rooms");
+		GameRoom.child("room_id").setValue(`${room}`);
 	});
 
-	socket.on('room_heart', (data) => {
-		socket.to(room_id).emit('test', data);
-	});
 });
