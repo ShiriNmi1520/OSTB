@@ -20,6 +20,8 @@ http.listen(process.env.PORT || 48763, () => {
 	console.log('Computer listening on :' + process.env.PORT);
 });
 
+//現在create_room join_room執行時需附帶auth成功時返回的token
+//否則function不會執行，直接回傳status 403
 io.on('connection', (socket) => {
 	socket.room = "";
 	socket.token = "";
@@ -38,6 +40,7 @@ io.on('connection', (socket) => {
 		console.log(`get login data from ${data.email}, start auth process..`);
 		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
+				//創立一個token，往後執行動作皆需附帶此token，否則傳回403 error
 				let ProfileForToken = {email: data.email, password:data.password},
 				token = jwt.sign(ProfileForToken, 'token', {
 					expiresIn: 60*60*24
@@ -71,6 +74,7 @@ io.on('connection', (socket) => {
 		firebase.auth().signOut()
 			.then(() => {
 				io.emit('logout', {type: 'success', code: 'default'});
+				socket.token = "";
 			})
 			.catch((error) => {
 				io.emit('logout', {type: 'error', code: `${error.code}`});
@@ -80,30 +84,41 @@ io.on('connection', (socket) => {
 	socket.on('create_room', (data) => {
 		//創立房間、隨機生成id並加入
 		//加入後將id返回客戶端
-		let id: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-		socket.join(id);
-		io.to(id).emit('create_room', id);
-		//roomID會被存放在每個unique-id底下
-		//透過key() 來得到
-		let RoomKey: string = firebase.database().ref('rooms').push({id: id, room: data.room}).key;
-		console.log(RoomKey);
-		socket.token = RoomKey;
-		//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
+		if (data.token === socket.token) {
+			let id: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+			socket.join(id);
+			io.to(id).emit('create_room', id);
+			//roomID會被存放在每個unique-id底下
+			//透過key() 來得到
+			let RoomKey: string = firebase.database().ref('rooms').push({id: id, room: data.room}).key;
+			console.log(RoomKey);
+			socket.token = RoomKey;
+			//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
+		}
+		else io.emit('create_room', {status:403, error:"No token provided"});
 	});
 
-	socket.on('join_room', (roomId) => {
+	socket.on('join_room', (data) => {
 		//加入其他玩家所創的Room
 		//並將Room內在線人數傳回
-			socket.join(roomId);
-			io.to(roomId).emit('Player joined!');
-			console.log(`Now we have ${io.sockets.clients(roomId)} clients in ${roomId}`);
-			socket.room = roomId;
+		if (data.token === socket.token) {
+			socket.join(data.roomId);
+			io.to(data.roomId).emit('Player joined!');
+			console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
+			socket.room = data.roomId;
+		}
+		else io.emit('join_room', {status:403, error:"No token provided"});
 	});
 
 	socket.on('InGameChat', (data) => {
 		if (data.name && data.content){
 			io.to(socket.room).emit({name: data.name, content: data.content});
 		}
+	});
+
+	socket.on('GameOver', () => {
+		socket.leave(socket.room);
+		socket.room = "";
 	})
 
 
