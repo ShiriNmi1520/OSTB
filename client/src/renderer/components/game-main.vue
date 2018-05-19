@@ -7,11 +7,13 @@
     </b-navbar>
     <b-container>
       <b-row class="mt-5">
-        <b-col sm="6"><b-jumbotron class="nav-red btn-click" @click="gotoComBattle">
+        <b-col sm="6">
+          <b-jumbotron class="nav-red btn-click" @click="gotoComBattle">
           <h1 class="text-center">コンピュータと<br><span class="asobu">遊ぶ</span></h1>
-        </b-jumbotron>
+          </b-jumbotron>
         </b-col>
-        <b-col sm="6"><b-jumbotron class="nav-red btn-click">
+        <b-col sm="6">
+          <b-jumbotron class="nav-red btn-click" @click="createRoom">
           <h1 class="text-center">プレーヤーと<br><span class="asobu">遊ぶ</span></h1>
         </b-jumbotron>
       </b-col>
@@ -21,12 +23,22 @@
 </template>
 
 <script>
+  const waitForTwoSec = new Promise((res) => {
+    setTimeout(() => {
+      res();
+    }, 2000);
+  });
   export default {
     name: 'game-main',
     data() {
       return {
         view: 'main',
       };
+    },
+    props: {
+      roomId: {
+        type: String,
+      },
     },
     methods: {
       gotoComBattle() {
@@ -37,6 +49,15 @@
         const vm = this;
         vm.$emit('backToMain', { type: '', code: '' });
         vm.$router.push({ name: 'login' });
+      },
+      createRoom() {
+        const vm = this;
+        vm.$socket.emit('create_room');
+        waitForTwoSec.then(() => {
+          if (vm.roomId !== '') {
+            vm.$router.push({ name: 'game-room' });
+          }
+        });
       },
     },
     watched: {},
