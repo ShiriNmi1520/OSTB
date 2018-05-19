@@ -102,14 +102,20 @@
       login() {
         const vm = this;
         vm.$socket.emit('auth', { email: vm.account, password: vm.password });
+        vm.$emit('updateLoading', true);
         const loginPromise = new Promise((res, rej) => {
-          if (vm.loginMessage.type !== 'default') {
-            res();
-          } else rej();
+          setTimeout(() => {
+            if (vm.loginMessage.type !== 'default') {
+              res();
+            } else if (vm.loginMessage.type === 'default') {
+              rej();
+            }
+          }, 2000);
         });
         loginPromise
           .then(() => {
             if (vm.loginMessage.type === 'success') {
+              vm.$emit('updateLoading', false);
               vm.$router.push({ name: 'main' });
               vm.loginMessage = {};
             } else if (vm.loginMessage.type === 'error' && vm.loginMessage.code === 'invalid-email') {
