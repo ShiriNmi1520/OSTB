@@ -83,8 +83,7 @@ io.on('connection', (socket) => {
 
 	socket.on('create_room', (data) => {
 		//創立房間、隨機生成id並加入
-		//加入後將id返回客戶端
-		if (data.token === socket.token) {
+		//加入後將id返回客戶端om
 			let id: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 			socket.join(id);
 			io.to(id).emit('create_room', id);
@@ -94,20 +93,15 @@ io.on('connection', (socket) => {
 			console.log(RoomKey);
 			socket.token = RoomKey;
 			//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
-		}
-		else io.emit('create_room', {status:403, error:"No token provided"});
 	});
 
 	socket.on('join_room', (data) => {
 		//加入其他玩家所創的Room
 		//並將Room內在線人數傳回
-		if (data.token === socket.token) {
 			socket.join(data.roomId);
 			io.to(data.roomId).emit('Player joined!');
 			console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
 			socket.room = data.roomId;
-		}
-		else io.emit('join_room', {status:403, error:"No token provided"});
 	});
 
 	socket.on('InGameChat', (data) => {

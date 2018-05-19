@@ -66,32 +66,24 @@ io.on('connection', function (socket) {
     });
     socket.on('create_room', function (data) {
         //創立房間、隨機生成id並加入
-        //加入後將id返回客戶端
-        if (data.token === socket.token) {
-            var id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            socket.join(id);
-            io.to(id).emit('create_room', id);
-            //roomID會被存放在每個unique-id底下
-            //透過key() 來得到
-            var RoomKey = firebase.database().ref('rooms').push({ id: id, room: data.room }).key;
-            console.log(RoomKey);
-            socket.token = RoomKey;
-            //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
-        }
-        else
-            io.emit('create_room', { status: 403, error: "No token provided" });
+        //加入後將id返回客戶端om
+        var id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        socket.join(id);
+        io.to(id).emit('create_room', id);
+        //roomID會被存放在每個unique-id底下
+        //透過key() 來得到
+        var RoomKey = firebase.database().ref('rooms').push({ id: id, room: data.room }).key;
+        console.log(RoomKey);
+        socket.token = RoomKey;
+        //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('join_room', function (data) {
         //加入其他玩家所創的Room
         //並將Room內在線人數傳回
-        if (data.token === socket.token) {
-            socket.join(data.roomId);
-            io.to(data.roomId).emit('Player joined!');
-            console.log("Now we have " + io.sockets.clients(data.roomId) + " clients in " + data.roomId);
-            socket.room = data.roomId;
-        }
-        else
-            io.emit('join_room', { status: 403, error: "No token provided" });
+        socket.join(data.roomId);
+        io.to(data.roomId).emit('Player joined!');
+        console.log("Now we have " + io.sockets.clients(data.roomId) + " clients in " + data.roomId);
+        socket.room = data.roomId;
     });
     socket.on('InGameChat', function (data) {
         if (data.name && data.content) {
