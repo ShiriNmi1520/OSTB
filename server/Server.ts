@@ -101,7 +101,7 @@ io.on('connection', (socket) => {
 			socket.join(data.roomId);
 			io.to(data.roomId).emit('Player joined!');
 			// console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
-			socket.room = data.roomId;
+			// socket.room = data.roomId;
 			// if(io.sockets.clients(data.roomId) == 4){
 			// 	socket.status = 1;
 			// 	console.log(`Room ${io.sockets.clients(data.roomId)} reached maximum players`);
