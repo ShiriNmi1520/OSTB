@@ -100,13 +100,13 @@ io.on('connection', (socket) => {
 		//並將Room內在線人數傳回
 			socket.join(data.roomId);
 			io.to(data.roomId).emit('Player joined!');
-			console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
+			// console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
 			socket.room = data.roomId;
-			if(io.sockets.clients(data.roomId) == 4){
-				socket.status = 1;
-				console.log(`Room ${io.sockets.clients(data.roomId)} reached maximum players`);
-				io.to(data.roomId).emit("We've got enough players, time to start game!");
-			}
+			// if(io.sockets.clients(data.roomId) == 4){
+			// 	socket.status = 1;
+			// 	console.log(`Room ${io.sockets.clients(data.roomId)} reached maximum players`);
+			// 	io.to(data.roomId).emit("We've got enough players, time to start game!");
+			// }
 	});
 
 	socket.on('InGameChat', (data) => {
