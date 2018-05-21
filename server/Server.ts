@@ -25,6 +25,7 @@ http.listen(process.env.PORT || 48763, () => {
 io.on('connection', (socket) => {
 	socket.room = "";
 	socket.token = "";
+	socket.GameStatus = "";
 
 	socket.on('test', (data) => {
 		console.log(data);
@@ -91,7 +92,7 @@ io.on('connection', (socket) => {
 			//透過key() 來得到
 			let RoomKey: string = firebase.database().ref('rooms').push({id: id}).key;
 			console.log(RoomKey);
-			socket.token = RoomKey;
+			socket.RoomKey = RoomKey;
 			//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
 	});
 
@@ -102,6 +103,11 @@ io.on('connection', (socket) => {
 			io.to(data.roomId).emit('Player joined!');
 			console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
 			socket.room = data.roomId;
+			if(io.sockets.clients(data.roomId) == 4){
+				socket.status = 1;
+				console.log(`Room ${io.sockets.clients(data.roomId)} reached maximum players`);
+				io.to(data.roomId).emit("We've got enough players, time to start game!");
+			}
 	});
 
 	socket.on('InGameChat', (data) => {
@@ -113,8 +119,6 @@ io.on('connection', (socket) => {
 	socket.on('GameOver', () => {
 		socket.leave(socket.room);
 		socket.room = "";
-	})
-
-
+	});
 
 });
