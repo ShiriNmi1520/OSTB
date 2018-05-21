@@ -100,6 +100,10 @@ io.on('connection', (socket) => {
 			//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
 	});
 
+	socket.on('getRoomId', () => {
+		io.emit('getRoomId', room_id);
+	});
+
 	socket.on('join_room', (data) => {
 		//加入其他玩家所創的Room
 		//並將Room內在線人數傳回
