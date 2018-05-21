@@ -30,5 +30,10 @@ export default new Router({
       name: 'game-room',
       component: require('@/components/game/room').default,
     },
+    {
+      path: '/main/roomList',
+      name: 'game-room-list',
+      component: require('@/components/game/room-list').default,
+    },
   ],
 });
