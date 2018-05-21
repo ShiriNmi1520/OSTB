@@ -74,9 +74,7 @@ io.on('connection', function (socket) {
         //roomID會被存放在每個unique-id底下
         //透過key() 來得到
         //傳送的data作為遊戲室名稱
-        var RoomKey = firebase.database().ref('rooms').set({ id: id, room: data }).key;
-        console.log(RoomKey);
-        socket.RoomKey = RoomKey;
+        var RoomKey = firebase.database().ref('rooms').set({ id: id, room: data });
         //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('join_room', function (data) {
