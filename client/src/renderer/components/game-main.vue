@@ -5,6 +5,7 @@
           <b-nav-item right href="#" @click="backToMain">登出</b-nav-item>
         </b-navbar-nav>
     </b-navbar>
+    <fade-transition>
     <b-container>
       <b-row class="mt-5">
         <b-col sm="6">
@@ -19,15 +20,11 @@
       </b-col>
       </b-row>
     </b-container>
+    </fade-transition>
   </div>
 </template>
 
 <script>
-  const waitForTwoSec = new Promise((res) => {
-    setTimeout(() => {
-      res();
-    }, 2000);
-  });
   export default {
     name: 'game-main',
     data() {
@@ -50,14 +47,12 @@
         vm.$emit('backToMain', { type: '', code: '' });
         vm.$router.push({ name: 'login' });
       },
-      createRoom() {
+      async createRoom() {
         const vm = this;
-        vm.$socket.emit('create_room');
-        waitForTwoSec.then(() => {
-          if (vm.roomId !== '') {
-            vm.$router.push({ name: 'game-room' });
-          }
-        });
+        const test = await vm.$socket.emit('create_room');
+        if (test !== '') {
+          vm.$router.push({ name: 'game-room' });
+        }
       },
     },
     watched: {},

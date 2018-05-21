@@ -6,7 +6,7 @@
         ["env", {
           "targets": { "node": 7 }
         }],
-        "stage-0"
+        "stage-3"
       ]
     },
     "renderer": {
@@ -14,7 +14,7 @@
         ["env", {
           "modules": false
         }],
-        "stage-0"
+        "stage-3"
       ]
     },
     "web": {
@@ -22,7 +22,7 @@
         ["env", {
           "modules": false
         }],
-        "stage-0"
+        "stage-3"
       ]
     }
   },

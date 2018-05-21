@@ -24,9 +24,9 @@
           const vm = this;
           vm.loginStatus = data;
         },
-        create_room(id) {
+        create_room(data) {
           const vm = this;
-          vm.roomID = id;
+          vm.roomID = data;
         },
       },
       data() {
