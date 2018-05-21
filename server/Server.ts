@@ -26,6 +26,8 @@ io.on('connection', (socket) => {
 	socket.room = "";
 	socket.token = "";
 	socket.GameStatus = "";
+	let room_id = [],
+		unique_key = [];
 
 	socket.on('test', (data) => {
 		console.log(data);
@@ -93,6 +95,8 @@ io.on('connection', (socket) => {
 			//傳送的data作為遊戲室名稱
 			let RoomKey: string = firebase.database().ref('rooms').push({id: id}).key;
 			console.log(RoomKey);
+			room_id.push(id);
+			unique_key.push(RoomKey);
 			//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
 	});
 
@@ -101,13 +105,13 @@ io.on('connection', (socket) => {
 		//並將Room內在線人數傳回
 			socket.join(data.roomId);
 			io.to(data.roomId).emit('Player joined!');
-			// console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
-			// socket.room = data.roomId;
-			// if(io.sockets.clients(data.roomId) == 4){
-			// 	socket.status = 1;
-			// 	console.log(`Room ${io.sockets.clients(data.roomId)} reached maximum players`);
-			// 	io.to(data.roomId).emit("We've got enough players, time to start game!");
-			// }
+			console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
+			socket.room = data.roomId;
+			if(io.sockets.clients(data.roomId) == 4){
+				socket.status = 1;
+				console.log(`Room ${io.sockets.clients(data.roomId)} reached maximum players`);
+				io.to(data.roomId).emit("We've got enough players, time to start game!");
+			}
 	});
 
 	socket.on('InGameChat', (data) => {
