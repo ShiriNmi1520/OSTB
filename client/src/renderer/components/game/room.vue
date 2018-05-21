@@ -24,13 +24,17 @@
     </b-row>
     <b-row>
       <b-col md="6" class="mt-3">
-        <div class="chatContainer p-3">123
+        <div class="chatContainer p-3">
+          <div class="chatTextArea">
+            <p v-for="message of chatAll">{{message.name}}: {{message.content}}</p>
+          </div>
+
           <b-row class="chatFunctionArea justify-content-md-center">
             <b-col md="9">
-              <b-form-input class="chatInputBox darkTheme"></b-form-input>
+              <b-form-input class="chatInputBox darkTheme" v-model="content"></b-form-input>
             </b-col>
             <b-col md="3">
-              <b-button class="chatButton">送信</b-button>
+              <b-button class="chatButton" @click="chat">送信</b-button>
             </b-col>
           </b-row>
         </div>
@@ -49,7 +53,21 @@
 <script>
   export default {
     name: 'room',
+    props: {
+      chatAll: {
+        type: Object,
+      },
+    },
+    data() {
+      return {
+        content: '',
+      };
+    },
     methods: {
+      chat() {
+        const vm = this;
+        vm.$socket.emit('InGameChat', { name: 'test', content: vm.content });
+      },
       leaveRoom() {
         const vm = this;
         vm.$socket.emit('GameOver');
@@ -98,6 +116,12 @@
     height: 20rem;
     background-color: @mainBlackTrans;
     position: relative;
+  }
+  .chatTextArea {
+    position: absolute;
+    height: 70%;
+    width: 100%;
+    overflow-y: scroll;
   }
   .chatFunctionArea {
     position: absolute;
