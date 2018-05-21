@@ -9,8 +9,8 @@
     <b-container>
       <b-row class="mt-5">
         <b-col sm="6">
-          <b-jumbotron class="nav-red btn-click" @click="gotoComBattle">
-          <h1 class="text-center">コンピュータと<br><span class="asobu">遊ぶ</span></h1>
+          <b-jumbotron class="nav-red btn-click" @click="gotoRoomList">
+          <h1 class="text-center">ゲームルーム<br><span class="asobu">探す</span></h1>
           </b-jumbotron>
         </b-col>
         <b-col sm="6">
@@ -25,6 +25,9 @@
 </template>
 
 <script>
+  const waitForTwoSec = () => {
+    setTimeout(() => {}, 2000);
+  };
   export default {
     name: 'game-main',
     data() {
@@ -38,9 +41,10 @@
       },
     },
     methods: {
-      gotoComBattle() {
+      gotoRoomList() {
         const vm = this;
-        vm.$router.push({ name: 'battle' });
+        vm.$socket.emit('getRoomId');
+        vm.$router.push({ name: 'game-room-list' });
       },
       backToMain() {
         const vm = this;
@@ -49,10 +53,10 @@
       },
       async createRoom() {
         const vm = this;
-        const test = await vm.$socket.emit('create_room');
-        if (test !== '') {
-          vm.$router.push({ name: 'game-room' });
-        }
+        const test = await waitForTwoSec();
+        vm.$socket.emit('create_room');
+        vm.$router.push({ name: 'game-room' });
+        return test;
       },
     },
     watched: {},
