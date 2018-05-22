@@ -1,4 +1,4 @@
-var express = require('express'), app = express(), http = require('http').Server(app), io = require('socket.io')(http), firebase = require('firebase'), jwt = require('jsonwebtoken'), firebase_config = {
+var express = require('express'), app = express(), http = require('http').Server(app), io = require('socket.io')(http), firebase = require('firebase'), jwt = require('jsonwebtoken'), me = "Alone QQ. Just like this unused constant", firebase_config = {
     apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
     authDomain: "buyao-70f4a.firebaseapp.com",
     databaseURL: "https://buyao-70f4a.firebaseio.com",
@@ -6,6 +6,7 @@ var express = require('express'), app = express(), http = require('http').Server
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
 };
+//生日快樂啦!
 firebase.initializeApp(firebase_config);
 http.listen(process.env.PORT || 48763, function () {
     console.log('Computer listening on :' + process.env.PORT);

@@ -4,6 +4,7 @@ const express = require('express'),
 	io = require('socket.io')(http),
 	firebase = require('firebase'),
 	jwt = require('jsonwebtoken'),
+	me = "Alone QQ. Just like this unused constant",
 	firebase_config = {
 		apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
 		authDomain: "buyao-70f4a.firebaseapp.com",
@@ -14,6 +15,7 @@ const express = require('express'),
 
 	};
 
+//生日快樂啦!
 firebase.initializeApp(firebase_config);
 
 http.listen(process.env.PORT || 48763, () => {
