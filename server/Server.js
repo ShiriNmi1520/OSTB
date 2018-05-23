@@ -17,7 +17,8 @@ io.on('connection', function (socket) {
     socket.room = "";
     socket.token = "";
     socket.GameStatus = "";
-    var room_id = [], unique_key = [];
+    socket.room_id = [];
+    socket.unique_key = [];
     socket.on('test', function (data) {
         console.log(data);
         io.emit('test', "success " + data.split(' ').reverse());
@@ -78,12 +79,12 @@ io.on('connection', function (socket) {
         //傳送的data作為遊戲室名稱
         var RoomKey = firebase.database().ref('rooms').push({ id: id }).key;
         console.log(RoomKey);
-        room_id.push(id);
-        unique_key.push(RoomKey);
+        socket.room_id.push(id);
+        socket.unique_key.push(RoomKey);
         //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('getRoomId', function () {
-        io.emit('getRoomId', room_id);
+        io.emit('getRoomId', socket.room_id);
     });
     socket.on('join_room', function (data) {
         //加入其他玩家所創的Room
