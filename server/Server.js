@@ -11,6 +11,14 @@ firebase.initializeApp(firebase_config);
 http.listen(process.env.PORT || 48763, function () {
     console.log('Computer listening on :' + process.env.PORT);
 });
+function removeItem(array, item) {
+    for (var i in array) {
+        if (array[i] == item) {
+            array.splice(i, 1);
+            break;
+        }
+    }
+}
 //現在create_room join_room執行時需附帶auth成功時返回的token
 //否則function不會執行，直接回傳status 403
 io.on('connection', function (socket) {
@@ -98,6 +106,9 @@ io.on('connection', function (socket) {
             console.log("Room " + io.sockets.clients(data.roomId) + " reached maximum players");
             io.to(data.roomId).emit("We've got enough players, time to start game!");
         }
+    });
+    socket.on('exit_room', function (data) {
+        removeItem(socket.room_id, data);
     });
     socket.on('InGameChat', function (data) {
         if (data.name && data.content) {
