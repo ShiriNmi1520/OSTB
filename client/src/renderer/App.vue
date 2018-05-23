@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="body darkTheme">
-    <router-view @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" :login-message="loginStatus"
+    <router-view @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :login-message="loginStatus"
                  :room-id="roomID" :chatAll="chat"></router-view>
     <fade-transition>
       <div class="loadingBox" v-if="loading">
@@ -60,6 +60,10 @@
           const vm = this;
           vm.loading = data;
         },
+        getRoomStatus(data) {
+          const vm = this;
+          vm.roomId = data;
+        },
       },
     };
   </script>
@@ -68,6 +72,9 @@
     @mainRed: #C05C48;
     @hoverRed: #86430E;
     @mainBlack: #474747;
+    * {
+      transition: .2s ease-in-out;
+    }
     body {
       height: 100%;
       width: 100%;

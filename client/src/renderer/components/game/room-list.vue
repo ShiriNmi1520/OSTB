@@ -14,15 +14,9 @@
     </b-row>
     <b-row>
       <b-col md="12" class="mt-3">
-        <b-btn block href="#" v-b-toggle="'room1'" class="btn-click">Accordion 1</b-btn>
+        <b-btn block href="#" v-b-toggle="'room1'" class="btn-click">room1</b-btn>
         <b-collapse id="room1" accordion="my-accordion" role="tabpanel">
-          test
-        </b-collapse>
-      </b-col>
-      <b-col md="12" class="mt-3">
-        <b-btn block href="#" v-b-toggle="'room2'" class="btn-click">Accordion 1</b-btn>
-        <b-collapse id="room2" accordion="my-accordion" role="tabpanel">
-          test12
+          <b-btn class="btn-info mt-3 btn-lg">加入</b-btn>
         </b-collapse>
       </b-col>
     </b-row>
