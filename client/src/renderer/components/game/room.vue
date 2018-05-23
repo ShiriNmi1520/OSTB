@@ -55,7 +55,10 @@
     name: 'room',
     props: {
       chatAll: {
-        type: Object,
+        type: Array,
+      },
+      roomId: {
+        type: String,
       },
     },
     data() {
@@ -70,7 +73,8 @@
       },
       leaveRoom() {
         const vm = this;
-        vm.$socket.emit('GameOver');
+        vm.$socket.emit('exit_room', vm.roomId);
+        vm.$emit('exitRoom', '');
         vm.$router.push({ name: 'main' });
       },
     },
