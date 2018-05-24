@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="body darkTheme">
     <router-view @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :login-message="loginStatus"
-                 :room-id="roomID" :chatAll="chat"></router-view>
+                 :room-id="roomID" :chatAll="chat" :roomList="roomIdList"></router-view>
     <fade-transition>
       <div class="loadingBox" v-if="loading">
         <div class="loadingItem-1"></div>
@@ -33,7 +33,8 @@
           vm.chat.push(data);
         },
         getRoomId(data) {
-          console.log(data);
+          const vm = this;
+          vm.roomIdList = data;
         },
       },
       data() {

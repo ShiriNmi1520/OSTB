@@ -13,10 +13,10 @@
       </b-col>
     </b-row>
     <b-row>
-      <b-col md="12" class="mt-3">
-        <b-btn block href="#" v-b-toggle="'room1'" class="btn-click">room1</b-btn>
-        <b-collapse id="room1" accordion="my-accordion" role="tabpanel">
-          <b-btn class="btn-info mt-3 btn-lg">加入</b-btn>
+      <b-col md="12" class="mt-3" v-for="(obj, index) in roomList">
+        <b-btn block href="#" v-b-toggle="'room' + index" class="btn-click">{{obj.room}}</b-btn>
+        <b-collapse :id="`room${index}`" accordion="my-accordion" role="tabpanel">
+          <b-btn class="btn-info mt-3 btn-lg" @click="joinRoom(obj.id)">加入</b-btn>
         </b-collapse>
       </b-col>
     </b-row>
@@ -24,12 +24,32 @@
 </template>
 
 <script>
+  function waitForTwoSec(x) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(x);
+      }, 3000);
+    });
+  }
   export default {
     name: 'room-list',
+    props: {
+      roomList: {
+        type: Object,
+      },
+    },
     methods: {
       backToMain() {
         const vm = this;
         vm.$router.push({ name: 'main' });
+      },
+      async joinRoom(data) {
+        const vm = this;
+        vm.$socket.emit('joinRoom', data);
+        const wait = await waitForTwoSec(vm).then(() => {
+          vm.$router.push({ name: 'game-room' });
+        });
+        return wait;
       },
     },
   };
