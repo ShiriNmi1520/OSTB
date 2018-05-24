@@ -92,7 +92,7 @@ io.on('connection', function (socket) {
         //並將Room內在線人數傳回
         socket.join(data);
         io.to(data).emit('Player joined!');
-        // console.log(`Now we have ${io.sockets.clients(data)} clients in ${data}`);
+        console.log("Now we have " + io.sockets.clients(data) + " clients in " + data);
         // socket.room = data;
         // if(io.sockets.clients(data) == 4){
         // 	socket.status = 1;
