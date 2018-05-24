@@ -22,7 +22,7 @@ http.listen(process.env.PORT || 48763, () => {
 	console.log('Computer listening on :' + process.env.PORT);
 });
 
-//現在create_room join_room執行時需附帶auth成功時返回的token
+//現在createRoom join_room執行時需附帶auth成功時返回的token
 //否則function不會執行，直接回傳status 403
 io.on('connection', (socket) => {
 	socket.room = "";
@@ -85,12 +85,12 @@ io.on('connection', (socket) => {
 			})
 	});
 
-	socket.on('create_room', (data) => {
+	socket.on('createRoom', (data) => {
 		//創立房間、隨機生成id並加入
 		//加入後將id返回客戶端om
 			let id: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 			socket.join(id);
-			io.to(id).emit('create_room', id);
+			io.to(id).emit('createRoom', id);
 			//roomID會被存放在每個unique-id底下
 			//透過key() 來得到
 			//傳送的data作為遊戲室名稱
@@ -101,35 +101,35 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('getRoomId', () => {
-		firebase.database().ref('rooms').on('value', snap => {
+		firebase.database().ref('rooms').once('value', snap => {
 			console.log(snap.val());
 			io.emit('getRoomId', snap.val());
 		});
 	});
 
-	socket.on('join_room', (data) => {
+	socket.on('joinRoom', (data) => {
 		//加入其他玩家所創的Room
 		//並將Room內在線人數傳回
-			socket.join(data.roomId);
-			io.to(data.roomId).emit('Player joined!');
-			console.log(`Now we have ${io.sockets.clients(data.roomId)} clients in ${data.roomId}`);
-			socket.room = data.roomId;
-			if(io.sockets.clients(data.roomId) == 4){
+			socket.join(data);
+			io.to(data).emit('Player joined!');
+			console.log(`Now we have ${io.sockets.clients(data)} clients in ${data}`);
+			socket.room = data;
+			if(io.sockets.clients(data) == 4){
 				socket.status = 1;
-				console.log(`Room ${io.sockets.clients(data.roomId)} reached maximum players`);
-				io.to(data.roomId).emit("We've got enough players, time to start game!");
+				console.log(`Room ${io.sockets.clients(data)} reached maximum players`);
+				io.to(data).emit("We've got enough players, time to start game!");
 			}
-	});
-
-	socket.on('exit_room', (data) => {
-		let index = room_id.indexOf(data);
-		if (index >= 0) room_id.splice(data, 1);
 	});
 
 	socket.on('InGameChat', (data) => {
 		if (data.name && data.content){
 			io.emit('InGameChat', {name: data.name, content: data.content});
 		}
+	});
+
+	socket.on('exitRoom', (data) => {
+		let index = room_id.indexOf(data);
+		if (index >= 0) room_id.splice(data, 1);
 	});
 
 	socket.on('DrawCard', () => {
@@ -145,6 +145,15 @@ io.on('connection', (socket) => {
 	socket.on('GameOver', () => {
 		socket.leave(socket.room);
 		socket.room = "";
+	});
+
+	socket.on('ShutdownSignal', () => {
+		socket.emit("Server is going down in five minutes");
+		socket.broadcast.emit("Server is going down in five minutes");
+		setTimeout(ShutDownProcess, 300000);
+		function ShutDownProcess(){
+			process.exit(0);
+		}
 	});
 
 });
