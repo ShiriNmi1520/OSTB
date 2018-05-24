@@ -24,7 +24,6 @@ io.on('connection', function (socket) {
         io.emit('test', "success " + data.split(' ').reverse());
     });
     socket.on('disconnect', function () {
-        console.log('say goodbye');
         io.emit('test', "ru disconnected?");
     });
     socket.on('auth', function (data) {
@@ -80,11 +79,10 @@ io.on('connection', function (socket) {
         var RoomKey = firebase.database().ref('rooms').push({ id: id }).key;
         socket.room_id.push(data);
         socket.unique_key.push(RoomKey);
-        console.log(data);
-        console.log("Array " + socket.room_id);
         //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('getRoomId', function () {
+        console.log("Request " + socket.room_id);
         io.emit('getRoomId', socket.room_id);
     });
     socket.on('join_room', function (data) {
@@ -102,7 +100,6 @@ io.on('connection', function (socket) {
     });
     socket.on('exit_room', function (data) {
         socket.room_id = socket.room_id.filter(function (e) { return e !== data; });
-        console.log("Exit room " + socket.room_id);
     });
     socket.on('InGameChat', function (data) {
         if (data.name && data.content) {
