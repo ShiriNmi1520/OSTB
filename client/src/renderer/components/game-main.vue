@@ -32,7 +32,7 @@
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(x);
-      }, 2000);
+      }, 3000);
     });
   }
   export default {
@@ -62,8 +62,10 @@
       },
       async createRoom() {
         const vm = this;
+        vm.$emit('updateLoading', true);
         vm.$socket.emit('create_room', vm.roomName);
         const test = await waitForTwoSec().then(() => {
+          vm.$emit('updateLoading', false);
           vm.$router.push({ name: 'game-room' });
         });
         return test;
