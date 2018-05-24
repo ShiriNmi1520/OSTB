@@ -69,13 +69,12 @@ io.on('connection', function (socket) {
         //創立房間、隨機生成id並加入
         //加入後將id返回客戶端om
         var id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        io.to(id).emit('createRoom', id);
+        var RoomKey = firebase.database().ref('/rooms/').push({ id: id, room: data }).key;
+        io.to(id).emit('createRoom', { 'id': id, 'key': RoomKey });
         //roomID會被存放在每個unique-id底下
         //透過key() 來得到
         //傳送的data作為遊戲室名稱
-        var RoomKey = firebase.database().ref('/rooms/').push({ id: id, room: data }).key;
         console.log("Created room name " + data);
-        console.log(RoomKey);
     });
     socket.on('getRoomId', function () {
         firebase.database().ref('/rooms/').once('value', function (snap) {
