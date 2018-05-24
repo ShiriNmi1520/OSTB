@@ -86,7 +86,7 @@ io.on('connection', function (socket) {
         //透過key() 來得到
         //傳送的data作為遊戲室名稱
         var RoomKey = firebase.database().ref('rooms').push({ id: id }).key;
-        socket.room_name.push(data);
+        socket.room_id.push(data);
         socket.unique_key.push(RoomKey);
         console.log(data);
         console.log("Array " + socket.room_name);
