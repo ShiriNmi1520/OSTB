@@ -103,9 +103,8 @@ io.on('connection', (socket) => {
 	socket.on('getRoomId', () => {
 		firebase.database().ref('rooms').on('value', snap => {
 			console.log(snap.val());
+			io.emit('getRoomId', snap.val());
 		});
-		console.log(`Request ${room_id}`);
-		io.emit('getRoomId', room_id);
 	});
 
 	socket.on('join_room', (data) => {

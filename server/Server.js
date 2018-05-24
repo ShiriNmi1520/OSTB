@@ -84,9 +84,8 @@ io.on('connection', function (socket) {
     socket.on('getRoomId', function () {
         firebase.database().ref('rooms').on('value', function (snap) {
             console.log(snap.val());
+            io.emit('getRoomId', snap.val());
         });
-        console.log("Request " + room_id);
-        io.emit('getRoomId', room_id);
     });
     socket.on('join_room', function (data) {
         //加入其他玩家所創的Room
