@@ -70,6 +70,7 @@ io.on('connection', function (socket) {
         //加入後將id返回客戶端om
         var id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         var RoomKey = firebase.database().ref('/rooms/').push({ id: id, room: data }).key;
+        socket.join(id);
         io.to(id).emit('createRoom', { 'id': id, 'key': RoomKey });
         //roomID會被存放在每個unique-id底下
         //透過key() 來得到

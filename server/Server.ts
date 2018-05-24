@@ -88,11 +88,12 @@ io.on('connection', (socket) => {
 		//加入後將id返回客戶端om
 		let id: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		let RoomKey: string = firebase.database().ref('/rooms/').push({id: id, room: data}).key;
-			io.to(id).emit('createRoom', {'id': id, 'key': RoomKey});
-			//roomID會被存放在每個unique-id底下
-			//透過key() 來得到
-			//傳送的data作為遊戲室名稱
-			console.log(`Created room name ${data}`);
+		socket.join(id);
+		io.to(id).emit('createRoom', {'id': id, 'key': RoomKey});
+		//roomID會被存放在每個unique-id底下
+		//透過key() 來得到
+		//傳送的data作為遊戲室名稱
+		console.log(`Created room name ${data}`);
 	});
 
 	socket.on('getRoomId', () => {
