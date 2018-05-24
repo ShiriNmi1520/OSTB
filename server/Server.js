@@ -17,8 +17,6 @@ io.on('connection', function (socket) {
     socket.room = "";
     socket.token = "";
     socket.GameStatus = "";
-    socket.unique_key = [];
-    var room_id = [];
     socket.on('test', function (data) {
         console.log(data);
         io.emit('test', "success " + data.split(' ').reverse());
@@ -76,13 +74,13 @@ io.on('connection', function (socket) {
         //roomID會被存放在每個unique-id底下
         //透過key() 來得到
         //傳送的data作為遊戲室名稱
-        var RoomKey = firebase.database().ref('rooms').push({ id: id, room: data }).key;
+        var RoomKey = firebase.database().ref('/rooms/').push({ id: id, room: data }).key;
         socket.unique_key.push(RoomKey);
         console.log("Created room name " + data);
         //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('getRoomId', function () {
-        firebase.database().ref('rooms').once('value', function (snap) {
+        firebase.database().ref('/rooms/').once('value', function (snap) {
             console.log(snap.val());
             io.emit('getRoomId', snap.val());
         });
@@ -92,13 +90,7 @@ io.on('connection', function (socket) {
         //並將Room內在線人數傳回
         socket.join(data);
         io.to(data).emit('Player joined!');
-        console.log("Now we have " + Object.keys(io.sockets.connected).length + " clients in " + data);
-        // socket.room = data;
-        // if(io.sockets.clients(data) == 4){
-        // 	socket.status = 1;
-        // 	console.log(`Room ${io.sockets.clients(data)} reached maximum players`);
-        // 	io.to(data).emit("We've got enough players, time to start game!");
-        // }
+        console.log("Now we have " + io.sockets.adapter.rooms[data].length + " clients in " + data);
     });
     socket.on('InGameChat', function (data) {
         if (data.name && data.content) {
@@ -106,9 +98,7 @@ io.on('connection', function (socket) {
         }
     });
     socket.on('exitRoom', function (data) {
-        var index = room_id.indexOf(data);
-        if (index >= 0)
-            room_id.splice(data, 1);
+        firebase.database().ref('/rooms/').child(data).remove();
     });
     socket.on('DrawCard', function () {
         var CardCount = 0;
