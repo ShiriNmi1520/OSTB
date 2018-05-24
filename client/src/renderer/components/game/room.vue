@@ -82,9 +82,9 @@
 </script>
 
 <style lang="less" scoped>
-  @mainRed: #C05C48;
-  @hoverRed: #86430E;
-  @mainBlack: #474747;
+  @mainRed: #ffa767;
+  @hoverRed: #936236;
+  @mainBlack: #303133;
   @mainBlackTrans: rgba(0,0,0,0.3);
   .blockTheme() {
     border-radius: 7px;
