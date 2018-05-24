@@ -63,7 +63,7 @@
       async createRoom() {
         const vm = this;
         vm.$emit('updateLoading', true);
-        vm.$socket.emit('create_room', vm.roomName);
+        vm.$socket.emit('createRoom', vm.roomName);
         const test = await waitForTwoSec().then(() => {
           vm.$emit('updateLoading', false);
           vm.$router.push({ name: 'game-room' });

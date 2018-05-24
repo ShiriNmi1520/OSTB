@@ -58,7 +58,7 @@
         type: Array,
       },
       roomId: {
-        type: String,
+        type: Object,
       },
     },
     data() {
@@ -73,7 +73,7 @@
       },
       leaveRoom() {
         const vm = this;
-        vm.$socket.emit('exit_room', vm.roomId);
+        vm.$socket.emit('exitRoom', vm.roomId.key);
         vm.$emit('exitRoom', '');
         vm.$router.push({ name: 'main' });
       },

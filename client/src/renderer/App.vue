@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="body darkTheme">
     <router-view @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :login-message="loginStatus"
-                 :room-id="roomID" :chatAll="chat" :roomList="roomIdList"></router-view>
+                 :room-id="roomId" :chatAll="chat" :roomList="roomIdList"></router-view>
     <fade-transition>
       <div class="loadingBox" v-if="loading">
         <div class="loadingItem-1"></div>
@@ -24,9 +24,9 @@
           const vm = this;
           vm.loginStatus = data;
         },
-        create_room(data) {
+        createRoom(data) {
           const vm = this;
-          vm.roomID = data;
+          vm.roomId = data;
         },
         InGameChat(data) {
           const vm = this;
@@ -43,7 +43,7 @@
           view: 'login',
           loginStatus: {},
           loading: false,
-          roomID: '',
+          roomId: {},
           chat: [],
           roomIdList: [],
         };
