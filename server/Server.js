@@ -89,11 +89,11 @@ io.on('connection', function (socket) {
         socket.room_id.push(data);
         socket.unique_key.push(RoomKey);
         console.log(data);
-        console.log("Array " + socket.room_name);
+        console.log("Array " + socket.room_id);
         //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('getRoomId', function () {
-        io.emit('getRoomId', socket.room_name);
+        io.emit('getRoomId', socket.room_id);
     });
     socket.on('join_room', function (data) {
         //加入其他玩家所創的Room

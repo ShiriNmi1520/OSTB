@@ -105,15 +105,15 @@ io.on('connection', (socket) => {
 			//透過key() 來得到
 			//傳送的data作為遊戲室名稱
 			let RoomKey: string = firebase.database().ref('rooms').push({id: id}).key;
-			socket.room_name.push(data);
+			socket.room_id.push(data);
 			socket.unique_key.push(RoomKey);
 			console.log(data);
-			console.log(`Array ${socket.room_name}`);
+			console.log(`Array ${socket.room_id}`);
 			//RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
 	});
 
 	socket.on('getRoomId', () => {
-		io.emit('getRoomId', socket.room_name);
+		io.emit('getRoomId', socket.room_id);
 	});
 
 	socket.on('join_room', (data) => {
