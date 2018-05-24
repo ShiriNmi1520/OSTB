@@ -5,7 +5,7 @@ var express = require('express'), app = express(), http = require('http').Server
     projectId: "buyao-70f4a",
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
-};
+}, card = ["Bang", "Miss", "Beer", "Panic", "Duel", "GeneralStore", "Indians", "StageCoach", "Salcon", "Jail", "Barrel"];
 //生日快樂啦!
 firebase.initializeApp(firebase_config);
 http.listen(process.env.PORT || 48763, function () {
@@ -17,8 +17,8 @@ io.on('connection', function (socket) {
     socket.room = "";
     socket.token = "";
     socket.GameStatus = "";
-    socket.room_id = [];
     socket.unique_key = [];
+    var room_id = [];
     socket.on('test', function (data) {
         console.log(data);
         io.emit('test', "success " + data.split(' ').reverse());
@@ -76,14 +76,17 @@ io.on('connection', function (socket) {
         //roomID會被存放在每個unique-id底下
         //透過key() 來得到
         //傳送的data作為遊戲室名稱
-        var RoomKey = firebase.database().ref('rooms').push({ id: id }).key;
-        socket.room_id.push(data);
+        var RoomKey = firebase.database().ref('rooms').push({ id: id, room: data }).key;
         socket.unique_key.push(RoomKey);
+        console.log("Created room name " + data);
         //RoomKey為將來遊戲中寫入相關資料時，直接對到此表單
     });
     socket.on('getRoomId', function () {
-        console.log("Request " + socket.room_id);
-        io.emit('getRoomId', socket.room_id);
+        firebase.database().ref('rooms').on('value', function (snap) {
+            console.log(snap.val());
+        });
+        console.log("Request " + room_id);
+        io.emit('getRoomId', room_id);
     });
     socket.on('join_room', function (data) {
         //加入其他玩家所創的Room
@@ -99,11 +102,23 @@ io.on('connection', function (socket) {
         }
     });
     socket.on('exit_room', function (data) {
-        socket.room_id = socket.room_id.filter(function (e) { return e !== data; });
+        var index = room_id.indexOf(data);
+        if (index >= 0)
+            room_id.splice(data, 1);
     });
     socket.on('InGameChat', function (data) {
         if (data.name && data.content) {
             io.emit('InGameChat', { name: data.name, content: data.content });
+        }
+    });
+    socket.on('DrawCard', function () {
+        var CardCount = 0;
+        while (true) {
+            var send = card[Math.floor(Math.random() * card.length)];
+            socket.emit('DrawCard', send);
+            CardCount++;
+            if (CardCount === 6)
+                break;
         }
     });
     socket.on('GameOver', function () {
