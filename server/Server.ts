@@ -22,15 +22,6 @@ http.listen(process.env.PORT || 48763, () => {
 	console.log('Computer listening on :' + process.env.PORT);
 });
 
-function removeItem(array, item){
-	for(var i in array){
-		if(array[i]==item){
-			array.splice(i,1);
-			break;
-		}
-	}
-}
-
 //現在create_room join_room執行時需附帶auth成功時返回的token
 //否則function不會執行，直接回傳status 403
 io.on('connection', (socket) => {
@@ -131,7 +122,8 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('exit_room', (data) => {
-		removeItem(socket.room_id, data);
+		socket.room_id = socket.room_id.filter(e => e !== data);
+		console.log(`Exit room ${socket.room_id}`);
 	});
 
 	socket.on('InGameChat', (data) => {
