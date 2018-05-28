@@ -15,10 +15,8 @@
     <b-row>
       <b-col md="12" class="mt-3">
         <b-list-group>
-          <b-list-group-item class="mainContainer mb-2">PLAYER1_NAME</b-list-group-item>
-          <b-list-group-item class="mainContainer mb-2">PLAYER2_NAME</b-list-group-item>
-          <b-list-group-item class="mainContainer mb-2">PLAYER3_NAME</b-list-group-item>
-          <b-list-group-item class="mainContainer mb-2">PLAYER4_NAME</b-list-group-item>
+          <b-list-group-item class="mainContainer mb-2">PLAYER1_NAME
+          <span class="float-right" v-if="">🙆‍</span></b-list-group-item>
         </b-list-group>
       </b-col>
     </b-row>
@@ -28,7 +26,6 @@
           <div class="chatTextArea">
             <p v-for="message of chatAll">{{message.name}}: {{message.content}}</p>
           </div>
-
           <b-row class="chatFunctionArea justify-content-md-center">
             <b-col md="9">
               <b-form-input class="chatInputBox darkTheme" v-model="content"></b-form-input>
@@ -127,7 +124,11 @@
     width: 100%;
     overflow-y: scroll;
   }
-  .chatFunctionArea {
+  .chatTextArea::-webkit-scrollbar {
+    width: 0 !important;
+  }
+
+    .chatFunctionArea {
     position: absolute;
     width: 100%;
     bottom: 10%;

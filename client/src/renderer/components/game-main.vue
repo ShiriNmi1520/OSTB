@@ -22,6 +22,7 @@
           </b-modal>
       </b-col>
       </b-row>
+      <b-btn @click="gotoBattle">test</b-btn>
     </b-container>
     </fade-transition>
   </div>
@@ -74,6 +75,10 @@
         const vm = this;
         vm.$emit('backToMain', { type: '', code: '' });
         vm.$router.push({ name: 'login' });
+      },
+      gotoBattle() {
+        const vm = this;
+        vm.$router.push({ name: 'battle' });
       },
     },
     watched: {},
