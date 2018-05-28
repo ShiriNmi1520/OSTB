@@ -70,6 +70,7 @@ io.on('connection', (socket) => {
 				io.emit('reg', {type: 'error', code: `${errorCode}`});
 			});
 	});
+	// TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
 
 	socket.on('logout', (data) => {
 	  console.log(`We've received logout signal from ${data.email}, star logout process...`);
@@ -118,7 +119,6 @@ io.on('connection', (socket) => {
 			io.emit('InGameChat', {name: data.name, content: data.content});
 		}
 	});
-
 	socket.on('exitRoom', (data) => {
 		firebase.database().ref('/rooms/').child(data).remove();
 	});
@@ -132,7 +132,19 @@ io.on('connection', (socket) => {
 			if (CardCount === 6) break;
 		}
 	});
-
+	// TODO: 那個 初始抽牌的部分是根據玩家抽到的角色卡血量來決定應該抽多少張，所以你可能還要再寫一個發角色卡
+  // TODO: 然後再寫一個每回合的抽卡，感謝。
+  // 你可以這樣寫
+  // 	socket.on('DrawCard', (data) => {
+  // 		let CardCount = 0;
+  // 		while(true){
+  // 			let send = card[Math.floor(Math.random() * card.length)];
+  // 			socket.emit('DrawCard', send);
+  // 			CardCount ++;
+  // 			if (CardCount === data.life) break;
+  // 		}
+  // 	});
+  // 另外無窮迴圈盡量少用，感恩。
 	socket.on('GameOver', () => {
 		socket.leave(socket.room);
 		socket.room = "";
@@ -148,3 +160,5 @@ io.on('connection', (socket) => {
 	});
 
 });
+
+// TODO: 規則在這邊，煩請詳閱。'https://zh.wikipedia.org/wiki/砰！#基本版遊戲概要'
