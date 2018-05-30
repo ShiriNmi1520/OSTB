@@ -1,7 +1,7 @@
 const cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 const types = ["♠", "♥", "♣", "♦"];
 
-function getRandom(pools, count) {
+export function getRandom(pools, count) {
 	const arr = [];
 	for (let i = 0; i < count; i++) {
 		let pool = pools[Math.floor(Math.random() * pools.length)];
@@ -10,7 +10,7 @@ function getRandom(pools, count) {
 	return arr;
 }
 
-function getRandomWithType(count) {
+export function getRandomWithType(count) {
 	const arr = [];
 	for (let i = 0; i < count; i++) {
 		let pool = cards[Math.floor(Math.random() * cards.length)];

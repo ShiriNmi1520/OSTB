@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 var types = ["♠", "♥", "♣", "♦"];
 function getRandom(pools, count) {
@@ -8,6 +10,7 @@ function getRandom(pools, count) {
     }
     return arr;
 }
+exports.getRandom = getRandom;
 function getRandomWithType(count) {
     var arr = [];
     for (var i = 0; i < count; i++) {
@@ -18,6 +21,7 @@ function getRandomWithType(count) {
     }
     return arr;
 }
+exports.getRandomWithType = getRandomWithType;
 module.exports = {
     getRandom: getRandom,
     getRandomWithType: getRandomWithType
