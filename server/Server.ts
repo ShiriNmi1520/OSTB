@@ -1,10 +1,10 @@
+import * as giveCard from "./giveCard";
 const express = require('express'),
 	app = express(),
 	http = require('http').Server(app),
 	io = require('socket.io')(http),
 	firebase = require('firebase'),
 	jwt = require('jsonwebtoken'),
-	giveCard = require('giveCard'),
 	firebase_config = {
 		apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
 		authDomain: "buyao-70f4a.firebaseapp.com",
