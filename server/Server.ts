@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
 				socket.token = token;
 				io.emit('auth', {type: 'success', code: 'default', token: token});
 			})
+      //TODO: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
 			.catch((error) => {
 				let errorCode = error.code;
 				io.emit('auth', {type: 'error', code: `${errorCode}`});
@@ -70,8 +71,8 @@ io.on('connection', (socket) => {
 				io.emit('reg', {type: 'error', code: `${errorCode}`});
 			});
 		let nameKey :string = firebase.database().ref('/users/').child(data.email).push({name: data.nickname}).key;
-		io.emit('reg', {name: data.nickname, key: nameKey});
-	});
+		io.emit('reg', {name: data.nickname, key: nameKey}); 	// 把資料丟過來我這邊ㄉ意思是..?
+  });
 	// TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
 
 	socket.on('logout', (data) => {
