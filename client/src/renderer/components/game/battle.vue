@@ -9,20 +9,28 @@
     </div>
     <b-row class="CardContainer">
       <b-col class="ml-2" sm="1" center v-for="(data, index) in test">
-        <div class="mainCard" :id="`Card${index}`">{{data}}</div>
+        <b-dropdown dropup variant="link" size="lg" no-caret>
+          <template slot="button-content" style="text-decoration: none !important;">
+            <div class="mainCard" style="text-decoration: none !important;" :id="`Card${index}`">{{data}}</div>
+          </template>
+          <b-dropdown-item @click="getItemID(index)">詳細</b-dropdown-item>
+          <b-dropdown-item @click="getItemID(index)">出牌</b-dropdown-item>
+        </b-dropdown>
       </b-col>
     </b-row>
-    <b-row class="CardContainer CardContainer--p1">
+    <b-row class="CardContainer CardContainer--p1 justify-content-center">
       <b-col sm="1" center>
         <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
       </b-col>
     </b-row>
-    <b-row class="CardContainer CardContainer--p2">
+    <b-row class="CardContainer CardContainer--p2 justify-content-center">
       <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
     </b-row>
-    <b-row class="CardContainer CardContainer--p3">
+    <b-row class="CardContainer CardContainer--p3 justify-content-center">
       <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
     </b-row>
+    <div class="allCard">123</div>
+    <div class="p">12344</div>
   </div>
 </template>
 
@@ -40,6 +48,9 @@
         const vm = this;
         vm.$router.push({ name: 'main' });
       },
+      getItemID(data) {
+        console.log(data);
+      },
     },
   };
 </script>
@@ -48,6 +59,9 @@
   @mainRed: #ffa767;
   @hoverRed: #936236;
   @mainBlack: #303133;
+  *::-webkit-scrollbar{
+    width: 0;
+  }
   .main-block-battle {
     position: absolute;
     height: 30rem;
@@ -99,13 +113,14 @@
     transform: translateY(-50%) rotate(-270deg);
   }
   .CardContainer--p1 {
+    position: absolute;
     height: 100%;
     width: unset;
-    top: 50%;
+    top: calc(50% - 2px);
     bottom: unset;
     right: unset;
     left: 0;
-    transform: translate(-280%, -50%) rotate(-270deg);
+    transform: translate(-280%, -56%) rotate(-270deg);
   }
   .char--p2 {
     top: 0;
@@ -113,12 +128,13 @@
     transform: translateX(-50%) rotate(-180deg);
   }
   .CardContainer--p2 {
+    position: absolute;
     width: 100%;
     bottom: unset;
     top: 0;
     left: 50%;
     right: unset;
-    transform: translate(-96%, -50%) rotate(-180deg);
+    transform: translate(-48%, -50%) rotate(-180deg);
   }
   .char--p3 {
     top: 50%;

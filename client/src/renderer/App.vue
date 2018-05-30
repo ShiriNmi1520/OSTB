@@ -75,6 +75,11 @@
     @mainBlack: #474747;
     * {
       transition: .2s ease-in-out;
+      text-decoration: none !important;
+    }
+    *::-webkit-scrollbar{
+      width: 0 !important;
+      height: 0 !important;
     }
     body {
       height: 100%;
