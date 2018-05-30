@@ -69,6 +69,8 @@ io.on('connection', (socket) => {
 				let errorCode = error.code;
 				io.emit('reg', {type: 'error', code: `${errorCode}`});
 			});
+		let nameKey :string = firebase.database().ref('/users/').child(data.email).push({name: data.nickname}).key;
+		io.emit('reg', {name: data.nickname, key: nameKey});
 	});
 	// TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
 
@@ -121,9 +123,9 @@ io.on('connection', (socket) => {
 		firebase.database().ref('/rooms/').child(data).remove();
 	});
 
-	socket.on('DrawCard', () => {
-		giveCard.getRandom(card, 6);
-		giveCard.getRandomWithType(6);
+	socket.on('DrawCard', (count) => {
+		giveCard.getRandom(card, count);
+		giveCard.getRandomWithType(count);
 	});
 	// TODO: 那個 初始抽牌的部分是根據玩家抽到的角色卡血量來決定應該抽多少張，所以你可能還要再寫一個發角色卡
   // TODO: 然後再寫一個每回合的抽卡，感謝。
