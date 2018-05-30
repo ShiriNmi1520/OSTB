@@ -4,7 +4,7 @@ const express = require('express'),
 	io = require('socket.io')(http),
 	firebase = require('firebase'),
 	jwt = require('jsonwebtoken'),
-	me = "Alone QQ. Just like this unused constant",
+	giveCard = require('./giveCard'),
 	firebase_config = {
 		apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
 		authDomain: "buyao-70f4a.firebaseapp.com",
@@ -122,13 +122,8 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('DrawCard', () => {
-		let CardCount = 0;
-		while(true){
-			let send = card[Math.floor(Math.random() * card.length)];
-			socket.emit('DrawCard', send);
-			CardCount ++;
-			if (CardCount === 6) break;
-		}
+		giveCard.getRandom(card, 6);
+		giveCard.getRandomWithType(6);
 	});
 
 	socket.on('GameOver', () => {

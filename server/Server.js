@@ -1,4 +1,4 @@
-var express = require('express'), app = express(), http = require('http').Server(app), io = require('socket.io')(http), firebase = require('firebase'), jwt = require('jsonwebtoken'), me = "Alone QQ. Just like this unused constant", firebase_config = {
+var express = require('express'), app = express(), http = require('http').Server(app), io = require('socket.io')(http), firebase = require('firebase'), jwt = require('jsonwebtoken'), giveCard = require('./giveCard'), firebase_config = {
     apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
     authDomain: "buyao-70f4a.firebaseapp.com",
     databaseURL: "https://buyao-70f4a.firebaseio.com",
@@ -99,14 +99,8 @@ io.on('connection', function (socket) {
         firebase.database().ref('/rooms/').child(data).remove();
     });
     socket.on('DrawCard', function () {
-        var CardCount = 0;
-        while (true) {
-            var send = card[Math.floor(Math.random() * card.length)];
-            socket.emit('DrawCard', send);
-            CardCount++;
-            if (CardCount === 6)
-                break;
-        }
+        giveCard.getRandom(card, 6);
+        giveCard.getRandomWithType(6);
     });
     socket.on('GameOver', function () {
         socket.leave(socket.room);
