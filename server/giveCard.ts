@@ -20,8 +20,3 @@ export function getRandomWithType(count) {
 		}
 		return arr;
 }
-
-module.exports = {
-	getRandom: getRandom,
-	getRandomWithType: getRandomWithType
-};

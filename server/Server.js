@@ -8,7 +8,7 @@ var express = require('express'), app = express(), http = require('http').Server
     projectId: "buyao-70f4a",
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
-}, card = ["Bang", "Miss", "Beer", "Panic", "Duel", "GeneralStore", "Indians", "StageCoach", "Salcon", "Jail", "Barrel"];
+}, card = ["Bang", "Miss"];
 //生日快樂啦!
 firebase.initializeApp(firebase_config);
 http.listen(process.env.PORT || 48763, function () {
@@ -38,6 +38,7 @@ io.on('connection', function (socket) {
             socket.token = token;
             io.emit('auth', { type: 'success', code: 'default', token: token });
         })
+            //TODO: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
             .catch(function (error) {
             var errorCode = error.code;
             io.emit('auth', { type: 'error', code: "" + errorCode });
@@ -57,7 +58,6 @@ io.on('connection', function (socket) {
             io.emit('reg', { type: 'error', code: "" + errorCode });
         });
         var nameKey = firebase.database().ref('/users/').child(data.email).push({ name: data.nickname }).key;
-        io.emit('reg', { name: data.nickname, key: nameKey });
     });
     // TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
     socket.on('logout', function (data) {
@@ -83,10 +83,10 @@ io.on('connection', function (socket) {
         //傳送的data作為遊戲室名稱
         console.log("Created room name " + data);
     });
-    socket.on('getRoomId', function () {
+    socket.on('getRoomId', function (data) {
         firebase.database().ref('/rooms/').once('value', function (snap) {
             console.log(snap.val());
-            io.emit('getRoomId', snap.val());
+            io.to(data.id).emit('getRoomId', snap.val());
         });
     });
     socket.on('joinRoom', function (data) {
@@ -94,7 +94,7 @@ io.on('connection', function (socket) {
         //並將Room內在線人數傳回
         socket.join(data);
         io.to(data).emit('Player joined!');
-        console.log("Now we have " + io.sockets.adapter.rooms[data].length + " clients in " + data);
+        console.log("Now we have " + io.sockets.adapter.rooms[data].length + " clients");
     });
     socket.on('InGameChat', function (data) {
         if (data.name && data.content) {
@@ -124,6 +124,23 @@ io.on('connection', function (socket) {
     socket.on('GameOver', function () {
         socket.leave(socket.room);
         socket.room = "";
+    });
+    socket.on('card', function (data) {
+        switch (data.card) {
+            case 'Bang':
+                io.emit('card', { Who: data.id, Card: data.card, Target: data.target });
+                io.to(data.target).emit("You've been attacked by " + data.id + "\nDid u have \"miss\"?");
+                socket.on('response', function (data) {
+                    switch (data) {
+                        case true:
+                            io.to(data.id).emit('Attack success!');
+                            io.to(data.target).emit("You lost 1 life!");
+                            break;
+                        case false:
+                            io.to(data.id).emit('Attack fail!');
+                    }
+                });
+        }
     });
     socket.on('ShutdownSignal', function () {
         socket.emit("Server is going down in five minutes");

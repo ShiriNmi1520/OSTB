@@ -13,7 +13,7 @@ const express = require('express'),
 		storageBucket: "buyao-70f4a.appspot.com",
 		messagingSenderId: "409751210552"
 	},
-	card = ["Bang", "Miss", "Beer", "Panic", "Duel", "GeneralStore", "Indians", "StageCoach", "Salcon", "Jail", "Barrel"];
+	card = ["Bang", "Miss"];
 
 //生日快樂啦!
 firebase.initializeApp(firebase_config);
@@ -71,7 +71,6 @@ io.on('connection', (socket) => {
 				io.emit('reg', {type: 'error', code: `${errorCode}`});
 			});
 		let nameKey :string = firebase.database().ref('/users/').child(data.email).push({name: data.nickname}).key;
-		io.emit('reg', {name: data.nickname, key: nameKey}); 	// 把資料丟過來我這邊ㄉ意思是..?
   });
 	// TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
 
@@ -100,10 +99,10 @@ io.on('connection', (socket) => {
 		console.log(`Created room name ${data}`);
 	});
 
-	socket.on('getRoomId', () => {
+	socket.on('getRoomId', (data) => {
 		firebase.database().ref('/rooms/').once('value', snap => {
 			console.log(snap.val());
-			io.emit('getRoomId', snap.val());
+			io.to(data.id).emit('getRoomId', snap.val());
 		});
 	});
 
@@ -112,7 +111,7 @@ io.on('connection', (socket) => {
 		//並將Room內在線人數傳回
 			socket.join(data);
 			io.to(data).emit('Player joined!');
-			console.log(`Now we have ${io.sockets.adapter.rooms[data].length} clients in ${data}`);
+			console.log(`Now we have ${io.sockets.adapter.rooms[data].length} clients`);
 	});
 
 	socket.on('InGameChat', (data) => {
@@ -144,6 +143,24 @@ io.on('connection', (socket) => {
 	socket.on('GameOver', () => {
 		socket.leave(socket.room);
 		socket.room = "";
+	});
+
+	socket.on('card', (data) => {
+		switch(data.card) {
+			case 'Bang':
+				io.emit('card', {Who: data.id, Card: data.card, Target: data.target});
+				io.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
+				socket.on('response', (data) => {
+					switch(data) {
+						case true:
+							io.to(data.id).emit('Attack success!');
+							io.to(data.target).emit("You lost 1 life!");
+							break;
+						case false:
+							io.to(data.id).emit('Attack fail!');
+					}
+				})
+		}
 	});
 
 	socket.on('ShutdownSignal', () => {

@@ -22,8 +22,4 @@ function getRandomWithType(count) {
     return arr;
 }
 exports.getRandomWithType = getRandomWithType;
-module.exports = {
-    getRandom: getRandom,
-    getRandomWithType: getRandomWithType
-};
 //# sourceMappingURL=giveCard.js.map
