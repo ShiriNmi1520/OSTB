@@ -140,6 +140,28 @@ io.on('connection', (socket) => {
   // 		}
   // 	});
   // 另外無窮迴圈盡量少用，感恩。
+  // TODO: 記得寫個 gameStart ， 它返回使用者在遊戲裡面的id (1~4), 然後在這個地方判定角色卡， emit 給 client 端，感謝。
+  // 要丟回來的有 player: [{
+  //   id: 0,
+  //   charCard: 0,
+  //   life: 0,
+  //   handCard: [{id: 1},{id: 2},{id: 3},{id: 4}]
+  // },{
+  //   id: 1,
+  //   charCard: 2,
+  //   life: 3,
+  //   handCard: [{id: 1},{id: 2},{id: 3},{id: 4}]},{
+  //   id: 2,
+  //   charCard: 0,
+  //   life: 0,
+  //   handCard: [{id: 1},{id: 2},{id: 3},{id: 4}]
+  // },{
+  //   id: 3,
+  //   charCard: 0,
+  //   life: 0,
+  //   handCard: [{id: 1},{id: 2},{id: 3},{id: 4}]
+  // }]
+  // 以上資料希望可以實時更新，每次有玩家對這場遊戲觸發任何事件都丟回來。
 	socket.on('GameOver', () => {
 		socket.leave(socket.room);
 		socket.room = "";
