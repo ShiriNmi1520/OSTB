@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
 				io.emit('reg', {type: 'error', code: `${errorCode}`});
 			});
 		let nameKey :string = firebase.database().ref('/users/').child(data.email).push({name: data.nickname}).key;
-		io.emit('reg', {name: data.nickname, key: nameKey}); 	// 把資料丟過來我這邊ㄉ意思是..?
+		io.emit('reg', {name: data.nickname, key: nameKey}); // 資料應該不用丟回來我這邊啦 你要丟的話在登入的地方丟就好。
   });
 	// TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
 
