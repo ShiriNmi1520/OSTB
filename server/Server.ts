@@ -170,7 +170,7 @@ io.on('connection', (socket) => {
 	socket.on('card', (data) => {
 		switch(data.card) {
 			case 'Bang':
-				io.emit('card', {Who: data.id, Card: data.card, Target: data.target});
+				io.emit('card', {who: data.id, card: data.card, target: data.target});
 				io.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
 				socket.on('response', (data) => {
 					switch(data) {
