@@ -169,18 +169,21 @@ io.on('connection', (socket) => {
 
 	socket.on('card', (data) => {
 		switch(data.card) {
-			case 'Bang':
+      case 'Bang':
 				io.emit('card', {who: data.id, card: data.card, target: data.target});
 				io.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
+				// TODO: 這邊只要 emit 觸發的事件給我就好 不需要寫訊息喔
 				socket.on('response', (data) => {
 					switch(data) {
 						case true:
 							io.to(data.id).emit('Attack success!');
 							io.to(data.target).emit("You lost 1 life!");
+							// 這裡直接丟資料回來給我 不需要訊息
 							break;
 						case false:
 							io.to(data.id).emit('Attack fail!');
-					}
+              // 這裡直接丟資料回來給我 不需要訊息
+          }
 				})
 		}
 	});
