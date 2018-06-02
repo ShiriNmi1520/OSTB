@@ -31,6 +31,7 @@
         },
         createRoom(data) {
           const vm = this;
+          console.log(data);
           vm.roomId = data;
         },
         InGameChat(data) {
@@ -44,6 +45,15 @@
         getGameId(data) {
           const vm = this;
           vm.inGameId = data;
+        },
+        gameStart() {
+          const vm = this;
+          vm.$router.push({ name: 'battle' });
+          // TODO: 如果大家都準備好了就用這個 function 讓大家一起進遊戲。
+        },
+        getBattleStatus(data) {
+          console.log(data);
+          // TODO: 接收戰鬥資料（玩家血量、手卡數量）
         },
       },
       data() {

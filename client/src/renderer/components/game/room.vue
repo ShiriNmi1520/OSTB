@@ -79,7 +79,10 @@
         const vm = this;
         vm.$socket.emit('inRoom_ready', 'uid');
       },
-      gameStart() {},
+      gameStart() {
+        const vm = this;
+        vm.$socket.emit('gameStart', 'room_id');
+      },
     },
   };
 </script>
