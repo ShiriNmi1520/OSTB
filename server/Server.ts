@@ -17,7 +17,7 @@ const express = require('express'),
 
 //生日快樂啦!
 firebase.initializeApp(firebase_config);
-
+// TODO: 不要自己寫爽就好，記得要看我的扣跟我的做搭配啊...豆頁好痛
 http.listen(process.env.PORT || 48763, () => {
 	console.log('Computer listening on :' + process.env.PORT);
 });
