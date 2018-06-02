@@ -114,6 +114,7 @@ io.on('connection', (socket) => {
 			socket.join(data);
 			io.to(data).emit('Player joined!');
 			console.log(`Now we have ${io.sockets.adapter.rooms[data].length} clients`);
+			// TODO: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
 	});
 
 	socket.on('InGameChat', (data) => {
