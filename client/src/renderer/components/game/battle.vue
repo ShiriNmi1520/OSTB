@@ -1,13 +1,13 @@
 <template>
   <div class="body darkTheme">
     <div class="main-block-battle">
-      <div class="char">MAIN</div>
-      <div class="char char--p1">P1</div>
-      <div class="char char--p2">P2</div>
-      <div class="char char--p3">P3</div>
+      <div class="char">{{4}}</div>
+      <div class="char char--p1">{{4 + 1 > 4 ? 4-4 + 1 : 0}}</div>
+      <div class="char char--p2">{{4 + 2 > 4 ? 4-4 + 2 : 0}}</div>
+      <div class="char char--p3">{{4 + 3 > 4 ? 4-4 + 3 : 0}}</div>
       <b-btn primary @click="backToMain">back to main</b-btn>
     </div>
-    <b-row class="CardContainer">
+    <b-row class="CardContainer justify-content-center">
       <b-col class="ml-2" sm="1" center v-for="(data, index) in test">
         <b-dropdown dropup variant="link" size="lg" no-caret>
           <template slot="button-content" style="text-decoration: none !important;">
@@ -18,7 +18,7 @@
         </b-dropdown>
       </b-col>
     </b-row>
-    <b-row class="CardContainer CardContainer--p1 justify-content-center">
+    <b-row class="CardContainer CardContainer--p3 justify-content-center">
       <b-col sm="1" center>
         <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
       </b-col>
@@ -26,7 +26,7 @@
     <b-row class="CardContainer CardContainer--p2 justify-content-center">
       <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
     </b-row>
-    <b-row class="CardContainer CardContainer--p3 justify-content-center">
+    <b-row class="CardContainer CardContainer--p1 justify-content-center">
       <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
     </b-row>
     <div class="allCard">123</div>
@@ -40,7 +40,24 @@
     data() {
       return {
         view: 'battle',
-        test: [1, 2, 3, 4, 5, 6],
+        test: [1, 2, 3, 4, 5],
+        player: [{
+          id: 0,
+          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          life: 4,
+        }, {
+          id: 1,
+          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          life: 4,
+        }, {
+          id: 2,
+          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          life: 4,
+        }, {
+          id: 3,
+          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          life: 4,
+        }],
       };
     },
     methods: {
@@ -87,7 +104,7 @@
     width: 100%;
     bottom: 0;
     left: 50%;
-    transform: translateX(-26%);
+    transform: translateX(-53%);
   }
   .mainCard {
     height: 10rem;
@@ -107,12 +124,12 @@
     top: -100%;
     background-color: @mainRed;
   }
-  .char--p1 {
+  .char--p3 {
     top: 50%;
     left: 4%;
     transform: translateY(-50%) rotate(-270deg);
   }
-  .CardContainer--p1 {
+  .CardContainer--p3 {
     position: absolute;
     height: 100%;
     width: unset;
@@ -136,13 +153,13 @@
     right: unset;
     transform: translate(-48%, -50%) rotate(-180deg);
   }
-  .char--p3 {
+  .char--p1 {
     top: 50%;
     left: unset;
     right: 0;
     transform: translate(-35%,-50%) rotate(-90deg);
   }
-  .CardContainer--p3 {
+  .CardContainer--p1 {
     height: 100%;
     width: unset;
     top: 50%;

@@ -117,7 +117,6 @@
             if (vm.loginMessage.type === 'success') {
               vm.$emit('updateLoading', false);
               vm.$router.push({ name: 'main' });
-              vm.loginMessage = {};
             } else if (vm.loginMessage.type === 'error' && vm.loginMessage.code === 'invalid-email') {
               vm.logErr = 'mail 格式不正。';
             }

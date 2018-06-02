@@ -23,6 +23,7 @@
       </b-col>
       </b-row>
       <b-btn @click="gotoBattle">test</b-btn>
+      <h1 style="font-size: 5rem; color: #2490A9; margin: 15px;">早安窩ㄉ朋友 天氣一好， 天空就是藍ㄉ 認同請分享</h1>
     </b-container>
     </fade-transition>
   </div>
@@ -49,11 +50,14 @@
       roomId: {
         type: String,
       },
+      clientId: {
+        type: String,
+      },
     },
     methods: {
       async gotoRoomList() {
         const vm = this;
-        vm.$socket.emit('getRoomId');
+        vm.$socket.emit('getRoomId', { id: vm.clientId });
         vm.$emit('updateLoading', true);
         const wait = await waitForTwoSec().then(() => {
           vm.$emit('updateLoading', false);

@@ -1,10 +1,13 @@
 <template>
   <div id="app" class="body darkTheme">
-    <router-view @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :login-message="loginStatus"
-                 :room-id="roomId" :chatAll="chat" :roomList="roomIdList"></router-view>
+    <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" @joinRoomFromList="joinRoomFormList" :login-message="loginStatus"
+                 :room-id="roomId" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId"></router-view>
     <fade-transition>
-      <div class="loadingBox" v-if="loading">
-        <div class="loadingItem-1"></div>
+      <div class="loading" v-if="loading">
+        <b-btn v-if="test" @click="testLogin">test</b-btn>
+        <div class="loadingBox">
+          <div class="loadingItem-1"></div>
+        </div>
       </div>
     </fade-transition>
   </div>
@@ -15,7 +18,9 @@
       name: 'vplu',
       sockets: {
         connect() {
-          console.log('login success');
+          const vm = this;
+          vm.loading = false;
+          vm.socketId = vm.$socket.io.engine.id;
         },
         test(data) {
           console.log(data);
@@ -36,16 +41,23 @@
           const vm = this;
           vm.roomIdList = data;
         },
+        getGameId(data) {
+          const vm = this;
+          vm.inGameId = data;
+        },
       },
       data() {
         return {
           res: '',
+          socketId: '',
           view: 'login',
           loginStatus: {},
-          loading: false,
+          loading: true,
           roomId: {},
           chat: [],
           roomIdList: [],
+          test: false,
+          inGameId: 0,
         };
       },
       methods: {
@@ -64,6 +76,15 @@
         getRoomStatus(data) {
           const vm = this;
           vm.roomId = data;
+        },
+        joinRoomFormList(data) {
+          const vm = this;
+          vm.roomId = data;
+        },
+        testLogin() {
+          const vm = this;
+          vm.$router.push({ name: 'main' });
+          vm.loading = false;
         },
       },
     };
@@ -84,6 +105,9 @@
     body {
       height: 100%;
       width: 100%;
+    }
+    .blur {
+      filter: blur(5px);
     }
     .blockTheme() {
       border-radius: 7px;
@@ -138,7 +162,12 @@
       height: @b;
       width: @b;
     }
-
+    .loading {
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0,0,0,0.2);
+    }
     .loadingBox {
       .center(fixed, 7rem);
       .blockTheme();
