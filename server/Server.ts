@@ -72,8 +72,8 @@ io.on('connection', (socket) => {
 			});
 		let nameKey :string = firebase.database().ref('/users/').child(data.email).push({name: data.nickname}).key;
   });
-	// TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
-
+  // TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
+  // TODO: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。
 	socket.on('logout', (data) => {
 	  console.log(`We've received logout signal from ${data.email}, star logout process...`);
 		firebase.auth().signOut()
@@ -119,6 +119,8 @@ io.on('connection', (socket) => {
 			io.emit('InGameChat', {name: data.name, content: data.content});
 		}
 	});
+	// TODO: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
+  // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false } 有其他的你再加寫。
 	socket.on('exitRoom', (data) => {
 		firebase.database().ref('/rooms/').child(data).remove();
 	});
@@ -140,7 +142,7 @@ io.on('connection', (socket) => {
   // 		}
   // 	});
   // 另外無窮迴圈盡量少用，感恩。
-  // TODO: 記得寫個 gameStart ， 它返回使用者在遊戲裡面的id (1~4), 然後在這個地方判定角色卡， emit 給 client 端，感謝。
+  // TODO: 記得寫個 gameStart ， 它返回使用者在遊戲裡面的id (1~4), emit 給 client 端，感謝。
   // 要丟回來的有 player: [{
   //   id: 0,
   //   charCard: 0,
