@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 					expiresIn: 60*60*24
 				});
 				socket.token = token;
-				io.emit('auth', {type: 'success', code: 'default', token: token});
+				io.emit('auth', {type: 'success', code: 'default', token: token, email: data.email});
 			})
       // TODO: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
       // TODO: 再加一個 uid 感恩。
@@ -66,6 +66,7 @@ io.on('connection', (socket) => {
 				io.emit('reg', {type: 'success', code: 'default'});
 				// https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
         // 這邊有抓ＵＩＤ的方式，你再試試看，感謝。
+        // 想不到怎麼寫的話請直接說，都可討論。
 			})
 			.catch((error) => {
 				// 處理錯誤區塊
@@ -94,9 +95,14 @@ io.on('connection', (socket) => {
 		//創立房間、隨機生成id並加入
 		//加入後將id返回客戶端om
 		let id: string = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		// 其實你可以先 const ROOM_PATH = firebase.database().ref('/rooms/')
+    // 然後再 let roomKey: string = ROOM_PATH.push({ id: id, room: data }).key;
+    // 或是你想過直接把 id 做成路徑？
+    // 像 firebase.database().ref(`/rooms/${id}`)
 		let RoomKey: string = firebase.database().ref('/rooms/').push({id: id, room: data}).key;
 		socket.join(id);
-		io.to(id).emit('createRoom', {'id': id, 'key': RoomKey});
+		io.to(id).emit('createRoom', {'id': id, 'key': RoomKey, 'room': data});
+		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
 		//roomID會被存放在每個unique-id底下
 		//透過key() 來得到
 		//傳送的data作為遊戲室名稱
