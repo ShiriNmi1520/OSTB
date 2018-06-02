@@ -73,6 +73,7 @@ io.on('connection', (socket) => {
 			});
 		let nameKey :string = firebase.database().ref('/users/').child(data.email).push({name: data.nickname}).key;
   });
+	// TODO: 另外那個 註冊的時候往 firebase 推 mail 的話會有命名規範的問題（不可以有.)，再一起想看看怎麼處理，感恩。
   // TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
   // TODO: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。
   // UID 看你要自己做還是抓 firebase 的UID，總之我做登入的時候記得要丟回來給我就好。
