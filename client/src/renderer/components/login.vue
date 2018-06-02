@@ -18,7 +18,7 @@
         </b-row>
         <b-row>
           <b-col sm="8" offset="2" class="mb-2">
-            <b-form-input type="password" class="darkTheme" placeholder="パスワードを入力" v-model="password"></b-form-input>
+            <b-form-input type="password" class="darkTheme" placeholder="パスワードを入力" @keyup.native.13="login" v-model="password"></b-form-input>
           </b-col>
           <b-col sm="8" offset="2" class="mb-2">
             <p class="text-center text-danger">{{logErr}}</p>
@@ -40,21 +40,26 @@
       <div class="main-block container" v-if="view === 'signUp'">
         <h1 class="text-center mt-4">サインアップ</h1>
         <b-row>
-          <b-col sm="8" offset="2" class="mt-4 mb-4">
-            <b-form-input class="darkTheme" placeholder="請輸入Email" v-model="account"></b-form-input>
+          <b-col sm="8" offset="2" class="mt-4 mb-2">
+            <b-form-input class="darkTheme" placeholder="MAILを入力" v-model="account"></b-form-input>
           </b-col>
         </b-row>
         <b-row>
-          <b-col sm="8" offset="2" class="mb-4">
-            <b-form-input type="password" class="darkTheme" placeholder="請輸入密碼" v-model="password"></b-form-input>
+          <b-col sm="8" offset="2" class="mb-2">
+            <b-form-input type="password" class="darkTheme" placeholder="パスワード" v-model="password"></b-form-input>
           </b-col>
         </b-row>
         <b-row>
-          <b-col sm="8" offset="2">
-            <b-form-input type="password" class="darkTheme mb-2" placeholder="請再輸入一次密碼"
+          <b-col sm="8" offset="2" class="mb-0">
+            <b-form-input type="password" class="darkTheme mb-2" placeholder="もう一度パスワード"
                           v-model="passwordSec"></b-form-input>
           </b-col>
-          <b-col sm="8" offset="2" class="mb-4">
+        </b-row>
+        <b-row>
+          <b-col sm="8" offset="2" class="mb-2">
+            <b-form-input type="text" class="darkTheme" placeholder="ニックネーム" @keyup.13="signUp" v-model="nickname"></b-form-input>
+          </b-col>
+          <b-col sm="8" offset="2" class="mb-2">
             <p class="text-center text-danger">{{secIncorrect}}</p>
             <p class="text-center text-danger">{{regErr}}</p>
           </b-col>
@@ -76,6 +81,13 @@
 </template>
 
 <script>
+  function waitForTwoSec() {
+    return new Promise((res) => {
+      setTimeout(() => {
+        res();
+      }, 2000);
+    });
+  }
   const EMAILRULE = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
   export default {
     name: 'login',
@@ -87,6 +99,7 @@
         logErr: '',
         regErr: '',
         passwordSec: '',
+        nickname: '',
       };
     },
     props: {
@@ -105,10 +118,10 @@
         vm.$emit('updateLoading', true);
         const loginPromise = new Promise((res, rej) => {
           setTimeout(() => {
-            if (vm.loginMessage.type !== 'default') {
-              res();
-            } else if (vm.loginMessage.type === 'default') {
+            if (vm.loginMessage.type !== 'success') {
               rej();
+            } else if (vm.loginMessage.type === 'success') {
+              res();
             }
           }, 2000);
         });
@@ -121,7 +134,11 @@
               vm.logErr = 'mail 格式不正。';
             }
           })
-          .catch((err) => { console.log(err); });
+          .catch((err) => {
+            console.log(err);
+            vm.$emit('updateLoading', false);
+            vm.logErr = '帳號或密碼錯誤。';
+          });
       },
       gotoSignUp() {
         const vm = this;
@@ -131,9 +148,12 @@
         const vm = this;
         const success = vm.account.search(EMAILRULE);
         if (success !== -1) {
-          vm.$socket.emit('register', { email: vm.account, password: vm.password });
-          vm.view = 'login';
-          vm.$emit('updateViewStatus', vm.view);
+          vm.$socket.emit('register', { email: vm.account, password: vm.password, nickname: vm.nickname });
+          vm.$emit('updateLoading', true);
+          waitForTwoSec().then(() => {
+            vm.$socket.emit('login', { email: vm.account, password: vm.password });
+            vm.$emit('updateLoading', false);
+          });
         } else {
           vm.regErr = 'email 格式有誤';
         }
