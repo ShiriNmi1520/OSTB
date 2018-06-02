@@ -17,7 +17,6 @@ const express = require('express'),
 
 //生日快樂啦!
 firebase.initializeApp(firebase_config);
-// TODO: 不要自己寫爽就好，記得要看我的扣跟我的做搭配啊...豆頁好痛
 http.listen(process.env.PORT || 48763, () => {
 	console.log('Computer listening on :' + process.env.PORT);
 });
@@ -65,6 +64,8 @@ io.on('connection', (socket) => {
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
 			.then(() => {
 				io.emit('reg', {type: 'success', code: 'default'});
+				// https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
+        // 這邊有抓ＵＩＤ的方式，你再試試看，感謝。
 			})
 			.catch((error) => {
 				// 處理錯誤區塊
