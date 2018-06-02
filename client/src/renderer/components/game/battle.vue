@@ -31,6 +31,7 @@
     </b-row>
     <div class="allCard">123</div>
     <div class="p">12344</div>
+    <b-btn>ドローテスト</b-btn>
   </div>
 </template>
 
@@ -67,6 +68,14 @@
       },
       getItemID(data) {
         console.log(data);
+      },
+      useCard(data) {
+        const vm = this;
+        vm.$socket.emit('useCard', data);
+      },
+      drawCard(data) {
+        const vm = this;
+        vm.$socket.emit('drawCard', data);
       },
     },
   };
