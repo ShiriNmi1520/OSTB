@@ -102,6 +102,7 @@ io.on('connection', (socket) => {
 		let RoomKey: string = firebase.database().ref('/rooms/').push({id: id, room: data}).key;
 		socket.join(id);
 		io.to(id).emit('createRoom', {'id': id, 'key': RoomKey, 'room': data});
+		console.log(data);
 		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
 		//roomID會被存放在每個unique-id底下
 		//透過key() 來得到
