@@ -50,7 +50,8 @@ io.on('connection', (socket) => {
 				socket.token = token;
 				io.emit('auth', {type: 'success', code: 'default', token: token});
 			})
-      //TODO: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
+      // TODO: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
+      // TODO: 再加一個 uid 感恩。
 			.catch((error) => {
 				let errorCode = error.code;
 				io.emit('auth', {type: 'error', code: `${errorCode}`});
@@ -74,6 +75,7 @@ io.on('connection', (socket) => {
   });
   // TODO: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
   // TODO: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。
+  // UID 看你要自己做還是抓 firebase 的UID，總之我做登入的時候記得要丟回來給我就好。
 	socket.on('logout', (data) => {
 	  console.log(`We've received logout signal from ${data.email}, star logout process...`);
 		firebase.auth().signOut()

@@ -40,6 +40,7 @@
         <div class="chatContainer">
           <b-jumbotron class="nav-red btn-click">
             <h1 class="text-center p-4">ゲームはここから<br><span class="asobu">開始</span></h1>
+            <h1 class="text-center p-4">準備を<br><span class="asobu">する</span></h1>
           </b-jumbotron>
         </div>
       </b-col>
@@ -74,6 +75,11 @@
         vm.$emit('exitRoom', '');
         vm.$router.push({ name: 'main' });
       },
+      ready() {
+        const vm = this;
+        vm.$socket.emit('inRoom_ready', 'uid');
+      },
+      gameStart() {},
     },
   };
 </script>
