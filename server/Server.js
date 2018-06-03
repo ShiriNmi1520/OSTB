@@ -7,7 +7,7 @@ var http = require("http");
 var io = require("socket.io");
 var express = require("express");
 var jwt = require("jsonwebtoken");
-var app = express(), FIRREBASE_CONFIG = {
+var app = express(), FIREBASE_CONFIG = {
     apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
     authDomain: "buyao-70f4a.firebaseapp.com",
     databaseURL: "https://buyao-70f4a.firebaseio.com",
@@ -18,7 +18,7 @@ var app = express(), FIRREBASE_CONFIG = {
 var http2 = new http.Server(app);
 var mainSocket = io(http2);
 // 生日快樂啦!
-firebase.initializeApp(FIRREBASE_CONFIG);
+firebase.initializeApp(FIREBASE_CONFIG);
 http2.listen(process.env.PORT || 48763, function () {
     console.log("Computer listening on :" + process.env.PORT);
 });
@@ -53,7 +53,6 @@ mainSocket.on("connection", function (socket) {
     });
     socket.on("register", function (data) {
         console.log("we've received register signal from " + data.email + ", start register process...");
-        console.log(data.email, data.password);
         mainSocket.emit("test", "we got it:)");
         var uid = "";
         firebase.auth().createUserWithEmailAndPassword(data.email, data.password)

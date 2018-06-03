@@ -6,7 +6,7 @@ import * as io from "socket.io";
 import express = require("express");
 import jwt = require("jsonwebtoken");
 const app :any = express(),
-	FIRREBASE_CONFIG :object = {
+	FIREBASE_CONFIG :object = {
 		apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
 		authDomain: "buyao-70f4a.firebaseapp.com",
 		databaseURL: "https://buyao-70f4a.firebaseio.com",
@@ -19,7 +19,7 @@ const app :any = express(),
   let mainSocket:any = io(http2);
 // 生日快樂啦!
 
-firebase.initializeApp(FIRREBASE_CONFIG);
+firebase.initializeApp(FIREBASE_CONFIG);
 http2.listen(process.env.PORT || 48763, () => {
 	console.log("Computer listening on :" + process.env.PORT);
 });
@@ -62,7 +62,6 @@ mainSocket.on("connection", (socket) => {
 
 	socket.on("register", (data) => {
 		console.log(`we've received register signal from ${data.email}, start register process...`);
-		console.log(data.email, data.password);
 		mainSocket.emit("test", "we got it:)");
 		let uid :string = "";
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
