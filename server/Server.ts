@@ -116,7 +116,7 @@ mainSocket.on("connection", (socket) => {
       nickname = snap.val().name;
     });
     path.set({
-      room: data.name,
+      room: data.name123,
       player: {}
     });
     playerPath.push({
@@ -128,7 +128,7 @@ mainSocket.on("connection", (socket) => {
       playerPath.once("value", (snap) => {
         playerData = snap.val();
       }).then(() => {
-				mainSocket.to(data.uid).emit("createRoom", {id: data.uid, room: data.name, playerData: playerData});
+				mainSocket.to(data.uid).emit("createRoom", {id: data.uid, room: data.name123, playerData: playerData});
 			});
     });
 		socket.join(data.uid);
