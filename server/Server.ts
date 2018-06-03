@@ -110,10 +110,10 @@ mainSocket.on("connection", (socket) => {
 		const path :any = firebase.database().ref("/room/").child(data.uid);
 		const playerPath :any = firebase.database().ref("/room/player");
 		const nicknamePath :any = firebase.database().ref(`/users/${data.uid}`);
-		let nickname: string = '';
+		let nickname: string = "";
 		let playerData: object = {};
-    nicknamePath.once('value', (snap) => {
-      nickname = snap.val().name
+    nicknamePath.once("value", (snap) => {
+      nickname = snap.val().name;
     });
     path.set({
       room: data.name,
@@ -125,7 +125,7 @@ mainSocket.on("connection", (socket) => {
       host: true,
       readyStatus: true
     }).then(() => {
-      playerPath.once('value', (snap) => {
+      playerPath.once("value", (snap) => {
         playerData = snap.val();
       });
     });

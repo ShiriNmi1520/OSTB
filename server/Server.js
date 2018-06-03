@@ -96,8 +96,29 @@ mainSocket.on("connection", function (socket) {
         // 或是你想過直接把 id 做成路徑？
         // 像 firebase.database().ref(`/rooms/${id}`)
         var path = firebase.database().ref("/room/").child(data.uid);
+        var playerPath = firebase.database().ref("/room/player");
+        var nicknamePath = firebase.database().ref("/users/" + data.uid);
+        var nickname = "";
+        var playerData = {};
+        nicknamePath.once("value", function (snap) {
+            nickname = snap.val().name;
+        });
+        path.set({
+            room: data.name,
+            player: {}
+        });
+        playerPath.push({
+            uid: data.uid,
+            nickname: nickname,
+            host: true,
+            readyStatus: true
+        }).then(function () {
+            playerPath.once("value", function (snap) {
+                playerData = snap.val();
+            });
+        });
         socket.join(data.uid);
-        mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name });
+        mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name, playerData: playerData });
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
         // roomID會被存放在每個unique-id底下
         // 透過key() 來得到
