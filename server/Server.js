@@ -116,9 +116,9 @@ mainSocket.on("connection", function (socket) {
             playerPath.once("value", function (snap) {
                 playerData = snap.val();
             });
+            mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name, playerData: playerData });
         });
         socket.join(data.uid);
-        mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name, playerData: playerData });
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
         // roomID會被存放在每個unique-id底下
         // 透過key() 來得到
