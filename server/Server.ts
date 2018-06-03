@@ -71,7 +71,7 @@ mainSocket.on("connection", (socket) => {
 						firebase.auth().onAuthStateChanged((user) => {
 							uid = user.uid;
 						});
-						firebase.database().ref("/users/").child(uid).update({name: data.nickname});});
+						firebase.database().ref("/users/").child(uid).update({name: data.nickname});
 					});
 				mainSocket.emit("auth", {type: "success", code: "default", uid: uid});
 				// https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
@@ -83,6 +83,7 @@ mainSocket.on("connection", (socket) => {
 				let errorCode :string = error.code;
 				mainSocket.emit("auth", {type: "error", code: `${errorCode}`});
 			});
+	});
 	// todo: 另外那個 註冊的時候往 firebase 推 mail 的話會有命名規範的問題（不可以有.)，再一起想看看怎麼處理，感恩。
   // todo: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
   // todo: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。
