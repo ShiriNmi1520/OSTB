@@ -2,7 +2,7 @@
 import * as giveCard from "./giveCard";
 import * as firebase from "firebase";
 import * as http from "http";
-import express from "express";
+import express = require("express");
 import io from "socket.io";
 import jwt from "jsonwebtoken";
 const app :any = express(),

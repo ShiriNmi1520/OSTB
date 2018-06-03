@@ -1,8 +1,9 @@
 "use strict";
 exports.__esModule = true;
+///<reference path="node_modules/@types/node/index.d.ts"/>
 var giveCard = require("./giveCard");
 var firebase = require("firebase");
-var http_1 = require("http");
+var http = require("http");
 var express_1 = require("express");
 var socket_io_1 = require("socket.io");
 var jsonwebtoken_1 = require("jsonwebtoken");
@@ -14,10 +15,10 @@ var app = express_1["default"](), FIRREBASE_CONFIG = {
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
 }, card = ["Bang", "Miss"];
-http_1["default"].Server(app);
+var http2 = new http.Server(app);
 // 生日快樂啦!
 firebase.initializeApp(FIRREBASE_CONFIG);
-http_1["default"].listen(process.env.PORT || 48763, function () {
+http2.listen(process.env.PORT || 48763, function () {
     console.log("Computer listening on :" + process.env.PORT);
 });
 // 現在createRoom join_room執行時需附帶auth成功時返回的token
