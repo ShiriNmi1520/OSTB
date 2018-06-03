@@ -91,20 +91,17 @@ mainSocket.on("connection", function (socket) {
     socket.on("createRoom", function (data) {
         // 創立房間、隨機生成id並加入
         // 加入後將id返回客戶端om
-        var id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         // 其實你可以先 const ROOM_PATH = firebase.database().ref('/rooms/')
         // 然後再 let roomKey: string = ROOM_PATH.push({ id: id, room: data }).key;
         // 或是你想過直接把 id 做成路徑？
         // 像 firebase.database().ref(`/rooms/${id}`)
-        firebase.database().ref("/rooms/").update({ id: id, room: data });
-        socket.join(id);
-        mainSocket.to(id).emit("createRoom", { id: id, room: data });
-        console.log(data);
+        firebase.database().ref("/rooms/").child(data.uid).update({ room: data.name });
+        socket.join(data.uid);
+        mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name });
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
         // roomID會被存放在每個unique-id底下
         // 透過key() 來得到
         // 傳送的data作為遊戲室名稱
-        console.log("Created room name " + data);
     });
     socket.on("getRoomId", function (data) {
         firebase.database().ref("/rooms/").once("value", function (snap) {
@@ -140,7 +137,7 @@ mainSocket.on("connection", function (socket) {
             }
         });
     });
-    socket.on("DrawCard", function (count) {
+    socket.on("drawCard", function (count) {
         giveCard.getRandom(card, count);
         giveCard.getRandomWithType(count);
     });
@@ -179,7 +176,7 @@ mainSocket.on("connection", function (socket) {
     //   handCard: [{id: 1},{id: 2},{id: 3},{id: 4}]
     // }]
     // 以上資料希望可以實時更新，每次有玩家對這場遊戲觸發任何事件都丟回來。
-    socket.on("GameOver", function () {
+    socket.on("gameOver", function () {
         socket.leave(socket.room);
         socket.room = "";
     });
