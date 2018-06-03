@@ -3,7 +3,7 @@ import * as giveCard from "./giveCard";
 import * as firebase from "firebase";
 import * as http from "http";
 import express = require("express");
-import io = require("socket.io");
+const io: any = require("socket.io");
 import jwt = require("jsonwebtoken");
 const app :any = express(),
 	FIRREBASE_CONFIG :object = {
