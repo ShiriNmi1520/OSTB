@@ -62,8 +62,9 @@ mainSocket.on("connection", function (socket) {
                 .then(function () {
                 firebase.auth().onAuthStateChanged(function (user) {
                     uid = user.uid;
+                    console.log(uid);
+                    firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
                 });
-                firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
             });
             mainSocket.emit("auth", { type: "success", code: "default", uid: uid });
             // https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
