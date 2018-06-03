@@ -109,9 +109,9 @@ mainSocket.on("connection", (socket) => {
     // 然後再 let roomKey: string = ROOM_PATH.push({ id: id, room: data }).key;
     // 或是你想過直接把 id 做成路徑？
     // 像 firebase.database().ref(`/rooms/${id}`)
-		let RoomKey: string = firebase.database().ref("/rooms/").push({id: id, room: data}).key;
+		firebase.database().ref("/rooms/").update({id: id, room: data});
 		socket.join(id);
-		mainSocket.to(id).emit("createRoom", {"id": id, "key": RoomKey, "room": data});
+		mainSocket.to(id).emit("createRoom", {id: id, room: data});
 		console.log(data);
 		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
 		// roomID會被存放在每個unique-id底下
@@ -142,8 +142,19 @@ mainSocket.on("connection", (socket) => {
 	});
 	// todo: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
   // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
+
 	socket.on("exitRoom", (data) => {
 		firebase.database().ref("/rooms/").child(data).remove();
+	});
+
+	socket.on("userStatus", () => {
+		firebase.auth().onAuthStateChanged((user) => {
+			if(user) {
+				mainSocket.emit("userStatus", user);
+			} else {
+				mainSocket.emit("userStatus", {login: false});
+			}
+		});
 	});
 
 	socket.on("DrawCard", (count) => {

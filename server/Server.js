@@ -97,9 +97,9 @@ mainSocket.on("connection", function (socket) {
         // 然後再 let roomKey: string = ROOM_PATH.push({ id: id, room: data }).key;
         // 或是你想過直接把 id 做成路徑？
         // 像 firebase.database().ref(`/rooms/${id}`)
-        var RoomKey = firebase.database().ref("/rooms/").push({ id: id, room: data }).key;
+        firebase.database().ref("/rooms/").update({ id: id, room: data });
         socket.join(id);
-        mainSocket.to(id).emit("createRoom", { "id": id, "key": RoomKey, "room": data });
+        mainSocket.to(id).emit("createRoom", { id: id, room: data });
         console.log(data);
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
         // roomID會被存放在每個unique-id底下
@@ -129,6 +129,16 @@ mainSocket.on("connection", function (socket) {
     // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
     socket.on("exitRoom", function (data) {
         firebase.database().ref("/rooms/").child(data).remove();
+    });
+    socket.on("userStatus", function () {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                mainSocket.emit("userStatus", user);
+            }
+            else {
+                mainSocket.emit("userStatus", { login: false });
+            }
+        });
     });
     socket.on("DrawCard", function (count) {
         giveCard.getRandom(card, count);
