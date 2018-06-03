@@ -19,7 +19,6 @@ const app: any = express(),
 let http2: any = new http.Server(app);
 let mainSocket: any = io(http2);
 // 生日快樂啦!
-
 firebase.initializeApp(FIREBASE_CONFIG);
 http2.listen(process.env.PORT || 48763, () => {
 	console.log("Computer listening on :" + process.env.PORT);
@@ -109,14 +108,29 @@ mainSocket.on("connection", (socket) => {
 		// 或是你想過直接把 id 做成路徑？
 		// 像 firebase.database().ref(`/rooms/${id}`)
 		const path :any = firebase.database().ref("/room/").child(data.uid);
+		const playerPath :any = firebase.database().ref("/room/player");
 		const nicknamePath :any = firebase.database().ref(`/users/${data.uid}`);
 		let nickname: string = '';
-		nicknamePath.once('value', (snap) => {
-		  nickname = snap.val().name
+		let playerData: object = {};
+    nicknamePath.once('value', (snap) => {
+      nickname = snap.val().name
     });
-		path.set({room: data.name, player: [{ uid: data.uid, master: true, nickname: nickname, readyStatus: true }]});
+    path.set({
+      room: data.name,
+      player: {}
+    });
+    playerPath.push({
+      uid: data.uid,
+      nickname: nickname,
+      host: true,
+      readyStatus: true
+    }).then(() => {
+      playerPath.once('value', (snap) => {
+        playerData = snap.val();
+      });
+    });
 		socket.join(data.uid);
-		mainSocket.to(data.uid).emit("createRoom", {id: data.uid, room: data.name});
+		mainSocket.to(data.uid).emit("createRoom", {id: data.uid, room: data.name, playerData: playerData});
 		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
 		// roomID會被存放在每個unique-id底下
 		// 透過key() 來得到
