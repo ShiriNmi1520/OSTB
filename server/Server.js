@@ -109,7 +109,6 @@ mainSocket.on("connection", function (socket) {
     });
     socket.on("getRoomId", function (data) {
         firebase.database().ref("/rooms/").once("value", function (snap) {
-            console.log(snap.val());
             mainSocket.to(data.id).emit("getRoomId", snap.val());
         });
     });
@@ -133,7 +132,9 @@ mainSocket.on("connection", function (socket) {
     socket.on("userStatus", function () {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                mainSocket.emit("userStatus", user);
+                firebase.database().ref("/users/").child(user.uid).once("value", function (snap) {
+                    mainSocket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val() });
+                });
             }
             else {
                 mainSocket.emit("userStatus", { login: false });
