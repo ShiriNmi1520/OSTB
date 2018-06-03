@@ -96,7 +96,7 @@ mainSocket.on("connection", function (socket) {
         // 或是你想過直接把 id 做成路徑？
         // 像 firebase.database().ref(`/rooms/${id}`)
         var path = firebase.database().ref("/room/").child(data.uid);
-        var playerPath = firebase.database().ref("/room/player");
+        var playerPath = firebase.database().ref("/room/" + data.uid + "/player");
         var nicknamePath = firebase.database().ref("/users/" + data.uid);
         var nickname = "";
         var playerData = {};
