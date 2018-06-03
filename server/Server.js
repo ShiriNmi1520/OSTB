@@ -79,7 +79,7 @@ mainSocket.on("connection", function (socket) {
     // todo: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
     // todo: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。
     // uID 看你要自己做還是抓 firebase 的UID，總之我做登入的時候記得要丟回來給我就好。
-    socket.on("logout", function (data) {
+    socket.on("logout", function () {
         firebase.auth().signOut()
             .then(function () {
             mainSocket.emit("logout", { type: "success", code: "default" });
@@ -95,7 +95,7 @@ mainSocket.on("connection", function (socket) {
         // 然後再 let roomKey: string = ROOM_PATH.push({ id: id, room: data }).key;
         // 或是你想過直接把 id 做成路徑？
         // 像 firebase.database().ref(`/rooms/${id}`)
-        firebase.database().ref("/rooms/").child(data.uid).update({ room: data.name });
+        var path = firebase.database().ref("/room/").child(data.uid);
         socket.join(data.uid);
         mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name });
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
