@@ -150,7 +150,7 @@ mainSocket.on("connection", (socket) => {
 		socket.join(data.roomId);
 		const path = firebase.database().ref(`/room/${data.roomId}/player`);
 		const nicknamePath = firebase.database().ref(`/users/${data.uid}/name`);
-		let nickname = '';
+		let nickname = "";
 		nicknamePath.once('value', (snap) => {
 		  nickname = snap.val();
     });
