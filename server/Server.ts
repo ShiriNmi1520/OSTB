@@ -139,7 +139,7 @@ mainSocket.on("connection", (socket) => {
 	});
 
 	socket.on("getRoomId", (data) => {
-		firebase.database().ref("/rooms/").once("value", snap => {
+		firebase.database().ref("/room/").once("value", snap => {
 			mainSocket.to(data.id).emit("getRoomId", snap.val());
 		});
 	});
@@ -147,7 +147,14 @@ mainSocket.on("connection", (socket) => {
 	socket.on("joinRoom", (data) => {
 		// 加入其他玩家所創的Room
 		// 並將Room內在線人數傳回
-		socket.join(data);
+		socket.join(data.roomId);
+		const path = firebase.database().ref(`/room/${data.roomId}/player`);
+		const nicknamePath = firebase.database().ref(`/users/${data.uid}/name`);
+		let nickname = '';
+		nicknamePath.once('value', (snap) => {
+		  nickname = snap.val();
+    });
+		path.push({host: false, nickname: nickname, readyStatus: false, uid: data.uid});
 		mainSocket.to(data).emit("Player joined!");
 		// todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
 	});
