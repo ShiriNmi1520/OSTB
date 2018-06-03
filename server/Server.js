@@ -4,10 +4,10 @@ exports.__esModule = true;
 var giveCard = require("./giveCard");
 var firebase = require("firebase");
 var http = require("http");
-var express_1 = require("express");
+var express = require("express");
 var socket_io_1 = require("socket.io");
 var jsonwebtoken_1 = require("jsonwebtoken");
-var app = express_1["default"](), FIRREBASE_CONFIG = {
+var app = express(), FIRREBASE_CONFIG = {
     apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
     authDomain: "buyao-70f4a.firebaseapp.com",
     databaseURL: "https://buyao-70f4a.firebaseio.com",
