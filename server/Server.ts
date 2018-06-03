@@ -2,8 +2,8 @@
 import * as giveCard from "./giveCard";
 import * as firebase from "firebase";
 import * as http from "http";
+import * as io from "socket.io";
 import express = require("express");
-const io: any = require("socket.io");
 import jwt = require("jsonwebtoken");
 const app :any = express(),
 	FIRREBASE_CONFIG :object = {
@@ -16,6 +16,7 @@ const app :any = express(),
 	},
 	card :Array<string> = ["Bang", "Miss"];
   let http2:any = new http.Server(app);
+  let mainSocket:any = io(http2);
 // 生日快樂啦!
 firebase.initializeApp(FIRREBASE_CONFIG);
 http2.listen(process.env.PORT || 48763, () => {
@@ -24,18 +25,18 @@ http2.listen(process.env.PORT || 48763, () => {
 
 // 現在createRoom join_room執行時需附帶auth成功時返回的token
 // 否則function不會執行，直接回傳status 403
-io.on("connection", (socket) => {
+mainSocket.on("connection", (socket) => {
 	socket.room = "";
 	socket.token = "";
 	socket.GameStatus = "";
 
 	socket.on("test", (data) => {
 		console.log(data);
-		io.emit("test", `success ${data.split(" ").reverse()}`);
+		mainSocket.emit("test", `success ${data.split(" ").reverse()}`);
 	});
 
 	socket.on("disconnect", () => {
-		io.emit("test", "ru disconnected?");
+		mainSocket.emit("test", "ru disconnected?");
 	});
 
 	socket.on("auth", (data) => {
@@ -48,23 +49,23 @@ io.on("connection", (socket) => {
 					expiresIn: 60*60*24
 				});
 				socket.token = token;
-				io.emit("auth", {type: "success", code: "default", token, email: data.email});
+				mainSocket.emit("auth", {type: "success", code: "default", token, email: data.email});
 			})
       // todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
       // todo: 再加一個 uid 感恩。
 			.catch((error) => {
 				const errorCode :string = error.code;
-				io.emit("auth", {type: "error", code: `${errorCode}`});
+				mainSocket.emit("auth", {type: "error", code: `${errorCode}`});
 			});
 	});
 
 	socket.on("register", (data) => {
 		console.log(`we've received register signal from ${data.email}, start register process...`);
 		console.log(data.email, data.password);
-		io.emit("test", "we got it:)");
+		mainSocket.emit("test", "we got it:)");
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
 			.then(() => {
-				io.emit("reg", {type: "success", code: "default"});
+				mainSocket.emit("reg", {type: "success", code: "default"});
 				// https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
         // 這邊有抓ＵＩＤ的方式，你再試試看，感謝。
         // 想不到怎麼寫的話請直接說，都可討論。
@@ -72,7 +73,7 @@ io.on("connection", (socket) => {
 			.catch((error) => {
 				// 處理錯誤區塊
 				let errorCode :string = error.code;
-				io.emit("reg", {type: "error", code: `${errorCode}`});
+				mainSocket.emit("reg", {type: "error", code: `${errorCode}`});
 			});
 		let nameKey :string = firebase.database().ref("/users/").child(data.email).push({name: data.nickname}).key;
   });
@@ -84,11 +85,11 @@ io.on("connection", (socket) => {
 	  console.log(`We've received logout signal from ${data.email}, star logout process...`);
 		firebase.auth().signOut()
 			.then(() => {
-				io.emit("logout", {type: "success", code: "default"});
+				mainSocket.emit("logout", {type: "success", code: "default"});
 				socket.token = "";
 			})
 			.catch((error) => {
-				io.emit("logout", {type: "error", code: `${error.code}`});
+				mainSocket.emit("logout", {type: "error", code: `${error.code}`});
 			});
 	});
 
@@ -102,7 +103,7 @@ io.on("connection", (socket) => {
     // 像 firebase.database().ref(`/rooms/${id}`)
 		let RoomKey: string = firebase.database().ref("/rooms/").push({id: id, room: data}).key;
 		socket.join(id);
-		io.to(id).emit("createRoom", {"id": id, "key": RoomKey, "room": data});
+		mainSocket.to(id).emit("createRoom", {"id": id, "key": RoomKey, "room": data});
 		console.log(data);
 		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
 		// roomID會被存放在每個unique-id底下
@@ -114,7 +115,7 @@ io.on("connection", (socket) => {
 	socket.on("getRoomId", (data) => {
 		firebase.database().ref("/rooms/").once("value", snap => {
 			console.log(snap.val());
-			io.to(data.id).emit("getRoomId", snap.val());
+			mainSocket.to(data.id).emit("getRoomId", snap.val());
 		});
 	});
 
@@ -122,14 +123,13 @@ io.on("connection", (socket) => {
 		// 加入其他玩家所創的Room
 		// 並將Room內在線人數傳回
 			socket.join(data);
-			io.to(data).emit("Player joined!");
-			console.log(`Now we have ${io.sockets.adapter.rooms[data].length} clients`);
+			mainSocket.to(data).emit("Player joined!");
 			// todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
 	});
 
 	socket.on("InGameChat", (data) => {
 		if (data.name && data.content) {
-			io.emit("InGameChat", {name: data.name, content: data.content});
+			mainSocket.emit("InGameChat", {name: data.name, content: data.content});
 		}
 	});
 	// todo: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
@@ -185,18 +185,18 @@ io.on("connection", (socket) => {
 	socket.on("card", (data) => {
 		switch(data.card) {
       case "Bang":
-				io.emit("card", {who: data.id, card: data.card, target: data.target});
-				io.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
+				mainSocket.emit("card", {who: data.id, card: data.card, target: data.target});
+				mainSocket.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
 				// todo: 這邊只要 emit 觸發的事件給我就好 不需要寫訊息喔
 				socket.on("response", (data) => {
 					switch(data) {
 						case true:
-							io.to(data.id).emit("Attack success!");
-							io.to(data.target).emit("You lost 1 life!");
+							mainSocket.to(data.id).emit("Attack success!");
+							mainSocket.to(data.target).emit("You lost 1 life!");
 							// 這裡直接丟資料回來給我 不需要訊息
 							break;
 						case false:
-							io.to(data.id).emit("Attack fail!");
+							mainSocket.to(data.id).emit("Attack fail!");
               // 這裡直接丟資料回來給我 不需要訊息
           }
 				});
