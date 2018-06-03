@@ -91,7 +91,6 @@ mainSocket.on("connection", (socket) => {
 	// todo: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。
 	// uID 看你要自己做還是抓 firebase 的UID，總之我做登入的時候記得要丟回來給我就好。
 	socket.on("logout", (data) => {
-		console.log(`We've received logout signal from ${data.email}, star logout process...`);
 		firebase.auth().signOut()
 			.then(() => {
 				mainSocket.emit("logout", {type: "success", code: "default"});
