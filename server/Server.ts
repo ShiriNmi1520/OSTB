@@ -116,7 +116,7 @@ mainSocket.on("connection", (socket) => {
       nickname = snap.val();
     });
     path.set({
-      room: data.name123,
+      room: data.name,
       player: {}
     });
     playerPath.push({

@@ -104,7 +104,7 @@ mainSocket.on("connection", function (socket) {
             nickname = snap.val();
         });
         path.set({
-            room: data.name123,
+            room: data.name,
             player: {}
         });
         playerPath.push({
