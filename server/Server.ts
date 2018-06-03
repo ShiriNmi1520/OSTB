@@ -148,10 +148,17 @@ mainSocket.on("connection", (socket) => {
 		// 加入其他玩家所創的Room
 		// 並將Room內在線人數傳回
 		socket.join(data.roomId);
+<<<<<<< HEAD
 		const path = firebase.database().ref(`/room/${data.roomId}/player`);
 		const nicknamePath = firebase.database().ref(`/users/${data.uid}/name`);
 		let nickname = "";
 		nicknamePath.once('value', (snap) => {
+=======
+		const path : any = firebase.database().ref(`/room/${data.roomId}/player`);
+		const nicknamePath : any = firebase.database().ref(`/users/${data.uid}/name`);
+		let nickname :string = "";
+		nicknamePath.once("value", (snap) => {
+>>>>>>> 7dbd25327ca908870b051940b10c7d46e65b19e5
 		  nickname = snap.val();
     });
 		path.push({host: false, nickname: nickname, readyStatus: false, uid: data.uid});
