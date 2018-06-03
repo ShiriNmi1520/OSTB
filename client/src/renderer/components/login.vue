@@ -129,6 +129,7 @@
           .then(() => {
             if (vm.loginMessage.type === 'success') {
               vm.$emit('updateLoading', false);
+              vm.$socket.emit('userStatus');
               vm.$router.push({ name: 'main' });
             } else if (vm.loginMessage.type === 'error' && vm.loginMessage.code === 'invalid-email') {
               vm.logErr = 'mail 格式不正。';
@@ -152,6 +153,8 @@
           vm.$emit('updateLoading', true);
           waitForTwoSec().then(() => {
             vm.$socket.emit('login', { email: vm.account, password: vm.password });
+            vm.$router.push({ name: 'main' });
+            vm.$socket.emit('userStatus');
             vm.$emit('updateLoading', false);
           });
         } else {

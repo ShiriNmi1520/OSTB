@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="body darkTheme">
     <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" @joinRoomFromList="joinRoomFormList" :login-message="loginStatus"
-                 :room-id="roomId" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId"></router-view>
+                 :room-id="roomId" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId" :userStatus="userData"></router-view>
     <fade-transition>
       <div class="loading" v-if="loading">
         <b-btn v-if="test" @click="testLogin">test</b-btn>
@@ -20,6 +20,7 @@
         connect() {
           const vm = this;
           vm.loading = false;
+          vm.$socket.emit('userStatus');
           vm.socketId = vm.$socket.io.engine.id;
         },
         test(data) {
@@ -28,6 +29,14 @@
         auth(data) {
           const vm = this;
           vm.loginStatus = data;
+        },
+        logout(data) {
+          const vm = this;
+          vm.loginStatus = data;
+        },
+        userStatus(data) {
+          const vm = this;
+          vm.userData = data;
         },
         createRoom(data) {
           const vm = this;
@@ -63,12 +72,19 @@
           view: 'login',
           loginStatus: {},
           loading: true,
+          userData: {},
           roomId: {},
           chat: [],
           roomIdList: [],
           test: false,
           inGameId: 0,
         };
+      },
+      computed: {
+        getLoginStatus() {
+          const vm = this;
+          return vm.userData.login === false && vm.$router.name !== 'login';
+        },
       },
       methods: {
         signOut() {
