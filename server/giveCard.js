@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 var types = ["♠", "♥", "♣", "♦"];
 function getRandom(pools, count) {
@@ -22,4 +22,3 @@ function getRandomWithType(count) {
     return arr;
 }
 exports.getRandomWithType = getRandomWithType;
-//# sourceMappingURL=giveCard.js.map
