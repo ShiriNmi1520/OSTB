@@ -101,10 +101,10 @@ mainSocket.on("connection", function (socket) {
         var nickname = "";
         var playerData = {};
         nicknamePath.once("value", function (snap) {
-            nickname = snap.val().name;
+            nickname = snap.val();
         });
         path.set({
-            room: data.name,
+            room: data.name123,
             player: {}
         });
         playerPath.push({
@@ -116,7 +116,7 @@ mainSocket.on("connection", function (socket) {
             playerPath.once("value", function (snap) {
                 playerData = snap.val();
             }).then(function () {
-                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name, playerData: playerData });
+                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name123, playerData: playerData });
             });
         });
         socket.join(data.uid);
