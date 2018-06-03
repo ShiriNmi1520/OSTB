@@ -5,8 +5,8 @@ var giveCard = require("./giveCard");
 var firebase = require("firebase");
 var http = require("http");
 var express = require("express");
-var socket_io_1 = require("socket.io");
-var jsonwebtoken_1 = require("jsonwebtoken");
+var io = require("socket.io");
+var jwt = require("jsonwebtoken");
 var app = express(), FIRREBASE_CONFIG = {
     apiKey: "AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE",
     authDomain: "buyao-70f4a.firebaseapp.com",
@@ -23,16 +23,16 @@ http2.listen(process.env.PORT || 48763, function () {
 });
 // 現在createRoom join_room執行時需附帶auth成功時返回的token
 // 否則function不會執行，直接回傳status 403
-socket_io_1["default"].on("connection", function (socket) {
+io.on("connection", function (socket) {
     socket.room = "";
     socket.token = "";
     socket.GameStatus = "";
     socket.on("test", function (data) {
         console.log(data);
-        socket_io_1["default"].emit("test", "success " + data.split(" ").reverse());
+        io.emit("test", "success " + data.split(" ").reverse());
     });
     socket.on("disconnect", function () {
-        socket_io_1["default"].emit("test", "ru disconnected?");
+        io.emit("test", "ru disconnected?");
     });
     socket.on("auth", function (data) {
         console.log("get login data from " + data.email + ", start auth process..");
@@ -40,30 +40,30 @@ socket_io_1["default"].on("connection", function (socket) {
             .then(function () {
             // 創立一個token，往後執行動作皆需附帶此token，否則傳回403 error
             var profileForToken = { email: data.email, password: data.password };
-            var token = jsonwebtoken_1["default"].sign(profileForToken, "token", {
+            var token = jwt.sign(profileForToken, "token", {
                 expiresIn: 60 * 60 * 24
             });
             socket.token = token;
-            socket_io_1["default"].emit("auth", { type: "success", code: "default", token: token, email: data.email });
+            io.emit("auth", { type: "success", code: "default", token: token, email: data.email });
         })["catch"](function (error) {
             var errorCode = error.code;
-            socket_io_1["default"].emit("auth", { type: "error", code: "" + errorCode });
+            io.emit("auth", { type: "error", code: "" + errorCode });
         });
     });
     socket.on("register", function (data) {
         console.log("we've received register signal from " + data.email + ", start register process...");
         console.log(data.email, data.password);
-        socket_io_1["default"].emit("test", "we got it:)");
+        io.emit("test", "we got it:)");
         firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
             .then(function () {
-            socket_io_1["default"].emit("reg", { type: "success", code: "default" });
+            io.emit("reg", { type: "success", code: "default" });
             // https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
             // 這邊有抓ＵＩＤ的方式，你再試試看，感謝。
             // 想不到怎麼寫的話請直接說，都可討論。
         })["catch"](function (error) {
             // 處理錯誤區塊
             var errorCode = error.code;
-            socket_io_1["default"].emit("reg", { type: "error", code: "" + errorCode });
+            io.emit("reg", { type: "error", code: "" + errorCode });
         });
         var nameKey = firebase.database().ref("/users/").child(data.email).push({ name: data.nickname }).key;
     });
@@ -75,10 +75,10 @@ socket_io_1["default"].on("connection", function (socket) {
         console.log("We've received logout signal from " + data.email + ", star logout process...");
         firebase.auth().signOut()
             .then(function () {
-            socket_io_1["default"].emit("logout", { type: "success", code: "default" });
+            io.emit("logout", { type: "success", code: "default" });
             socket.token = "";
         })["catch"](function (error) {
-            socket_io_1["default"].emit("logout", { type: "error", code: "" + error.code });
+            io.emit("logout", { type: "error", code: "" + error.code });
         });
     });
     socket.on("createRoom", function (data) {
@@ -91,7 +91,7 @@ socket_io_1["default"].on("connection", function (socket) {
         // 像 firebase.database().ref(`/rooms/${id}`)
         var RoomKey = firebase.database().ref("/rooms/").push({ id: id, room: data }).key;
         socket.join(id);
-        socket_io_1["default"].to(id).emit("createRoom", { "id": id, "key": RoomKey, "room": data });
+        io.to(id).emit("createRoom", { "id": id, "key": RoomKey, "room": data });
         console.log(data);
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
         // roomID會被存放在每個unique-id底下
@@ -102,20 +102,20 @@ socket_io_1["default"].on("connection", function (socket) {
     socket.on("getRoomId", function (data) {
         firebase.database().ref("/rooms/").once("value", function (snap) {
             console.log(snap.val());
-            socket_io_1["default"].to(data.id).emit("getRoomId", snap.val());
+            io.to(data.id).emit("getRoomId", snap.val());
         });
     });
     socket.on("joinRoom", function (data) {
         // 加入其他玩家所創的Room
         // 並將Room內在線人數傳回
         socket.join(data);
-        socket_io_1["default"].to(data).emit("Player joined!");
-        console.log("Now we have " + socket_io_1["default"].sockets.adapter.rooms[data].length + " clients");
+        io.to(data).emit("Player joined!");
+        console.log("Now we have " + io.sockets.adapter.rooms[data].length + " clients");
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     });
     socket.on("InGameChat", function (data) {
         if (data.name && data.content) {
-            socket_io_1["default"].emit("InGameChat", { name: data.name, content: data.content });
+            io.emit("InGameChat", { name: data.name, content: data.content });
         }
     });
     // todo: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
@@ -169,18 +169,18 @@ socket_io_1["default"].on("connection", function (socket) {
     socket.on("card", function (data) {
         switch (data.card) {
             case "Bang":
-                socket_io_1["default"].emit("card", { who: data.id, card: data.card, target: data.target });
-                socket_io_1["default"].to(data.target).emit("You've been attacked by " + data.id + "\nDid u have \"miss\"?");
+                io.emit("card", { who: data.id, card: data.card, target: data.target });
+                io.to(data.target).emit("You've been attacked by " + data.id + "\nDid u have \"miss\"?");
                 // todo: 這邊只要 emit 觸發的事件給我就好 不需要寫訊息喔
                 socket.on("response", function (data) {
                     switch (data) {
                         case true:
-                            socket_io_1["default"].to(data.id).emit("Attack success!");
-                            socket_io_1["default"].to(data.target).emit("You lost 1 life!");
+                            io.to(data.id).emit("Attack success!");
+                            io.to(data.target).emit("You lost 1 life!");
                             // 這裡直接丟資料回來給我 不需要訊息
                             break;
                         case false:
-                            socket_io_1["default"].to(data.id).emit("Attack fail!");
+                            io.to(data.id).emit("Attack fail!");
                         // 這裡直接丟資料回來給我 不需要訊息
                     }
                 });
