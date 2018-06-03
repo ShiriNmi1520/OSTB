@@ -48,7 +48,10 @@
     },
     props: {
       roomId: {
-        type: String,
+        type: Object,
+      },
+      userStatus: {
+        type: Object,
       },
       clientId: {
         type: String,
@@ -68,17 +71,22 @@
       async createRoom() {
         const vm = this;
         vm.$emit('updateLoading', true);
-        vm.$socket.emit('createRoom', vm.roomName);
-        const test = await waitForTwoSec().then(() => {
-          vm.$emit('updateLoading', false);
-          vm.$router.push({ name: 'game-room' });
-        });
-        return test;
+        if (vm.roomName !== '') {
+          vm.$socket.emit('createRoom', { name: vm.roomName, uid: vm.userStatus.uid });
+          await waitForTwoSec().then(() => {
+            vm.$emit('updateLoading', false);
+            vm.$router.push({ name: 'game-room' });
+          });
+        }
       },
       backToMain() {
         const vm = this;
         vm.$emit('backToMain', { type: '', code: '' });
-        vm.$router.push({ name: 'login' });
+        vm.$socket.emit('logout');
+        waitForTwoSec().then(() => {
+          vm.$socket.emit('userStatus');
+          vm.$router.push({ name: 'login' });
+        });
       },
       gotoBattle() {
         const vm = this;
