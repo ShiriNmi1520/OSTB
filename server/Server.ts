@@ -169,7 +169,7 @@ mainSocket.on("connection", (socket) => {
 	// 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
 
 	socket.on("exitRoom", (data) => {
-		firebase.database().ref("/rooms/").child(data).remove();
+		// firebase.database().ref("/rooms/").child(data).remove();
 	});
 
 	socket.on("userStatus", () => {

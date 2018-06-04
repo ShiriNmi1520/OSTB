@@ -153,7 +153,7 @@ mainSocket.on("connection", function (socket) {
     // todo: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
     // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
     socket.on("exitRoom", function (data) {
-        firebase.database().ref("/rooms/").child(data).remove();
+        // firebase.database().ref("/rooms/").child(data).remove();
     });
     socket.on("userStatus", function () {
         firebase.auth().onAuthStateChanged(function (user) {
