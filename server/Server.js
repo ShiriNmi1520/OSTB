@@ -103,6 +103,7 @@ mainSocket.on("connection", function (socket) {
         nicknamePath.once("value", function (snap) {
             nickname = snap.val();
         });
+        console.log(data);
         path.set({
             room: data.name,
             player: {}
