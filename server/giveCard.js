@@ -6,7 +6,7 @@ function getRandom(pools, count) {
     var arr = [];
     for (var i = 0; i < count; i++) {
         var pool = pools[Math.floor(Math.random() * pools.length)];
-        arr.indexOf(pool) == -1 ? arr.push(pool) : i--;
+        arr.indexOf(pool) === -1 ? arr.push(pool) : i--;
     }
     return arr;
 }
@@ -17,7 +17,7 @@ function getRandomWithType(count) {
         var pool = cards[Math.floor(Math.random() * cards.length)];
         var type = types[Math.floor(Math.random() * types.length)];
         var result = pool + type;
-        arr.indexOf(result) == -1 ? arr.push(result) : i--;
+        arr.indexOf(result) === -1 ? arr.push(result) : i--;
     }
     return arr;
 }
