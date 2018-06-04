@@ -116,7 +116,7 @@ mainSocket.on("connection", function (socket) {
             playerPath.once("value", function (snap) {
                 playerData = snap.val();
             }).then(function () {
-                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name123, playerData: playerData });
+                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name, playerData: playerData });
             });
         });
         socket.join(data.uid);
