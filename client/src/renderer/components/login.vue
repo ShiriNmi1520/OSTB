@@ -138,7 +138,7 @@
           .catch((err) => {
             console.log(err);
             vm.$emit('updateLoading', false);
-            vm.logErr = '帳號或密碼錯誤。';
+            vm.logErr = 'アカウントまたはパスワードがエラーが起きる。';
           });
       },
       gotoSignUp() {
