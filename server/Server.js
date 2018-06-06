@@ -105,7 +105,7 @@ mainSocket.on("connection", function (socket) {
         });
         console.log(data);
         path.set({
-            room: data.name123,
+            room: data.roomName,
             player: {}
         });
         playerPath.push({
@@ -117,7 +117,7 @@ mainSocket.on("connection", function (socket) {
             playerPath.once("value", function (snap) {
                 playerData = snap.val();
             }).then(function () {
-                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.name123, playerData: playerData });
+                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.roomName, playerData: playerData });
             });
         });
         socket.join(data.uid);
@@ -135,7 +135,7 @@ mainSocket.on("connection", function (socket) {
         // 加入其他玩家所創的Room
         // 並將Room內在線人數傳回
         socket.join(data.roomId);
-        var path = firebase.database().ref("/room/" + data.roomId + "/player");
+        var path = firebase.database().ref("/room/" + data.roomName + "/player");
         var nicknamePath = firebase.database().ref("/users/" + data.uid + "/name");
         var nickname = "";
         nicknamePath.once("value", function (snap) {
@@ -146,13 +146,14 @@ mainSocket.on("connection", function (socket) {
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     });
     socket.on("InGameChat", function (data) {
-        if (data.name && data.content) {
-            mainSocket.emit("InGameChat", { name: data.name, content: data.content });
+        if (data.senderName && data.content) {
+            mainSocket.emit("InGameChat", { name: data.senderName, content: data.content });
         }
     });
     // todo: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
     // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
     socket.on("exitRoom", function (data) {
+        console.log(data);
         // firebase.database().ref("/rooms/").child(data).remove();
     });
     socket.on("userStatus", function () {

@@ -117,7 +117,7 @@ mainSocket.on("connection", (socket) => {
     });
     console.log(data);
     path.set({
-      room: data.name123,
+      room: data.roomName,
       player: {}
     });
     playerPath.push({
@@ -129,7 +129,7 @@ mainSocket.on("connection", (socket) => {
       playerPath.once("value", (snap) => {
         playerData = snap.val();
       }).then(() => {
-				mainSocket.to(data.uid).emit("createRoom", {id: data.uid, room: data.name123, playerData: playerData});
+				mainSocket.to(data.uid).emit("createRoom", {id: data.uid, room: data.roomName, playerData: playerData});
 			});
     });
 		socket.join(data.uid);
@@ -149,7 +149,7 @@ mainSocket.on("connection", (socket) => {
 		// 加入其他玩家所創的Room
 		// 並將Room內在線人數傳回
 		socket.join(data.roomId);
-		const path : any = firebase.database().ref(`/room/${data.roomId}/player`);
+		const path : any = firebase.database().ref(`/room/${data.roomName}/player`);
 		const nicknamePath : any = firebase.database().ref(`/users/${data.uid}/name`);
 		let nickname :string = "";
 		nicknamePath.once("value", (snap) => {
@@ -161,14 +161,15 @@ mainSocket.on("connection", (socket) => {
 	});
 
 	socket.on("InGameChat", (data) => {
-		if (data.name && data.content) {
-			mainSocket.emit("InGameChat", {name: data.name, content: data.content});
+		if (data.senderName && data.content) {
+			mainSocket.emit("InGameChat", {name: data.senderName, content: data.content});
 		}
 	});
 	// todo: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
 	// 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
 
 	socket.on("exitRoom", (data) => {
+		console.log(data);
 		// firebase.database().ref("/rooms/").child(data).remove();
 	});
 
