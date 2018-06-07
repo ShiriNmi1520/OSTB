@@ -110,11 +110,14 @@
           code: 'default',
         }),
       },
+      clientId: {
+        type: String,
+      },
     },
     methods: {
       login() {
         const vm = this;
-        vm.$socket.emit('auth', { email: vm.account, password: vm.password });
+        vm.$socket.emit('auth', { email: vm.account, password: vm.password, clientId: vm.clientId });
         vm.$emit('updateLoading', true);
         const loginPromise = new Promise((res, rej) => {
           setTimeout(() => {
@@ -154,7 +157,7 @@
           waitForTwoSec().then(() => {
             vm.$socket.emit('login', { email: vm.account, password: vm.password });
             vm.$router.push({ name: 'main' });
-            vm.$socket.emit('userStatus');
+            vm.$socket.emit('userStatus', { clientId: vm.clientId });
             vm.$emit('updateLoading', false);
           });
         } else {
