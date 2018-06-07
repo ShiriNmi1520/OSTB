@@ -91,7 +91,7 @@ mainSocket.on("connection", (socket) => {
         let uid = "";
         function registerProcess() {
             return new Promise((rej) => {
-                firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(data.email, data.password)
+                firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
                     .catch((error) => {
                     let errorCode = error.code;
                     const transferData = { type: "error", code: `${errorCode}` };
