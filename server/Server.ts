@@ -67,9 +67,9 @@ mainSocket.on("connection", (socket: any) => {
     async function executeLoginProcess(): Promise<void> {
       await loginProcess().then((fulfilled : any) => {
         console.log("test");
-        mainSocket.connected[clientId].emit(fulfilled);
+        mainSocket.emit("auth", fulfilled);
       }).catch((rejected : any) => {
-        mainSocket.connected[clientId].emit(rejected);
+        mainSocket.emit("auth", rejected);
       });
     }
     executeLoginProcess();
