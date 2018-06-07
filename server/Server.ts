@@ -43,19 +43,18 @@ mainSocket.on("connection", (socket: any) => {
 	socket.on("auth", (data: any) => {
 		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
-				// 創立一個token，往後執行動作皆需附帶此token，否則傳回403 error
 				const profileForToken: object = { email: data.email, password: data.password };
 				const token: string = jwt.sign(profileForToken, "token", {
 					expiresIn: 60 * 60 * 24
 				});
 				socket.token = token;
-				mainSocket.emit("auth", { type: "success", code: "default", token, email: data.email });
+				mainSocket.to(data.clientId).emit("auth", { type: "success", code: "default", token, email: data.email });
 			})
 			// todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
 			// todo: 再加一個 uid 感恩。
 			.catch((error) => {
 				const errorCode: string = error.code;
-				mainSocket.emit("auth", { type: "error", code: `${errorCode}` });
+				mainSocket.to(data.clientId).emit("auth", { type: "error", code: `${errorCode}` });
 			});
 	});
 
@@ -131,13 +130,16 @@ mainSocket.on("connection", (socket: any) => {
 		}).catch((err: any) => {
       console.log(err);
     });
-		socket.join(data.uid);
+    socket.join(data.uid);
+    firebase.database().ref("/room/").once("value", snap => {
+			mainSocket.emit("getRoomId", snap.val());
+		});
 		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
 	});
 
 	socket.on("getRoomId", (data: any) => {
 		firebase.database().ref("/room/").once("value", snap => {
-			mainSocket.to(data.id).emit("getRoomId", snap.val());
+			mainSocket.emit("getRoomId", snap.val());
 		});
 	});
 
