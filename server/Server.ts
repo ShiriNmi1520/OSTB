@@ -146,8 +146,8 @@ mainSocket.on("connection", (socket: any) => {
 		// 加入其他玩家所創的Room
     // 並將Room內在線人數傳回
     console.log(data);
-		socket.join(data.roomName);
-		const path: any = firebase.database().ref(`/room/${data.roomName}/player`);
+		socket.join(data.roomId);
+		const path: any = firebase.database().ref(`/room/${data.roomId}/player`);
 		const nicknamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
 		let nickname: string = "";
 		nicknamePath.once("value", (snap: any) => {
@@ -171,7 +171,12 @@ mainSocket.on("connection", (socket: any) => {
 	// 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
 
 	socket.on("exitRoom", (data: any) => {
-		console.log(data);
+    console.log(data);
+    if(data.host === false) {
+      const removePlayer : any = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
+      removePlayer.remove();
+      socket.leave(data.roomId);
+    }
 		// firebase.database().ref("/rooms/").child(data).remove();
 	});
 
