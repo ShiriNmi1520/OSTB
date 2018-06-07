@@ -218,7 +218,7 @@ mainSocket.on("connection", (socket) => {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-                    mainSocket.to(data.clientId).emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val() });
+                    mainSocket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val() });
                 });
             }
             else {
