@@ -131,9 +131,6 @@ mainSocket.on("connection", (socket: any) => {
 		});
 		socket.join(data.uid);
 		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
-		// roomID會被存放在每個unique-id底下
-		// 透過key() 來得到
-		// 傳送的data作為遊戲室名稱
 	});
 
 	socket.on("getRoomId", (data: any) => {
