@@ -65,9 +65,9 @@ mainSocket.on("connection", (socket: any) => {
     async function executeLoginProcess(): Promise<void> {
       await loginProcess().then((fulfilled : any) => {
         console.log("test");
-        mainSocket.emit("auth", fulfilled);
+        socket.emit("auth", fulfilled);
       }).catch((rejected : any) => {
-        mainSocket.emit("auth", rejected);
+        socket.emit("auth", rejected);
       });
     }
     executeLoginProcess();
@@ -85,7 +85,7 @@ mainSocket.on("connection", (socket: any) => {
 							firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
 						});
 					});
-				mainSocket.emit("auth", { type: "success", code: "default", uid: uid });
+				socket.emit("auth", { type: "success", code: "default", uid: uid });
 				// https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
 				// 這邊有抓ＵＩＤ的方式，你再試試看，感謝。
 				// 想不到怎麼寫的話請直接說，都可討論。
@@ -93,7 +93,7 @@ mainSocket.on("connection", (socket: any) => {
 			.catch((error) => {
 				// 處理錯誤區塊
 				let errorCode: string = error.code;
-				mainSocket.emit("auth", { type: "error", code: `${errorCode}` });
+				socket.emit("auth", { type: "error", code: `${errorCode}` });
 			});
 	});
 	// todo: 另外那個 註冊的時候往 firebase 推 mail 的話會有命名規範的問題（不可以有.)，再一起想看看怎麼處理，感恩。
@@ -140,7 +140,7 @@ mainSocket.on("connection", (socket: any) => {
 			playerPath.once("value", (snap: any) => {
 				playerData = snap.val();
 			}).then(() => {
-				mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
+				socket.emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
 			});
 		}).catch((err: any) => {
       console.log(err);
