@@ -5,14 +5,7 @@
   "main": "Server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "check": "gts check",
-    "clean": "gts clean",
-    "compile": "tsc -p .",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run check"
+    "start": "node server.js"
   },
   "keywords": [
     "socket-io",
@@ -21,20 +14,16 @@
   "author": "Y.C.Huang",
   "license": "ISC",
   "dependencies": {
-    "@types/express": "^4.16.0",
-    "@types/jsonwebtoken": "^7.2.7",
-    "eslint": "^4.19.1",
+    "@types/socket.io": "^1.4.34",
     "express": "^4.16.3",
     "firebase": "^5.0.2",
     "http": "0.0.0",
     "jsonwebtoken": "^8.2.1",
     "socket.io": "^2.1.0",
-    "tslint": "^5.10.0"
+    "tslint": "^5.10.0",
+    "typescript": "^2.8.3"
   },
   "devDependencies": {
-    "@types/node": "^10.3.0",
-    "eslint-config-google": "^0.9.1",
-    "gts": "^0.6.0",
-    "typescript": "^2.8.4"
+    "@types/node": "^10.3.0"
   }
 }
