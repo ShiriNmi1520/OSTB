@@ -15,7 +15,7 @@
     <b-row>
       <b-col md="12" class="mt-3">
         <b-list-group>
-          <b-list-group-item class="mainContainer mb-2" v-for="obj of roomId.playerData">{{obj.uid}}
+          <b-list-group-item class="mainContainer mb-2" v-for="obj of roomId.player">{{obj.uid}}
           <span class="float-right" v-if="">🙆‍</span></b-list-group-item>
         </b-list-group>
       </b-col>
@@ -45,6 +45,9 @@
         </div>
       </b-col>
     </b-row>
+    <div v-if="checkRoomIdIsEmptyOrNot">
+      <b-btn @click="backToLogin()">back to login</b-btn>
+    </div>
   </div>
 </template>
 
@@ -86,8 +89,21 @@
         const vm = this;
         vm.$socket.emit('gameStart', 'room_id');
       },
+      backToLogin() {
+        const vm = this;
+        vm.$router.push({ name: 'login' });
+      },
     },
-    computed: {},
+    computed: {
+      knowWhoIsSelf() {
+        const vm = this;
+        return vm.roomId.player;
+      },
+      checkRoomIdIsEmptyOrNot() {
+        const vm = this;
+        return vm.roomId.id === undefined;
+      },
+    },
   };
 </script>
 

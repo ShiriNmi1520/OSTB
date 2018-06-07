@@ -23,6 +23,10 @@
           vm.$socket.emit('userStatus');
           vm.socketId = vm.$socket.io.engine.id;
         },
+        error() {
+          const vm = this;
+          vm.error = true;
+        },
         test(data) {
           console.log(data);
         },
