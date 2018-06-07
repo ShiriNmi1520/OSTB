@@ -46,7 +46,6 @@ mainSocket.on("connection", (socket) => {
         mainSocket.emit("test", "ru disconnected?");
     });
     socket.on("auth", (data) => {
-        console.log(data);
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
             .then(() => {
             const profileForToken = { email: data.email, password: data.password };
@@ -54,6 +53,7 @@ mainSocket.on("connection", (socket) => {
                 expiresIn: 60 * 60 * 24
             });
             socket.token = token;
+            console.log(data);
             mainSocket.to(`${data.clientId}`).emit("auth", { type: "success", code: "default", token, email: data.email });
         })
             // todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
