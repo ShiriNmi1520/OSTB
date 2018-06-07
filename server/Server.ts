@@ -41,7 +41,6 @@ mainSocket.on("connection", (socket: any) => {
 	});
 
 	socket.on("auth", (data: any) => {
-    const clientId : string = data.clientId;
     function loginProcess(): any {
       return new Promise((res, rej) => {
       firebase.auth().signInWithEmailAndPassword(data.email, data.password)
@@ -51,7 +50,6 @@ mainSocket.on("connection", (socket: any) => {
 					expiresIn: 60 * 60 * 24
 				});
         socket.token = token;
-        console.log(clientId);
         const transferData : object = { type: "success", code: "default", token, email: data.email };
         res(transferData);
       })
