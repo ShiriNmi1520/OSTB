@@ -78,36 +78,26 @@ mainSocket.on("connection", (socket: any) => {
     function registerProcess(): any {
       return new Promise((rej) => {
         firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
-        .catch((error) => {
-          let errorCode: string = error.code;
-          const transferData : object = { type: "error", code: `${errorCode}` };
-          rej(transferData);
-        });
-      });
-    }
-    function forRegisterLoginProcess(): any {
-      return new Promise((res, rej) => {
-        firebase.auth().signInWithEmailAndPassword(data.email, data.password)
-        .then(() => {
-          console.log("Sign in for register");
-          firebase.auth().onAuthStateChanged((user: any) => {
-            uid = user.uid;
-            console.log(uid);
-            firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
-            const transferData : object = { type: "success", code: "default"};
-            res(transferData);
-          });
+          .then(() => {
+            firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+              .then(() => {
+              console.log("Sign in for register");
+              firebase.auth().onAuthStateChanged((user: any) => {
+              uid = user.uid;
+              console.log(uid);
+              firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+              });
+            });
+          })
+          .catch((error) => {
+            let errorCode: string = error.code;
+            const transferData : object = { type: "error", code: `${errorCode}` };
+            rej(transferData);
         });
       });
     }
     async function executeRegisterProcess(): Promise<void> {
-      await registerProcess().then(() => {
-        forRegisterLoginProcess().then((fulfilled : any) => {
-          socket.emit("register", fulfilled);
-        }).catch((rejected : any) => {
-          socket.emit("register", rejected);
-        });
-      }).catch((rejected : any) => {
+      registerProcess().catch((rejected : any) => {
         socket.emit("register", rejected);
       });
     }
