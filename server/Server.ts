@@ -41,7 +41,6 @@ mainSocket.on("connection", (socket: any) => {
 	});
 
 	socket.on("auth", (data: any) => {
-		console.log(`get login data from ${data.email}, start auth process..`);
 		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
 				// 創立一個token，往後執行動作皆需附帶此token，否則傳回403 error
@@ -61,8 +60,6 @@ mainSocket.on("connection", (socket: any) => {
 	});
 
 	socket.on("register", (data: any) => {
-		console.log(`we've received register signal from ${data.email}, start register process...`);
-		mainSocket.emit("test", "we got it:)");
 		let uid: string = "";
 		firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
 			.then(() => {
@@ -147,7 +144,8 @@ mainSocket.on("connection", (socket: any) => {
 
 	socket.on("joinRoom", (data: any) => {
 		// 加入其他玩家所創的Room
-		// 並將Room內在線人數傳回
+    // 並將Room內在線人數傳回
+    console.log(data);
 		socket.join(data.roomName);
 		const path: any = firebase.database().ref(`/room/${data.roomName}/player`);
 		const nicknamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
