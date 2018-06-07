@@ -15,7 +15,7 @@
     <b-row>
       <b-col md="12" class="mt-3">
         <b-list-group>
-          <b-list-group-item class="mainContainer mb-2">PLAYER1_NAME
+          <b-list-group-item class="mainContainer mb-2" v-for="obj of roomId.playerData">{{obj.uid}}
           <span class="float-right" v-if="">🙆‍</span></b-list-group-item>
         </b-list-group>
       </b-col>
@@ -58,6 +58,9 @@
       roomId: {
         type: Object,
       },
+      loginStatus: {
+        type: Object,
+      },
     },
     data() {
       return {
@@ -84,6 +87,7 @@
         vm.$socket.emit('gameStart', 'room_id');
       },
     },
+    computed: {},
   };
 </script>
 

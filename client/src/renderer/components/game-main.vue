@@ -72,7 +72,7 @@
         const vm = this;
         vm.$emit('updateLoading', true);
         if (vm.roomName !== '') {
-          vm.$socket.emit('createRoom', { name123: vm.roomName, uid: vm.userStatus.uid });
+          vm.$socket.emit('createRoom', { roomName: vm.roomName, uid: vm.userStatus.uid });
           await waitForTwoSec().then(() => {
             vm.$emit('updateLoading', false);
             vm.$router.push({ name: 'game-room' });

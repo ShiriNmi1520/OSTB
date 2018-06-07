@@ -83,7 +83,7 @@
       computed: {
         getLoginStatus() {
           const vm = this;
-          return vm.userData.login === false && vm.$router.name !== 'login';
+          return (vm.userData.login === false && vm.$router.name !== 'login') || (vm.roomId === null && vm.$router.name !== 'login');
         },
       },
       methods: {
