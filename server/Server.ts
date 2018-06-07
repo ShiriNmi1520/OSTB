@@ -100,6 +100,9 @@ mainSocket.on("connection", (socket: any) => {
     async function executeRegisterProcess(): Promise<void> {
       await registerProcess().catch((rejected : any) => {
         socket.emit("register", rejected);
+      })
+      .then(() => {
+        console.log("I am register");
       });
       await forRegisterLoginProcess().then((fulfilled : any) => {
         console.log("I was here");
