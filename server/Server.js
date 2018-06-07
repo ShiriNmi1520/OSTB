@@ -46,6 +46,7 @@ mainSocket.on("connection", (socket) => {
         mainSocket.emit("test", "ru disconnected?");
     });
     socket.on("auth", (data) => {
+        console.log(data);
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
             .then(() => {
             const profileForToken = { email: data.email, password: data.password };

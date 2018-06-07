@@ -41,6 +41,7 @@ mainSocket.on("connection", (socket: any) => {
 	});
 
 	socket.on("auth", (data: any) => {
+    console.log(data);
 		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
 				const profileForToken: object = { email: data.email, password: data.password };
