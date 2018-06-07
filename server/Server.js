@@ -89,26 +89,42 @@ mainSocket.on("connection", (socket) => {
     });
     socket.on("register", (data) => {
         let uid = "";
-        firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
-            .then(() => {
-            firebase.auth().signInWithEmailAndPassword(data.email, data.password)
-                .then(() => {
-                firebase.auth().onAuthStateChanged((user) => {
-                    uid = user.uid;
-                    console.log(uid);
-                    firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+        function registerProcess() {
+            return new Promise((rej) => {
+                firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(data.email, data.password)
+                    .catch((error) => {
+                    let errorCode = error.code;
+                    const transferData = { type: "error", code: `${errorCode}` };
+                    rej(transferData);
                 });
             });
-            socket.emit("auth", { type: "success", code: "default", uid: uid });
-            // https://stackoverflow.com/questions/38352772/is-there-any-way-to-get-firebase-auth-user-uid
-            // 這邊有抓ＵＩＤ的方式，你再試試看，感謝。
-            // 想不到怎麼寫的話請直接說，都可討論。
-        })
-            .catch((error) => {
-            // 處理錯誤區塊
-            let errorCode = error.code;
-            socket.emit("auth", { type: "error", code: `${errorCode}` });
-        });
+        }
+        function forRegisterLoginProcess() {
+            return new Promise((res, rej) => {
+                firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+                    .then(() => {
+                    firebase.auth().onAuthStateChanged((user) => {
+                        uid = user.uid;
+                        console.log(uid);
+                        firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+                    });
+                });
+            });
+        }
+        function executeRegisterProcess() {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield registerProcess().catch((rejected) => {
+                    socket.emit("register", rejected);
+                });
+                yield forRegisterLoginProcess().then((fulfilled) => {
+                    socket.emit("register", fulfilled);
+                })
+                    .catch((rejected) => {
+                    socket.emit("register", rejected);
+                });
+            });
+        }
+        executeRegisterProcess();
     });
     // todo: 另外那個 註冊的時候往 firebase 推 mail 的話會有命名規範的問題（不可以有.)，再一起想看看怎麼處理，感恩。
     // todo: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
