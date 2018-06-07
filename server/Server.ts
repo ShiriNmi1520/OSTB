@@ -118,7 +118,7 @@ mainSocket.on("connection", (socket: any) => {
 			player: {}
 		});
 		playerPath.push({
-			uid: data.uid,
+			uid: "data.uid",
 			nickname: nickname,
 			host: true,
 			readyStatus: true
