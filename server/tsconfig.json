@@ -1,6 +1,5 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
-  "compileOnSave": true,
   "compilerOptions": {
     "rootDir": ".",
     "target": "es6",
