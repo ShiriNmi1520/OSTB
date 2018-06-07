@@ -117,6 +117,7 @@ mainSocket.on("connection", (socket) => {
                     socket.emit("register", rejected);
                 });
                 yield forRegisterLoginProcess().then((fulfilled) => {
+                    console.log("I was here");
                     socket.emit("register", fulfilled);
                 })
                     .catch((rejected) => {
