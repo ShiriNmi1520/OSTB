@@ -103,10 +103,13 @@ mainSocket.on("connection", (socket) => {
             return new Promise((res, rej) => {
                 firebase.auth().signInWithEmailAndPassword(data.email, data.password)
                     .then(() => {
+                    console.log("Sign in for register");
                     firebase.auth().onAuthStateChanged((user) => {
                         uid = user.uid;
                         console.log(uid);
                         firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+                        const transferData = { type: "success", code: "default" };
+                        res(transferData);
                     });
                 });
             });

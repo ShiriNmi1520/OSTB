@@ -89,10 +89,13 @@ mainSocket.on("connection", (socket: any) => {
       return new Promise((res, rej) => {
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
         .then(() => {
+          console.log("Sign in for register");
           firebase.auth().onAuthStateChanged((user: any) => {
             uid = user.uid;
             console.log(uid);
             firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+            const transferData : object = { type: "success", code: "default"};
+            res(transferData);
           });
         });
       });
