@@ -40,6 +40,9 @@
       loginMessage: {
         type: Object,
       },
+      userStatus: {
+        type: Object,
+      },
     },
     // data: () => ({
     //   join: '',
