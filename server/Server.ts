@@ -104,7 +104,7 @@ mainSocket.on("connection", (socket: any) => {
 		// 然後再 let roomKey: string = ROOM_PATH.push({ id: id, room: data }).key;
 		// 或是你想過直接把 id 做成路徑？
 		// 像 firebase.database().ref(`/rooms/${id}`)
-		const path: any = firebase.database().ref(`/room/${data.uid}`);
+		const path: any = firebase.database().ref(`/room/`).child(data.uid);
 		const playerPath: any = firebase.database().ref(`/room/${data.uid}/player`);
 		const nicknamePath: any = firebase.database().ref(`/users/${data.uid}`);
 		let nickname: string = "";
@@ -116,9 +116,7 @@ mainSocket.on("connection", (socket: any) => {
 		path.set({
 			room: "test",
 			player: {}
-		}).catch((err : any) => {
-      console.log(err);
-    });
+		});
 		playerPath.push({
 			uid: data.uid,
 			nickname: nickname,
@@ -130,7 +128,9 @@ mainSocket.on("connection", (socket: any) => {
 			}).then(() => {
 				mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
 			});
-		});
+		}).catch((err: any) => {
+      console.log(err);
+    });
 		socket.join(data.uid);
 		// 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
 	});
