@@ -98,22 +98,15 @@ mainSocket.on("connection", (socket: any) => {
       });
     }
     async function executeRegisterProcess(): Promise<void> {
-      await registerProcess().catch((rejected : any) => {
-        socket.emit("register", rejected);
-      })
-      .then(() => {
-        console.log("I am register");
-      });
-      await forRegisterLoginProcess().then((fulfilled : any) => {
-        console.log("I was here");
+     await Promise.all([registerProcess(), forRegisterLoginProcess()]).then((fulfilled : any) => {
         socket.emit("register", fulfilled);
-      })
-      .catch((rejected : any) => {
-        socket.emit("register", rejected);
-      });
+     })
+     .catch((rejected : any) => {
+       socket.emit("register", rejected);
+     });
     }
     executeRegisterProcess();
-  });
+   });
 	// todo: 另外那個 註冊的時候往 firebase 推 mail 的話會有命名規範的問題（不可以有.)，再一起想看看怎麼處理，感恩。
 	// todo: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
 	// todo: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。

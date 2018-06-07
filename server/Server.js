@@ -113,14 +113,7 @@ mainSocket.on("connection", (socket) => {
         }
         function executeRegisterProcess() {
             return __awaiter(this, void 0, void 0, function* () {
-                yield registerProcess().catch((rejected) => {
-                    socket.emit("register", rejected);
-                })
-                    .then(() => {
-                    console.log("I am register");
-                });
-                yield forRegisterLoginProcess().then((fulfilled) => {
-                    console.log("I was here");
+                yield Promise.all([registerProcess(), forRegisterLoginProcess()]).then((fulfilled) => {
                     socket.emit("register", fulfilled);
                 })
                     .catch((rejected) => {
