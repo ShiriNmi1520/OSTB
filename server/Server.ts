@@ -49,13 +49,13 @@ mainSocket.on("connection", (socket: any) => {
 					expiresIn: 60 * 60 * 24
 				});
 				socket.token = token;
-				mainSocket.to(data.clientId).emit("auth", { type: "success", code: "default", token, email: data.email });
+				mainSocket.to(`${data.clientId}`).emit("auth", { type: "success", code: "default", token, email: data.email });
 			})
 			// todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
 			// todo: 再加一個 uid 感恩。
 			.catch((error) => {
 				const errorCode: string = error.code;
-				mainSocket.to(data.clientId).emit("auth", { type: "error", code: `${errorCode}` });
+				mainSocket.to(`${data.clientId}`).emit("auth", { type: "error", code: `${errorCode}` });
 			});
 	});
 
