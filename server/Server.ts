@@ -114,7 +114,7 @@ mainSocket.on("connection", (socket: any) => {
 		});
 		console.log(data);
 		path.set({
-			room: data.roomName,
+			room: data.roomId,
 			player: {}
 		});
 		playerPath.push({
@@ -146,7 +146,7 @@ mainSocket.on("connection", (socket: any) => {
 		// 加入其他玩家所創的Room
     // 並將Room內在線人數傳回
     console.log(data);
-    let error : boolean = false;
+    let error : any = false;
 		const path: any = firebase.database().ref(`/room/${data.roomId}/player`);
 		const nicknamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
     let nickname: string = "";
@@ -158,6 +158,9 @@ mainSocket.on("connection", (socket: any) => {
       return error;
       }
     });
+    if (error === true) {
+      return 1;
+    }
     nicknamePath.once("value", (snap: any) => {
 			nickname = snap.val();
 		});
