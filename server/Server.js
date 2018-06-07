@@ -113,11 +113,12 @@ mainSocket.on("connection", (socket) => {
         }
         function executeRegisterProcess() {
             return __awaiter(this, void 0, void 0, function* () {
-                yield registerProcess().catch((rejected) => {
-                    socket.emit("register", rejected);
-                });
-                forRegisterLoginProcess().then((fulfilled) => {
-                    socket.emit("register", fulfilled);
+                yield registerProcess().then(() => {
+                    forRegisterLoginProcess().then((fulfilled) => {
+                        socket.emit("register", fulfilled);
+                    }).catch((rejected) => {
+                        socket.emit("register", rejected);
+                    });
                 }).catch((rejected) => {
                     socket.emit("register", rejected);
                 });

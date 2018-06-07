@@ -98,11 +98,12 @@ mainSocket.on("connection", (socket: any) => {
       });
     }
     async function executeRegisterProcess(): Promise<void> {
-      await registerProcess().catch((rejected : any) => {
-        socket.emit("register", rejected);
-      });
-      forRegisterLoginProcess().then((fulfilled : any) => {
-        socket.emit("register", fulfilled);
+      await registerProcess().then(() => {
+        forRegisterLoginProcess().then((fulfilled : any) => {
+          socket.emit("register", fulfilled);
+        }).catch((rejected : any) => {
+          socket.emit("register", rejected);
+        });
       }).catch((rejected : any) => {
         socket.emit("register", rejected);
       });
