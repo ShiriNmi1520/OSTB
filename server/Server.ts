@@ -148,14 +148,14 @@ mainSocket.on("connection", (socket: any) => {
 	socket.on("joinRoom", (data: any) => {
 		// 加入其他玩家所創的Room
 		// 並將Room內在線人數傳回
-		socket.join(data.roomId);
-		const path: any = firebase.database().ref(`/room/${data.roomId}/player`);
-		const nicknamePath: any = firebase.database().ref(`/users/${data.uid}/name`);
+		socket.join(data.roomName);
+		const path: any = firebase.database().ref(`/room/${data.roomName}/player`);
+		const nicknamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
 		let nickname: string = "";
 		nicknamePath.once("value", (snap: any) => {
 			nickname = snap.val();
 		});
-		path.push({ host: false, nickname: nickname, readyStatus: false, uid: data.uid });
+		path.push({ host: false, nickname: nickname, readyStatus: false, uid: data.userId});
 		mainSocket.to(data).emit("Player joined!");
 		// todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
