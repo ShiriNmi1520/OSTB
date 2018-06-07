@@ -55,6 +55,10 @@
           const vm = this;
           vm.inGameId = data;
         },
+        updateRoomStatus(data) {
+          const vm = this;
+          vm.roomId.player = data;
+        },
         gameStart() {
           const vm = this;
           vm.$router.push({ name: 'battle' });
