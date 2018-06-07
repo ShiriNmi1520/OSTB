@@ -54,7 +54,7 @@
       },
       async joinRoom(data) {
         const vm = this;
-        vm.$socket.emit('joinRoom', { roomName: data.key, userId: vm.loginMessage.uid });
+        vm.$socket.emit('joinRoom', { roomName: data.key, userId: vm.userStatus.uid });
         vm.$emit('joinRoomFromList', data);
         vm.$emit('updateLoading', true);
         const wait = await waitForTwoSec(vm).then(() => {
