@@ -7,7 +7,7 @@
             <b-col>
               <h1>GAME_ROOM_NAME</h1>
             </b-col>
-              <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="leaveRoom">退席</b-btn>
+              <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="deleteRoom">退席</b-btn>
           </b-row>
         </div>
       </b-col>
@@ -72,9 +72,9 @@
         const vm = this;
         vm.$socket.emit('InGameChat', { name: 'test', content: vm.content });
       },
-      leaveRoom() {
+      exitRoom() {
         const vm = this;
-        vm.$socket.emit('exitRoom', vm.roomId.key);
+        // vm.$socket.emit('exitRoom', {host: ,roomId, index});
         vm.$emit('exitRoom', '');
         vm.$router.push({ name: 'main' });
       },

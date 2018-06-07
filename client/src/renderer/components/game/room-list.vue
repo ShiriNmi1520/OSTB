@@ -54,15 +54,14 @@
       },
       async joinRoom(data) {
         const vm = this;
-        vm.$socket.emit('joinRoom', { roomName: data.key, userId: vm.userStatus.uid });
+        vm.$socket.emit('joinRoom', { roomId: data.key, userId: vm.userStatus.uid });
         vm.$emit('joinRoomFromList', data);
         vm.$emit('updateLoading', true);
-        const wait = await waitForTwoSec(vm).then(() => {
+        await waitForTwoSec(vm).then(() => {
           vm.roomId = data;
           vm.$router.push({ name: 'game-room' });
           vm.$emit('updateLoading', false);
         });
-        return wait;
       },
     },
   };
