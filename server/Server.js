@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -47,22 +55,39 @@ mainSocket.on("connection", (socket) => {
     });
     socket.on("auth", (data) => {
         const clientId = data.clientId;
-        firebase.auth().signInWithEmailAndPassword(data.email, data.password)
-            .then(() => {
-            const profileForToken = { email: data.email, password: data.password };
-            const token = jwt.sign(profileForToken, "token", {
-                expiresIn: 60 * 60 * 24
+        function loginProcess() {
+            return new Promise((res, rej) => {
+                firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+                    .then(() => {
+                    const profileForToken = { email: data.email, password: data.password };
+                    const token = jwt.sign(profileForToken, "token", {
+                        expiresIn: 60 * 60 * 24
+                    });
+                    socket.token = token;
+                    console.log(clientId);
+                    const transferData = { type: "success", code: "default", token, email: data.email };
+                    res(transferData);
+                })
+                    // todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
+                    // todo: 再加一個 uid 感恩。
+                    .catch((error) => {
+                    const errorCode = error.code;
+                    const transferData = { type: "error", code: `${errorCode}` };
+                    rej(transferData);
+                });
             });
-            socket.token = token;
-            console.log(clientId);
-            mainSocket.to(clientId).emit("auth", { type: "success", code: "default", token, email: data.email });
-        })
-            // todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
-            // todo: 再加一個 uid 感恩。
-            .catch((error) => {
-            const errorCode = error.code;
-            mainSocket.to(clientId).emit("auth", { type: "error", code: `${errorCode}` });
-        });
+        }
+        function executeLoginProcess() {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield loginProcess().then((fulfilled) => {
+                    console.log("test");
+                    mainSocket.to(clientId).emit(fulfilled);
+                }).catch((rejected) => {
+                    mainSocket.to(clientId).emit(rejected);
+                });
+            });
+        }
+        executeLoginProcess();
     });
     socket.on("register", (data) => {
         let uid = "";

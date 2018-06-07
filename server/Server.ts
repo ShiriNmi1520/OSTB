@@ -42,7 +42,9 @@ mainSocket.on("connection", (socket: any) => {
 
 	socket.on("auth", (data: any) => {
     const clientId : string = data.clientId;
-		firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+    function loginProcess(): any {
+      return new Promise((res, rej) => {
+      firebase.auth().signInWithEmailAndPassword(data.email, data.password)
 			.then(() => {
 				const profileForToken: object = { email: data.email, password: data.password };
 				const token: string = jwt.sign(profileForToken, "token", {
@@ -50,14 +52,27 @@ mainSocket.on("connection", (socket: any) => {
 				});
         socket.token = token;
         console.log(clientId);
-				mainSocket.to(clientId).emit("auth", { type: "success", code: "default", token, email: data.email });
-			})
+        const transferData : object = { type: "success", code: "default", token, email: data.email };
+        res(transferData);
+      })
 			// todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
 			// todo: 再加一個 uid 感恩。
 			.catch((error) => {
-				const errorCode: string = error.code;
-				mainSocket.to(clientId).emit("auth", { type: "error", code: `${errorCode}` });
-			});
+        const errorCode: string = error.code;
+        const transferData : object = { type: "error", code: `${errorCode}` };
+				rej(transferData);
+			  });
+      });
+    }
+    async function executeLoginProcess(): Promise<void> {
+      await loginProcess().then((fulfilled : any) => {
+        console.log("test");
+        mainSocket.to(clientId).emit(fulfilled);
+      }).catch((rejected : any) => {
+        mainSocket.to(clientId).emit(rejected);
+      });
+    }
+    executeLoginProcess();
 	});
 
 	socket.on("register", (data: any) => {
