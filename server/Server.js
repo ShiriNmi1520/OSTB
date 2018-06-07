@@ -107,7 +107,7 @@ mainSocket.on("connection", (socket) => {
         // 然後再 let roomKey: string = ROOM_PATH.push({ id: id, room: data }).key;
         // 或是你想過直接把 id 做成路徑？
         // 像 firebase.database().ref(`/rooms/${id}`)
-        const path = firebase.database().ref("/room/").child(data.uid);
+        const path = firebase.database().ref(`/room/`).child(data.uid);
         const playerPath = firebase.database().ref(`/room/${data.uid}/player`);
         const nicknamePath = firebase.database().ref(`/users/${data.uid}`);
         let nickname = "";
@@ -117,7 +117,7 @@ mainSocket.on("connection", (socket) => {
         });
         console.log(data);
         path.set({
-            room: data.roomName,
+            room: data.roomId,
             player: {}
         });
         playerPath.push({
@@ -129,14 +129,13 @@ mainSocket.on("connection", (socket) => {
             playerPath.once("value", (snap) => {
                 playerData = snap.val();
             }).then(() => {
-                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.roomName, player: playerData });
+                mainSocket.to(data.uid).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
             });
+        }).catch((err) => {
+            console.log(err);
         });
         socket.join(data.uid);
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
-        // roomID會被存放在每個unique-id底下
-        // 透過key() 來得到
-        // 傳送的data作為遊戲室名稱
     });
     socket.on("getRoomId", (data) => {
         firebase.database().ref("/room/").once("value", snap => {
@@ -147,6 +146,7 @@ mainSocket.on("connection", (socket) => {
         // 加入其他玩家所創的Room
         // 並將Room內在線人數傳回
         console.log(data);
+        let error = false;
         const path = firebase.database().ref(`/room/${data.roomId}/player`);
         const nicknamePath = firebase.database().ref(`/users/${data.userId}/name`);
         let nickname = "";
@@ -154,8 +154,13 @@ mainSocket.on("connection", (socket) => {
             mainSocket.emit("updateRoomStatus", snap.val());
             if (snap.val().length >= 4) {
                 mainSocket.emit("error");
+                error = true;
+                return error;
             }
         });
+        if (error === true) {
+            return 1;
+        }
         nicknamePath.once("value", (snap) => {
             nickname = snap.val();
         });
@@ -164,6 +169,7 @@ mainSocket.on("connection", (socket) => {
         mainSocket.to(data).emit("Player joined!");
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
         // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
+        return;
     });
     socket.on("InGameChat", (data) => {
         if (data.senderName && data.content) {

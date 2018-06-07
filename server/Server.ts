@@ -114,11 +114,11 @@ mainSocket.on("connection", (socket: any) => {
 		});
 		console.log(data);
 		path.set({
-			room: "test",
-			player: {}
+      room: data.roomId,
+      player: {}
 		});
 		playerPath.push({
-			uid: "data.uid",
+			uid: data.uid,
 			nickname: nickname,
 			host: true,
 			readyStatus: true
@@ -168,6 +168,7 @@ mainSocket.on("connection", (socket: any) => {
 		mainSocket.to(data).emit("Player joined!");
 		// todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
+    return ;
     });
 
 	socket.on("InGameChat", (data: any) => {
