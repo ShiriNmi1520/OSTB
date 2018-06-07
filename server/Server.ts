@@ -114,7 +114,7 @@ mainSocket.on("connection", (socket: any) => {
 		});
 		console.log(data);
 		path.set({
-			room: data.roomId,
+			room: "test",
 			player: {}
 		});
 		playerPath.push({
