@@ -1,12 +1,16 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "rootDir": "."
+    "rootDir": ".",
+    "target": "es6",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
   },
   "include": [
-    "src/*.ts",
-    "src/**/*.ts",
-    "test/*.ts",
-    "test/**/*.ts"
-  ]
+    "./*.ts",
+    "VueSocketIO/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }
