@@ -147,14 +147,17 @@ mainSocket.on("connection", (socket) => {
         // 加入其他玩家所創的Room
         // 並將Room內在線人數傳回
         console.log(data);
-        socket.join(data.roomName);
-        const path = firebase.database().ref(`/room/${data.roomName}/player`);
+        socket.join(data.roomId);
+        const path = firebase.database().ref(`/room/${data.roomId}/player`);
         const nicknamePath = firebase.database().ref(`/users/${data.userId}/name`);
         let nickname = "";
         nicknamePath.once("value", (snap) => {
             nickname = snap.val();
         });
         path.push({ host: false, nickname: nickname, readyStatus: false, uid: data.userId });
+        path.once("value", (snap) => {
+            mainSocket.emit("updateRoomStatus", snap.val());
+        });
         mainSocket.to(data).emit("Player joined!");
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
         // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
@@ -168,6 +171,11 @@ mainSocket.on("connection", (socket) => {
     // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
     socket.on("exitRoom", (data) => {
         console.log(data);
+        if (data.host === false) {
+            const removePlayer = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
+            removePlayer.remove();
+            socket.leave(data.roomId);
+        }
         // firebase.database().ref("/rooms/").child(data).remove();
     });
     socket.on("userStatus", () => {
