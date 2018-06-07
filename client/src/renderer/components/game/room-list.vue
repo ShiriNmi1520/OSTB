@@ -43,6 +43,9 @@
       userStatus: {
         type: Object,
       },
+      clientId: {
+        type: String,
+      },
     },
     // data: () => ({
     //   join: '',

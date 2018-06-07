@@ -64,6 +64,9 @@
       loginStatus: {
         type: Object,
       },
+      clientId: {
+        type: String,
+      },
     },
     data() {
       return {
