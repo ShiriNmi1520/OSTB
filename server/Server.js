@@ -38,7 +38,7 @@ let mainSocket = socket_io_1.default(http2);
 // 生日快樂啦!
 firebase.initializeApp(FIREBASE_CONFIG);
 http2.listen(process.env.PORT || 48763, () => {
-    console.log("Computer listening on :" + process.env.PORT);
+    console.log("Server listening on :" + process.env.PORT);
 });
 // 現在createRoom join_room執行時需附帶auth成功時返回的token
 // 否則function不會執行，直接回傳status 403
@@ -113,7 +113,7 @@ mainSocket.on("connection", (socket) => {
         function executeRegisterProcess() {
             return __awaiter(this, void 0, void 0, function* () {
                 yield registerProcess().catch((rejected) => {
-                    socket.emit("register", rejected);
+                    socket.emit("error", rejected);
                 });
             });
         }
@@ -227,11 +227,11 @@ mainSocket.on("connection", (socket) => {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-                    mainSocket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val() });
+                    socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val() });
                 });
             }
             else {
-                mainSocket.emit("userStatus", { login: false });
+                socket.emit("userStatus", { login: false });
             }
         });
     });
@@ -285,7 +285,7 @@ mainSocket.on("connection", (socket) => {
         switch (data.card) {
             case "Bang":
                 mainSocket.emit("card", { who: data.id, card: data.card, target: data.target });
-                mainSocket.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
+                socket.broadcast.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
                 // todo: 這邊只要 emit 觸發的事件給我就好 不需要寫訊息喔
                 socket.on("response", (data) => {
                     switch (data) {
