@@ -33,11 +33,11 @@ mainSocket.on("connection", (socket: any) => {
 
   socket.on("test", (data: any) => {
     console.log(data);
-    mainSocket.emit("test", `success ${data.split(" ").reverse()}`);
+    socket.emit("test", `success ${data.split(" ").reverse()}`);
   });
 
   socket.on("disconnect", () => {
-    mainSocket.emit("test", "ru disconnected?");
+    socket.emit("test", "ru disconnected?");
   });
 
   socket.on("auth", (data: any) => {
@@ -110,11 +110,11 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("logout", () => {
     firebase.auth().signOut()
       .then(() => {
-        mainSocket.emit("logout", { type: "success", code: "default" });
+        socket.emit("logout", { type: "success", code: "default" });
         socket.token = "";
       })
       .catch((error) => {
-        mainSocket.emit("logout", { type: "error", code: `${error.code}` });
+        socket.emit("logout", { type: "error", code: `${error.code}` });
       });
   });
 
@@ -174,9 +174,9 @@ mainSocket.on("connection", (socket: any) => {
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
     let nickName: string = "";
     path.once("value", (snap: any) => {
-      mainSocket.emit("updateRoomStatus", snap.val());
+      socket.emit("updateRoomStatus", snap.val());
       if (snap.val().length >= 4) {
-        mainSocket.emit("error");
+        socket.emit("error");
         error = true;
       return error;
       }
@@ -189,7 +189,7 @@ mainSocket.on("connection", (socket: any) => {
     });
     path.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId});
     socket.join(data.roomId);
-    mainSocket.to(data).emit("Player joined!");
+    socket.emit("joinRoom", "Player joined!");
     // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
     return ;

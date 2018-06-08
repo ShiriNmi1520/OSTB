@@ -8,8 +8,7 @@
     "skipDefaultLibCheck": true,
   },
   "include": [
-    "./*.ts",
-    "VueSocketIO/**/*"
+    "./*.ts"
   ],
   "exclude": [
     "node_modules"
