@@ -65,9 +65,9 @@ mainSocket.on("connection", (socket: any) => {
     async function executeLoginProcess(): Promise<void> {
       await loginProcess().then((fulfilled : any) => {
         console.log("test");
-        socket.emit("auth", fulfilled);
+        socket.broadcast.to(socket.id).emit("auth", fulfilled);
       }).catch((rejected : any) => {
-        socket.emit("auth", rejected);
+        socket.broadcast.to(socket.id).emit("auth", rejected);
       });
     }
     executeLoginProcess();
@@ -110,11 +110,11 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("logout", () => {
     firebase.auth().signOut()
       .then(() => {
-        socket.emit("logout", { type: "success", code: "default" });
+        socket.broadcast.to(socket.id).emit("logout", { type: "success", code: "default" });
         socket.token = "";
       })
       .catch((error) => {
-        socket.emit("logout", { type: "error", code: `${error.code}` });
+        socket.broadcast.to(socket.id).emit("logout", { type: "error", code: `${error.code}` });
       });
   });
 
@@ -147,7 +147,7 @@ mainSocket.on("connection", (socket: any) => {
       playerPath.once("value", (snap: any) => {
         playerData = snap.val();
       }).then(() => {
-        socket.emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
+        socket.broadcast.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
       });
     }).catch((err: any) => {
       console.log(err);
@@ -216,10 +216,10 @@ mainSocket.on("connection", (socket: any) => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-          socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
+          socket.broadcast.to(socket.id).emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
         });
       } else {
-        socket.emit("userStatus", { login: false });
+        socket.broadcast.to(socket.id).emit("userStatus", { login: false });
       }
     });
   });
