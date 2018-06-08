@@ -79,9 +79,9 @@ mainSocket.on("connection", (socket) => {
             return __awaiter(this, void 0, void 0, function* () {
                 yield loginProcess().then((fulfilled) => {
                     console.log("test");
-                    socket.broadcast.to(socket.id).emit("auth", fulfilled);
+                    socket.broadcast.to(data.clientId).emit("auth", fulfilled);
                 }).catch((rejected) => {
-                    socket.broadcast.to(socket.id).emit("auth", rejected);
+                    socket.broadcast.to(data.clientId).emit("auth", rejected);
                 });
             });
         }
