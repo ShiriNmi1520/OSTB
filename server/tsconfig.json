@@ -2,6 +2,7 @@
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "rootDir": ".",
+    "outDir": "./src",
     "target": "es6",
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,

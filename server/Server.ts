@@ -127,20 +127,20 @@ mainSocket.on("connection", (socket: any) => {
     // 像 firebase.database().ref(`/rooms/${id}`)
     const path: any = firebase.database().ref(`/room/`).child(data.uid);
     const playerPath: any = firebase.database().ref(`/room/${data.uid}/player`);
-    const nicknamePath: any = firebase.database().ref(`/users/${data.uid}`);
-    let nickname: string = "";
+    const nickNamePath: any = firebase.database().ref(`/users/${data.uid}`);
+    let nickName: string = "";
     let playerData: object = {};
-    nicknamePath.once("value", (snap: any) => {
-      nickname = snap.val();
+    nickNamePath.once("value", (snap: any) => {
+      nickName = snap.val();
+      console.log(`nickName path ${snap.val()}`);
     });
-    console.log(data);
     path.set({
       room: data.roomId,
       player: {}
     });
     playerPath.push({
       uid: data.uid,
-      nickname: nickname,
+      nickName: nickName,
       host: true,
       readyStatus: true
     }).then(() => {
@@ -171,8 +171,8 @@ mainSocket.on("connection", (socket: any) => {
     console.log(data);
     let error : any = false;
     const path: any = firebase.database().ref(`/room/${data.roomId}/player`);
-    const nicknamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
-    let nickname: string = "";
+    const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
+    let nickName: string = "";
     path.once("value", (snap: any) => {
       mainSocket.emit("updateRoomStatus", snap.val());
       if (snap.val().length >= 4) {
@@ -184,10 +184,10 @@ mainSocket.on("connection", (socket: any) => {
     if (error === true) {
       return 1;
     }
-    nicknamePath.once("value", (snap: any) => {
-      nickname = snap.val();
+    nickNamePath.once("value", (snap: any) => {
+      nickName = snap.val();
     });
-    path.push({ host: false, nickname: nickname, readyStatus: false, uid: data.userId});
+    path.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId});
     socket.join(data.roomId);
     mainSocket.to(data).emit("Player joined!");
     // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
