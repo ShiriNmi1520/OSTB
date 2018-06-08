@@ -165,7 +165,7 @@ mainSocket.on("connection", (socket: any) => {
     });
   });
 
-  socket.on("joinRoom", (data: any) => {
+  socket.on("joinRoom", (data: any): void => {
     // 加入其他玩家所創的Room
     // 並將Room內在線人數傳回
     console.log(data);
@@ -182,7 +182,7 @@ mainSocket.on("connection", (socket: any) => {
       }
     });
     if (error === true) {
-      return 1;
+      return ;
     }
     nickNamePath.once("value", (snap: any) => {
       nickName = snap.val();
@@ -192,7 +192,6 @@ mainSocket.on("connection", (socket: any) => {
     socket.emit("joinRoom", "Player joined!");
     // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
-    return ;
     });
 
   socket.on("InGameChat", (data: any) => {

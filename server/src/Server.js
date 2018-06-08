@@ -195,7 +195,7 @@ mainSocket.on("connection", (socket) => {
             }
         });
         if (error === true) {
-            return 1;
+            return;
         }
         nickNamePath.once("value", (snap) => {
             nickName = snap.val();
@@ -205,7 +205,6 @@ mainSocket.on("connection", (socket) => {
         socket.emit("joinRoom", "Player joined!");
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
         // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
-        return;
     });
     socket.on("InGameChat", (data) => {
         if (data.senderName && data.content) {
