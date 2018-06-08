@@ -98,7 +98,7 @@ mainSocket.on("connection", (socket: any) => {
     }
     async function executeRegisterProcess(): Promise<void> {
       await registerProcess().catch((rejected : any) => {
-        socket.emit("error", rejected);
+        mainSocket.to(socket.id)("error", rejected);
       });
     }
     executeRegisterProcess();
@@ -110,11 +110,11 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("logout", () => {
     firebase.auth().signOut()
       .then(() => {
-        socket.broadcast.to(socket.id).emit("logout", { type: "success", code: "default" });
+        mainSocket.to(socket.id).emit("logout", { type: "success", code: "default" });
         socket.token = "";
       })
       .catch((error) => {
-        socket.broadcast.to(socket.id).emit("logout", { type: "error", code: `${error.code}` });
+        mainSocket.to(socket.id).emit("logout", { type: "error", code: `${error.code}` });
       });
   });
 
@@ -147,7 +147,7 @@ mainSocket.on("connection", (socket: any) => {
       playerPath.once("value", (snap: any) => {
         playerData = snap.val();
       }).then(() => {
-        socket.broadcast.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
+        mainSocket.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
       });
     }).catch((err: any) => {
       console.log(err);
@@ -174,9 +174,9 @@ mainSocket.on("connection", (socket: any) => {
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
     let nickName: string = "";
     path.once("value", (snap: any) => {
-      socket.emit("updateRoomStatus", snap.val());
+      mainSocket.to(socket.id).emit("updateRoomStatus", snap.val());
       if (snap.val().length >= 4) {
-        socket.emit("error");
+        mainSocket.to(socket.id).emit("error");
         error = true;
       return error;
       }
@@ -189,7 +189,7 @@ mainSocket.on("connection", (socket: any) => {
     });
     path.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId});
     socket.join(data.roomId);
-    socket.emit("joinRoom", "Player joined!");
+    mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
     // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
     });
@@ -216,10 +216,10 @@ mainSocket.on("connection", (socket: any) => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-          socket.broadcast.to(socket.id).emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
+          mainSocket.to(socket.id).emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
         });
       } else {
-        socket.broadcast.to(socket.id).emit("userStatus", { login: false });
+        mainSocket.to(socket.id).emit("userStatus", { login: false });
       }
     });
   });
@@ -276,7 +276,7 @@ mainSocket.on("connection", (socket: any) => {
     switch (data.card) {
       case "Bang":
         mainSocket.emit("card", { who: data.id, card: data.card, target: data.target });
-        socket.broadcast.to(data.target).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
+        mainSocket.to(socket.id).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
         // todo: 這邊只要 emit 觸發的事件給我就好 不需要寫訊息喔
         socket.on("response", (data: any) => {
           switch (data) {
