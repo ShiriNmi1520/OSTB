@@ -81,7 +81,7 @@ mainSocket.on("connection", (socket: any) => {
           .then(() => {
             firebase.auth().signInWithEmailAndPassword(data.email, data.password)
               .then(() => {
-              console.log("Sign in for register");
+                console.log("Ready to push player nickName");
               firebase.auth().onAuthStateChanged((user: any) => {
               uid = user.uid;
               console.log(uid);
@@ -97,7 +97,7 @@ mainSocket.on("connection", (socket: any) => {
       });
     }
     async function executeRegisterProcess(): Promise<void> {
-      registerProcess().catch((rejected : any) => {
+      await registerProcess().catch((rejected : any) => {
         socket.emit("register", rejected);
       });
     }
