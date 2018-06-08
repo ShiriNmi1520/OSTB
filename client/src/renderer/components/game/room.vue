@@ -7,7 +7,7 @@
             <b-col>
               <h1>GAME_ROOM_NAME</h1>
             </b-col>
-              <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="deleteRoom">退席</b-btn>
+              <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="exitRoom">退席</b-btn>
           </b-row>
         </div>
       </b-col>
@@ -48,6 +48,7 @@
     <div v-if="checkRoomIdIsEmptyOrNot">
       <b-btn @click="backToLogin()">back to login</b-btn>
     </div>
+    <b-btn @click="testForGetSelf()">123</b-btn>
   </div>
 </template>
 
@@ -67,10 +68,14 @@
       clientId: {
         type: String,
       },
+      userStatus: {
+        type: Object,
+      },
     },
     data() {
       return {
         content: '',
+        selfId: {},
       };
     },
     methods: {
@@ -80,7 +85,7 @@
       },
       exitRoom() {
         const vm = this;
-        // vm.$socket.emit('exitRoom', {host: ,roomId, index});
+        vm.$socket.emit('exitRoom', { host: vm.selfId.object.host, roomId: vm.roomId.id, index: vm.selfId.key });
         vm.$emit('exitRoom', '');
         vm.$router.push({ name: 'main' });
       },
@@ -98,14 +103,20 @@
       },
     },
     computed: {
-      knowWhoIsSelf() {
-        const vm = this;
-        return vm.roomId.player;
-      },
       checkRoomIdIsEmptyOrNot() {
         const vm = this;
         return vm.roomId.id === undefined;
       },
+    },
+    created() {
+      const vm = this;
+      Object.keys(vm.roomId.player).forEach((key) => {
+        if (vm.roomId.player[key].uid === vm.userStatus.uid) {
+          vm.selfId = { key, object: vm.roomId.player[key] };
+          return { key, object: vm.roomId.player[key] };
+        }
+        return 0;
+      });
     },
   };
 </script>

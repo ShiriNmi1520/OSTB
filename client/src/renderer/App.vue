@@ -9,6 +9,9 @@
           <div class="loadingItem-1"></div>
         </div>
       </div>
+      <div class="loading" v-if="error">
+        <h1 class="text-white">{{errorData}}</h1>
+      </div>
     </fade-transition>
   </div>
 </template>
@@ -23,9 +26,10 @@
           vm.$socket.emit('userStatus');
           vm.socketId = vm.$socket.io.engine.id;
         },
-        error() {
+        error(data) {
           const vm = this;
           vm.error = true;
+          vm.errorData = data;
         },
         test(data) {
           console.log(data);
@@ -83,9 +87,11 @@
           socketId: '',
           view: 'login',
           loginStatus: {},
+          error: false,
           loading: true,
           userData: {},
           roomId: {},
+          errorData: {},
           chat: [],
           roomIdList: [],
           test: false,
@@ -112,10 +118,6 @@
           vm.loading = data;
         },
         getRoomStatus(data) {
-          const vm = this;
-          vm.roomId = data;
-        },
-        joinRoomFormList(data) {
           const vm = this;
           vm.roomId = data;
         },
