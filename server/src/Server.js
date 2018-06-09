@@ -64,8 +64,12 @@ mainSocket.on("connection", (socket) => {
                         expiresIn: 60 * 60 * 24
                     });
                     socket.token = token;
-                    const transferData = { type: "success", code: "default", token, email: data.email };
-                    res(transferData);
+                    firebase.auth().onAuthStateChanged((user) => {
+                        if (user) {
+                            const transferData = { type: "success", code: "default", token, email: data.email };
+                            res(transferData);
+                        }
+                    });
                 })
                     // todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
                     // todo: 再加一個 uid 感恩。
@@ -232,24 +236,24 @@ mainSocket.on("connection", (socket) => {
         }
         // firebase.database().ref("/rooms/").child(data).remove();
     });
-    socket.on("userStatus", (data) => {
-        firebase.auth().onIdTokenChanged((user) => {
-            if (user) {
-                let transferData = { email: user.email, uid: user.uid };
-                mainSocket.socket(data.clientId).emit({ data: transferData, id: socket.id });
-                // mainSocket.to(data.clientId).emit("userStatus", {data : transferData, id : socket.id});
-            }
-        });
-        // firebase.auth().onAuthStateChanged((user) => {
-        //   if (user) {
-        //     firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-        //       socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
-        //     });
-        //   } else {
-        //     socket.emit("userStatus", { login: false });
-        //   }
-        // });
-    });
+    // socket.on("userStatus", (data : any) => {
+    //   firebase.auth().onIdTokenChanged((user :any) => {
+    //     if (user) {
+    //       let transferData : object = {email : user.email, uid : user.uid};
+    //       mainSocket.socket(data.clientId).emit({data : transferData, id : socket.id});
+    //       // mainSocket.to(data.clientId).emit("userStatus", {data : transferData, id : socket.id});
+    //     }
+    //   });
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     firebase.database().ref("/users/").child(user.uid).once("value", snap => {
+    //       socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
+    //     });
+    //   } else {
+    //     socket.emit("userStatus", { login: false });
+    //   }
+    // });
+    // });
     socket.on("gameStart", () => {
         const path = firebase.database().ref("/room/");
     });
