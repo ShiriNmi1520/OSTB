@@ -78,7 +78,7 @@ mainSocket.on("connection", (socket) => {
             return __awaiter(this, void 0, void 0, function* () {
                 yield loginProcess().then((fulfilled) => {
                     console.log(socket.id);
-                    mainSocket.to(socket.id).emit("auth", { fulfilled: fulfilled, id: socket.id });
+                    mainSocket.to(socket.id).emit("auth", fulfilled);
                 }).catch((rejected) => {
                     mainSocket.to(socket.id).emit("auth", rejected);
                 });
@@ -225,7 +225,7 @@ mainSocket.on("connection", (socket) => {
         firebase.auth().onIdTokenChanged((user) => {
             if (user) {
                 let transferData = { email: user.email, uid: user.uid };
-                mainSocket.to(socket.id).emit("userStatus", transferData);
+                mainSocket.to(socket.id).emit("userStatus", { data: transferData, id: socket.id });
             }
         });
         // firebase.auth().onAuthStateChanged((user) => {
