@@ -212,15 +212,21 @@ mainSocket.on("connection", (socket: any) => {
   });
 
   socket.on("userStatus", (data : any) => {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onIdTokenChanged((user :any) => {
       if (user) {
-        firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-          socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
-        });
-      } else {
-        socket.emit("userStatus", { login: false });
+        let transferData : object = {email : user.email, uid : user.uid};
+        mainSocket.to(socket.id).emit("userStatus", transferData);
       }
     });
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     firebase.database().ref("/users/").child(user.uid).once("value", snap => {
+    //       socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
+    //     });
+    //   } else {
+    //     socket.emit("userStatus", { login: false });
+    //   }
+    // });
   });
 
   socket.on("gameStart", () => {
