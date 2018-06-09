@@ -51,7 +51,7 @@ mainSocket.on("connection", (socket) => {
         mainSocket.socket(socket.id).emit(socket.id);
     });
     socket.on("disconnect", () => {
-        mainSocket.socket(socket.id).emit("disconnected");
+        mainSocket.to(socket.id).emit("disconnected");
         // socket.emit("test", "ru disconnected?");
     });
     socket.on("auth", (data) => {

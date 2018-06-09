@@ -37,7 +37,7 @@ mainSocket.on("connection", (socket: any) => {
   });
 
   socket.on("disconnect", () => {
-    mainSocket.socket(socket.id).emit("disconnected");
+    mainSocket.to(socket.id).emit("disconnected");
     // socket.emit("test", "ru disconnected?");
   });
 
