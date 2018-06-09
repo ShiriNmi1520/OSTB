@@ -225,7 +225,7 @@ mainSocket.on("connection", (socket) => {
         firebase.auth().onIdTokenChanged((user) => {
             if (user) {
                 let transferData = { email: user.email, uid: user.uid };
-                mainSocket.to(socket.id).emit("userStatus", { data: transferData, id: socket.id });
+                mainSocket.to(data.clientId).emit("userStatus", { data: transferData, id: socket.id });
             }
         });
         // firebase.auth().onAuthStateChanged((user) => {
