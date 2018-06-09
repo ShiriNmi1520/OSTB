@@ -78,7 +78,7 @@ mainSocket.on("connection", (socket) => {
             return __awaiter(this, void 0, void 0, function* () {
                 yield loginProcess().then((fulfilled) => {
                     console.log(socket.id);
-                    mainSocket.to(socket.id).emit("auth", fulfilled);
+                    mainSocket.to(socket.id).emit("auth", { fulfilled: fulfilled, id: socket.id });
                 }).catch((rejected) => {
                     mainSocket.to(socket.id).emit("auth", rejected);
                 });
