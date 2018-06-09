@@ -129,6 +129,7 @@ mainSocket.on("connection", (socket: any) => {
   });
 
   socket.on("createRoom", (data: any) => {
+    console.log(`createRoom ${JSON.stringify(data)}`);
     // 創立房間、隨機生成id並加入
     // 加入後將id返回客戶端om
     // 其實你可以先 const ROOM_PATH = firebase.database().ref('/rooms/')
@@ -157,16 +158,15 @@ mainSocket.on("connection", (socket: any) => {
       playerPath.once("value", (snap: any) => {
         playerData = snap.val();
       }).then(() => {
-        // mainSocket.socket(socket.id).emit({ id: data.uid, room: data.roomId, player: playerData });
-        mainSocket.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
+        nickNamePath.once("value", (snap : any) => {
+          mainSocket.to(socket.id).emit("createRoom", {host: true, uid: data.uid, nickName: snap.val().name,
+            player: playerData, room: data.roomId, readyStatus: true});
+        });
       });
     }).catch((err: any) => {
       console.log(err);
     });
     socket.join(data.uid);
-    firebase.database().ref("/room/").once("value", snap => {
-      mainSocket.emit("getRoomId", snap.val());
-    });
     // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
   });
 
@@ -179,7 +179,7 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("joinRoom", (data: any): void => {
     // 加入其他玩家所創的Room
     // 並將Room內在線人數傳回
-    console.log(data);
+    console.log(`joinRoom ${JSON.stringify(data)}`);
     let error : any = false;
     const path: any = firebase.database().ref(`/room/${data.roomId}/player`);
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
