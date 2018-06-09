@@ -66,7 +66,7 @@ mainSocket.on("connection", (socket) => {
                     socket.token = token;
                     firebase.auth().onAuthStateChanged((user) => {
                         if (user) {
-                            const transferData = { type: "success", code: "default", token, email: data.email };
+                            const transferData = { type: "success", code: "default", token, email: data.email, uid: user.uid };
                             res(transferData);
                         }
                     });
