@@ -47,7 +47,6 @@ mainSocket.on("connection", (socket) => {
     socket.token = "";
     socket.GameStatus = "";
     socket.on("test", (data) => {
-        console.log(socket);
         mainSocket.to(socket.id).emit("test", socket.id);
     });
     socket.on("disconnect", () => {
@@ -78,7 +77,7 @@ mainSocket.on("connection", (socket) => {
         function executeLoginProcess() {
             return __awaiter(this, void 0, void 0, function* () {
                 yield loginProcess().then((fulfilled) => {
-                    console.log("test");
+                    console.log(socket.id);
                     mainSocket.to(socket.id).emit("auth", fulfilled);
                 }).catch((rejected) => {
                     mainSocket.to(socket.id).emit("auth", rejected);

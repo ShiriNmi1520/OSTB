@@ -32,7 +32,6 @@ mainSocket.on("connection", (socket: any) => {
   socket.GameStatus = "";
 
   socket.on("test", (data: any) => {
-    console.log(socket);
     mainSocket.to(socket.id).emit("test", socket.id);
   });
 
@@ -64,7 +63,7 @@ mainSocket.on("connection", (socket: any) => {
     }
     async function executeLoginProcess(): Promise<void> {
       await loginProcess().then((fulfilled : any) => {
-        console.log("test");
+        console.log(socket.id);
         mainSocket.to(socket.id).emit("auth", fulfilled);
       }).catch((rejected : any) => {
         mainSocket.to(socket.id).emit("auth", rejected);
