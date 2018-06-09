@@ -215,10 +215,10 @@ mainSocket.on("connection", (socket: any) => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-          mainSocket.to(socket.id).emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
+          socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
         });
       } else {
-        mainSocket.to(socket.id).emit("userStatus", { login: false });
+        socket.emit("userStatus", { login: false });
       }
     });
   });
