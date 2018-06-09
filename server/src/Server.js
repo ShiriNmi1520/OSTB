@@ -144,7 +144,7 @@ mainSocket.on("connection", (socket) => {
         });
     });
     socket.on("createRoom", (data) => {
-        console.log(`createRoom ${data}`);
+        console.log(`createRoom ${JSON.stringify(data)}`);
         // 創立房間、隨機生成id並加入
         // 加入後將id返回客戶端om
         // 其實你可以先 const ROOM_PATH = firebase.database().ref('/rooms/')
@@ -192,7 +192,7 @@ mainSocket.on("connection", (socket) => {
     socket.on("joinRoom", (data) => {
         // 加入其他玩家所創的Room
         // 並將Room內在線人數傳回
-        console.log(`joinRoom ${data}`);
+        console.log(`joinRoom ${JSON.stringify(data)}`);
         let error = false;
         const path = firebase.database().ref(`/room/${data.roomId}/player`);
         const nickNamePath = firebase.database().ref(`/users/${data.userId}/name`);
