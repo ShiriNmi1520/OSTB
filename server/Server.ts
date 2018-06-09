@@ -129,7 +129,7 @@ mainSocket.on("connection", (socket: any) => {
   });
 
   socket.on("createRoom", (data: any) => {
-    console.log(data);
+    console.log(`createRoom ${data}`);
     // 創立房間、隨機生成id並加入
     // 加入後將id返回客戶端om
     // 其實你可以先 const ROOM_PATH = firebase.database().ref('/rooms/')
@@ -179,7 +179,7 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("joinRoom", (data: any): void => {
     // 加入其他玩家所創的Room
     // 並將Room內在線人數傳回
-    console.log(data);
+    console.log(`joinRoom ${data}`);
     let error : any = false;
     const path: any = firebase.database().ref(`/room/${data.roomId}/player`);
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
