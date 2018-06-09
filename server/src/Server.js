@@ -144,6 +144,7 @@ mainSocket.on("connection", (socket) => {
         });
     });
     socket.on("createRoom", (data) => {
+        console.log(data);
         // 創立房間、隨機生成id並加入
         // 加入後將id返回客戶端om
         // 其實你可以先 const ROOM_PATH = firebase.database().ref('/rooms/')
