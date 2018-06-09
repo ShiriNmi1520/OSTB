@@ -70,11 +70,11 @@ mainSocket.on("connection", (socket: any) => {
     async function executeLoginProcess(): Promise<void> {
       await loginProcess().then((fulfilled : any) => {
         console.log(socket.id);
-        mainSocket.socket(socket.id).emit(fulfilled);
-        // mainSocket.to(socket.id).emit("auth", fulfilled);
+        // mainSocket.socket(socket.id).emit(fulfilled);
+        mainSocket.to(socket.id).emit("auth", fulfilled);
       }).catch((rejected : any) => {
-        mainSocket.socket(socket.id).emit(rejected);
-        // mainSocket.to(socket.id).emit("auth", rejected);
+        // mainSocket.socket(socket.id).emit(rejected);
+        mainSocket.to(socket.id).emit("auth", rejected);
       });
     }
     executeLoginProcess();
@@ -105,8 +105,8 @@ mainSocket.on("connection", (socket: any) => {
     }
     async function executeRegisterProcess(): Promise<void> {
       await registerProcess().catch((rejected : any) => {
-        mainSocket.socket(socket.id).emit(rejected);
-        // mainSocket.to(socket.id)("error", rejected);
+        // mainSocket.socket(socket.id).emit(rejected);
+        mainSocket.to(socket.id)("error", rejected);
       });
     }
     executeRegisterProcess();
@@ -118,13 +118,13 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("logout", () => {
     firebase.auth().signOut()
       .then(() => {
-        mainSocket.socket(socket.id).emit({ type: "success", code: "default" });
-        // mainSocket.to(socket.id).emit("logout", { type: "success", code: "default" });
+        // mainSocket.socket(socket.id).emit({ type: "success", code: "default" });
+        mainSocket.to(socket.id).emit("logout", { type: "success", code: "default" });
         socket.token = "";
       })
       .catch((error) => {
-        mainSocket.socket(socket.id).emit({ type: "error", code: `${error.code}` });
-        // mainSocket.to(socket.id).emit("logout", { type: "error", code: `${error.code}` });
+        // mainSocket.socket(socket.id).emit({ type: "error", code: `${error.code}` });
+        mainSocket.to(socket.id).emit("logout", { type: "error", code: `${error.code}` });
       });
   });
 
@@ -157,8 +157,8 @@ mainSocket.on("connection", (socket: any) => {
       playerPath.once("value", (snap: any) => {
         playerData = snap.val();
       }).then(() => {
-        mainSocket.socket(socket.id).emit({ id: data.uid, room: data.roomId, player: playerData });
-        // mainSocket.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
+        // mainSocket.socket(socket.id).emit({ id: data.uid, room: data.roomId, player: playerData });
+        mainSocket.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
       });
     }).catch((err: any) => {
       console.log(err);
@@ -185,11 +185,11 @@ mainSocket.on("connection", (socket: any) => {
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
     let nickName: string = "";
     path.once("value", (snap: any) => {
-      mainSocket.socket(socket.id).emit(snap.val());
-      // mainSocket.to(socket.id).emit("updateRoomStatus", snap.val());
+      // mainSocket.socket(socket.id).emit(snap.val());
+      mainSocket.to(socket.id).emit("updateRoomStatus", snap.val());
       if (snap.val().length >= 4) {
-        mainSocket.socket(socket.id).emit("error");
-        // mainSocket.to(socket.id).emit("error");
+        // mainSocket.socket(socket.id).emit("error");
+        mainSocket.to(socket.id).emit("error");
         error = true;
       return error;
       }
