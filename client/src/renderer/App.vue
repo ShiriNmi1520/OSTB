@@ -32,7 +32,13 @@
           vm.errorData = data;
         },
         test(data) {
-          console.log(data);
+          if (typeof (data) !== 'object') {
+            console.log(data);
+          } else {
+            Object.keys(data).forEach((key) => {
+              console.log(data[key]);
+            });
+          }
         },
         auth(data) {
           const vm = this;

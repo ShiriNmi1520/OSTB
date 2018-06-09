@@ -48,7 +48,6 @@
     <div v-if="checkRoomIdIsEmptyOrNot">
       <b-btn @click="backToLogin()">back to login</b-btn>
     </div>
-    <b-btn @click="testForGetSelf()">123</b-btn>
   </div>
 </template>
 

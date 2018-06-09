@@ -31,7 +31,7 @@
         </b-row>
         <b-row>
           <b-col sm="8" offset="2" class="mb-4">
-            <b-btn style="width: 100%;" class="mb-4">パスワードを忘れ？</b-btn>
+            <b-btn style="width: 100%;" class="mb-4" @click="getSocketId">パスワードを忘れ？</b-btn>
           </b-col>
         </b-row>
       </div>
@@ -167,6 +167,10 @@
       backToLogin() {
         const vm = this;
         vm.view = 'login';
+      },
+      getSocketId() {
+        const vm = this;
+        vm.$socket.emit('test');
       },
     },
     computed: {
