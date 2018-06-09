@@ -67,9 +67,6 @@
       clientId: {
         type: String,
       },
-      userStatus: {
-        type: Object,
-      },
     },
     data() {
       return {
@@ -110,7 +107,7 @@
     created() {
       const vm = this;
       Object.keys(vm.roomId.player).forEach((key) => {
-        if (vm.roomId.player[key].uid === vm.userStatus.uid) {
+        if (vm.roomId.player[key].uid === vm.loginStatus.uid) {
           vm.selfId = { key, object: vm.roomId.player[key] };
           return { key, object: vm.roomId.player[key] };
         }

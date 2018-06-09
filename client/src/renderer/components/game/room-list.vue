@@ -16,7 +16,7 @@
       <b-col md="12" class="mt-3" v-for="(obj, index) in roomList">
         <b-btn block href="#" v-b-toggle="'room' + index" class="btn-click">{{obj.room}}</b-btn>
         <b-collapse :id="`room${index}`" accordion="my-accordion" role="tabpanel">
-          <b-btn class="btn-info mt-3 btn-lg" @click="joinRoom({id: obj.index})">加入</b-btn>
+          <b-btn class="btn-info mt-3 btn-lg" @click="joinRoom(index)">加入</b-btn>
         </b-collapse>
       </b-col>
     </b-row>
@@ -37,10 +37,7 @@
       roomList: {
         type: Object,
       },
-      loginMessage: {
-        type: Object,
-      },
-      userStatus: {
+      loginStatus: {
         type: Object,
       },
       clientId: {
@@ -57,8 +54,9 @@
       },
       async joinRoom(data) {
         const vm = this;
-        vm.$socket.emit('joinRoom', { roomId: data.id, userId: vm.userStatus.uid });
+        vm.$socket.emit('joinRoom', { roomId: data, userId: vm.loginStatus.uid });
         vm.$emit('updateLoading', true);
+        vm.$emit('update');
         await waitForTwoSec(vm).then(() => {
           vm.$router.push({ name: 'game-room' });
           vm.$emit('updateLoading', false);

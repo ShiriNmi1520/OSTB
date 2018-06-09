@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="body darkTheme">
-    <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :login-message="loginStatus"
+    <router-view :class='{"blur": loading}' @updateRoomId="getRoomId" @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus"
                  :room-id="roomId" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId" :userStatus="userData"></router-view>
     <fade-transition>
       <div class="loading" v-if="loading">
@@ -54,6 +54,11 @@
           vm.socketIdTest = data.id;
         },
         createRoom(data) {
+          const vm = this;
+          console.log(data);
+          vm.roomId = data;
+        },
+        joinRoom(data) {
           const vm = this;
           console.log(data);
           vm.roomId = data;

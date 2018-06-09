@@ -19,6 +19,20 @@
     </script>
 </head>
 <body>
-
+  <input type="text" placeholder="輸入帳號" id="acc">
+  <input type="password" placeholder="輸入密碼" id="pwd">
+  <button id="login">登入</button>
 </body>
+<script>
+  let acc = document.getElementById('acc');
+  let pwd = document.getElementById('pwd');
+  let login = document.getElementById('login');
+  login.addEventListener('click', () => {
+    firebase.auth().signInWithEmailAndPassword(acc.value, pwd.value).then(() => {
+      firebase.auth().onAuthStateChanged((user) => {
+        console.log(user);
+      })
+    })
+  })
+</script>
 </html>

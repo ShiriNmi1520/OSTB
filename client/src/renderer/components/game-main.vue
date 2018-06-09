@@ -50,11 +50,11 @@
       roomId: {
         type: Object,
       },
-      userStatus: {
-        type: Object,
-      },
       clientId: {
         type: String,
+      },
+      loginStatus: {
+        type: Object,
       },
     },
     methods: {
@@ -72,7 +72,7 @@
         const vm = this;
         vm.$emit('updateLoading', true);
         if (vm.roomName !== '') {
-          vm.$socket.emit('createRoom', { roomId: vm.roomName, uid: vm.userStatus.uid });
+          vm.$socket.emit('createRoom', { roomId: vm.roomName, uid: vm.loginStatus.uid });
           await waitForTwoSec().then(() => {
             vm.$emit('updateLoading', false);
             vm.$router.push({ name: 'game-room' });
@@ -84,7 +84,6 @@
         vm.$emit('backToMain', { type: '', code: '' });
         vm.$socket.emit('logout');
         waitForTwoSec().then(() => {
-          vm.$socket.emit('userStatus');
           vm.$router.push({ name: 'login' });
         });
       },

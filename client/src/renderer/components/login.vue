@@ -103,7 +103,7 @@
       };
     },
     props: {
-      loginMessage: {
+      loginStatus: {
         type: Object,
         default: () => ({
           type: 'default',
@@ -121,20 +121,20 @@
         vm.$emit('updateLoading', true);
         const loginPromise = new Promise((res, rej) => {
           setTimeout(() => {
-            if (vm.loginMessage.type !== 'success') {
+            if (vm.loginStatus.type !== 'success') {
               rej();
-            } else if (vm.loginMessage.type === 'success') {
+            } else if (vm.loginStatus.type === 'success') {
               res();
             }
           }, 2000);
         });
         loginPromise
           .then(() => {
-            if (vm.loginMessage.type === 'success') {
+            if (vm.loginStatus.type === 'success') {
               vm.$emit('updateLoading', false);
               vm.$socket.emit('userStatus', { clientId: vm.clientId });
               vm.$router.push({ name: 'main' });
-            } else if (vm.loginMessage.type === 'error' && vm.loginMessage.code === 'invalid-email') {
+            } else if (vm.loginStatus.type === 'error' && vm.loginStatus.code === 'invalid-email') {
               vm.logErr = 'mail 格式不正。';
             }
           })
