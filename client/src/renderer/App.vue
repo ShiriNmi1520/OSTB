@@ -50,7 +50,8 @@
         },
         userStatus(data) {
           const vm = this;
-          vm.userData = data;
+          vm.userData = data.data;
+          vm.socketIdTest = data.id;
         },
         createRoom(data) {
           const vm = this;
@@ -102,6 +103,7 @@
           roomIdList: [],
           test: false,
           inGameId: 0,
+          socketIdTest: '',
         };
       },
       computed: {
