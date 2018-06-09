@@ -32,11 +32,13 @@ mainSocket.on("connection", (socket: any) => {
   socket.GameStatus = "";
 
   socket.on("test", (data: any) => {
-    mainSocket.to(socket.id).emit("test", socket.id);
+    // mainSocket.to(socket.id).emit("test", socket.id);
+    mainSocket.socket(socket.id).emit(socket.id);
   });
 
   socket.on("disconnect", () => {
-    socket.emit("test", "ru disconnected?");
+    mainSocket.socket(socket.id).emit("disconnected");
+    // socket.emit("test", "ru disconnected?");
   });
 
   socket.on("auth", (data: any) => {
@@ -64,9 +66,11 @@ mainSocket.on("connection", (socket: any) => {
     async function executeLoginProcess(): Promise<void> {
       await loginProcess().then((fulfilled : any) => {
         console.log(socket.id);
-        mainSocket.to(socket.id).emit("auth", fulfilled);
+        mainSocket.socket(socket.id).emit(fulfilled);
+        // mainSocket.to(socket.id).emit("auth", fulfilled);
       }).catch((rejected : any) => {
-        mainSocket.to(socket.id).emit("auth", rejected);
+        mainSocket.socket(socket.id).emit(rejected);
+        // mainSocket.to(socket.id).emit("auth", rejected);
       });
     }
     executeLoginProcess();
@@ -97,7 +101,8 @@ mainSocket.on("connection", (socket: any) => {
     }
     async function executeRegisterProcess(): Promise<void> {
       await registerProcess().catch((rejected : any) => {
-        mainSocket.to(socket.id)("error", rejected);
+        mainSocket.socket(socket.id).emit(rejected);
+        // mainSocket.to(socket.id)("error", rejected);
       });
     }
     executeRegisterProcess();
@@ -109,11 +114,13 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("logout", () => {
     firebase.auth().signOut()
       .then(() => {
-        mainSocket.to(socket.id).emit("logout", { type: "success", code: "default" });
+        mainSocket.socket(socket.id).emit({ type: "success", code: "default" });
+        // mainSocket.to(socket.id).emit("logout", { type: "success", code: "default" });
         socket.token = "";
       })
       .catch((error) => {
-        mainSocket.to(socket.id).emit("logout", { type: "error", code: `${error.code}` });
+        mainSocket.socket(socket.id).emit({ type: "error", code: `${error.code}` });
+        // mainSocket.to(socket.id).emit("logout", { type: "error", code: `${error.code}` });
       });
   });
 
@@ -146,7 +153,8 @@ mainSocket.on("connection", (socket: any) => {
       playerPath.once("value", (snap: any) => {
         playerData = snap.val();
       }).then(() => {
-        mainSocket.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
+        mainSocket.socket(socket.id).emit({ id: data.uid, room: data.roomId, player: playerData });
+        // mainSocket.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
       });
     }).catch((err: any) => {
       console.log(err);
@@ -173,9 +181,11 @@ mainSocket.on("connection", (socket: any) => {
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
     let nickName: string = "";
     path.once("value", (snap: any) => {
-      mainSocket.to(socket.id).emit("updateRoomStatus", snap.val());
+      mainSocket.socket(socket.id).emit(snap.val());
+      // mainSocket.to(socket.id).emit("updateRoomStatus", snap.val());
       if (snap.val().length >= 4) {
-        mainSocket.to(socket.id).emit("error");
+        mainSocket.socket(socket.id).emit("error");
+        // mainSocket.to(socket.id).emit("error");
         error = true;
       return error;
       }
@@ -188,7 +198,8 @@ mainSocket.on("connection", (socket: any) => {
     });
     path.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId});
     socket.join(data.roomId);
-    mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
+    mainSocket.socket(socket.id).emit("Joined!");
+    // mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
     // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
     });
@@ -215,7 +226,8 @@ mainSocket.on("connection", (socket: any) => {
     firebase.auth().onIdTokenChanged((user :any) => {
       if (user) {
         let transferData : object = {email : user.email, uid : user.uid};
-        mainSocket.to(data.clientId).emit("userStatus", {data : transferData, id : socket.id});
+        mainSocket.socket(data.clientId).emit({data : transferData, id : socket.id});
+        // mainSocket.to(data.clientId).emit("userStatus", {data : transferData, id : socket.id});
       }
     });
     // firebase.auth().onAuthStateChanged((user) => {
