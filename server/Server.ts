@@ -32,8 +32,8 @@ mainSocket.on("connection", (socket: any) => {
   socket.GameStatus = "";
 
   socket.on("test", (data: any) => {
-    console.log(data);
-    socket.emit("test", `success ${data.split(" ").reverse()}`);
+    console.log(socket);
+    mainSocket.to(socket.id).emit("test", socket.id);
   });
 
   socket.on("disconnect", () => {

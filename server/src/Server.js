@@ -47,8 +47,8 @@ mainSocket.on("connection", (socket) => {
     socket.token = "";
     socket.GameStatus = "";
     socket.on("test", (data) => {
-        console.log(data);
-        socket.emit("test", `success ${data.split(" ").reverse()}`);
+        console.log(socket);
+        mainSocket.to(socket.id).emit("test", socket.id);
     });
     socket.on("disconnect", () => {
         socket.emit("test", "ru disconnected?");
