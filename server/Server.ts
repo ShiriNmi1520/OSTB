@@ -157,16 +157,15 @@ mainSocket.on("connection", (socket: any) => {
       playerPath.once("value", (snap: any) => {
         playerData = snap.val();
       }).then(() => {
-        // mainSocket.socket(socket.id).emit({ id: data.uid, room: data.roomId, player: playerData });
-        mainSocket.to(socket.id).emit("createRoom", { id: data.uid, room: data.roomId, player: playerData });
+        nickNamePath.once("value", (snap : any) => {
+          mainSocket.to(socket.id).emit("createRoom", {host: true, uid: data.uid, nickName: snap.val().name,
+            player: playerData, room: data.roomId, readyStatus: true});
+        });
       });
     }).catch((err: any) => {
       console.log(err);
     });
     socket.join(data.uid);
-    firebase.database().ref("/room/").once("value", snap => {
-      mainSocket.emit("getRoomId", snap.val());
-    });
     // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
   });
 
