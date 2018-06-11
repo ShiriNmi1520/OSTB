@@ -174,7 +174,7 @@ mainSocket.on("connection", (socket) => {
                 playerData = snap.val();
             }).then(() => {
                 nickNamePath.once("value", (snap) => {
-                    mainSocket.to(socket.id).emit("createRoom", { host: true, uid: data.uid, nickName: snap.val().name,
+                    mainSocket.to(socket.id).emit("createRoom", { host: true, id: data.uid, nickName: snap.val().name,
                         player: playerData, room: data.roomId, readyStatus: true });
                 });
             });
@@ -215,7 +215,7 @@ mainSocket.on("connection", (socket) => {
         });
         path.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId });
         socket.join(data.roomId);
-        mainSocket.to(socket.id).emit("joinRoom", { host: false, nickName: nickName, readyStatus: false, uid: data.userId });
+        mainSocket.to(socket.id).emit("joinRoom", { host: false, nickName: nickName, readyStatus: false, id: data.roomId });
         // mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
         // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
