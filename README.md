@@ -1,4 +1,3 @@
-
 # OSTB 架構介紹
 
 期末項目，實現前後端分離。
@@ -61,7 +60,7 @@
 
 ## 使用流程
 
-#### 登入
+### 登入
 
 * 前端
 
@@ -69,178 +68,81 @@
 
 * 後端
 
-    <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/1-b.png?alt=media&token=e33e83ad-f364-4ed6-a4cd-eb6525d9d761">
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/1-b.png?alt=media&token=e33e83ad-f364-4ed6-a4cd-eb6525d9d761">
 
 
 
 ### 註冊
 
-   * 前端
+* 前端
 
-     <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/2-a.png?alt=media&token=f8fd4fda-7a31-4aed-9010-3710d2b45069">
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/2-a.png?alt=media&token=f8fd4fda-7a31-4aed-9010-3710d2b45069">
 
-   * 後端
+* 後端
 
-     <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/2-a.png?alt=media&token=f8fd4fda-7a31-4aed-9010-3710d2b45069">
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/2-a.png?alt=media&token=f8fd4fda-7a31-4aed-9010-3710d2b45069">
 
 
 
 
 ### 登出
 
-   * 前端
+* 前端
 
-     ```flow
-     st=>start: 開始登出
-     op=>operation: 清除登入相關資訊
-     e=>end: 已登出成功，進入登入畫面
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/3-a.png?alt=media&token=5781dbab-8727-4263-80c0-d3d41fb5f6af">
 
-     st->op->e
-     ```
+* 後端
 
-
-
-   * 後端
-
-     ```flow
-     st=>start: 開始登出
-     op=>operation: 清除登入相關資訊
-     e=>end: 已登出成功
-
-     st->op->e
-     ```
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/3-b.png?alt=media&token=2a68354a-97c4-4a04-af9e-2a949a16c99c">
 
 ### 創建房間
 
-   * 前端
+* 前端
 
-     ```flow
-     st=>start: 點擊創建房間按鈕
-     op=>operation: 輸入房間資訊
-     sub1=>subroutine: 往後端推送房間名稱、個人ＵＩＤ
-     e=>end: 接收來自後端的資料，創建成功，路由進入房間畫面。
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/4-a.png?alt=media&token=c5aae070-7ecf-4fa5-bdc3-d1236fe5b543">
 
-     st->op->sub1->e
-     ```
+* 後端
 
-
-
-   * 後端
-
-     ```flow
-     st=>start: 收到前端資料，開始創建房間
-     op=>operation: 使用前端傳來之房間名、個人ＵＩＤ往 firebase 進行推送
-     op2=>operation: 推送成功後，往前端推送房間相關資料。
-     e=>end: 已結束
-
-     st->op->op2->e
-     ```
-
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/4-b.png?alt=media&token=43c82c36-4666-4f58-adf0-9e047618d073">
+  
 ### 獲取房間清單
 
-   * 前端
+* 前端
 
-     ```flow
-     st=>start: 傳送請求給後端
-     e=>end: 已收到資訊，進入房間列表。
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/5-a.png?alt=media&token=5aa2c00e-1b88-4a00-a57a-60d7a0cb3707">
 
-     st->e
-     ```
+* 後端
 
-
-
-   * 後端
-
-     ```flow
-     st=>start: 接收前端訊號
-     op=>operation: 往 firebase 提取資訊
-     e=>end: 發送至前端，結束
-
-     st->op->e
-     ```
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/5-b.png?alt=media&token=3c5e7e4e-9ef0-4fa0-9549-e79014cc9d01">
 
 ### 加入房間
 
-   * 前端
+* 前端
 
-     ```flow
-     st=>start: 往後端發送請求
-     op=>operation: 提取該房間資訊，傳送給後端
-     e=>end: 順利加入房間，路由進入房間。
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/6-a.png?alt=media&token=19466545-7cad-456f-8cba-9da0fda74ea9">
 
-     st->op->e
-     ```
+* 後端
 
-
-
-   * 後端
-
-     ```flow
-     st=>start: 接收前端訊號
-     op=>operation: 將前端使用者發送的資訊相對應的，把該使用者推送進房間。
-     e=>end: 發送房間資訊至前端，結束
-
-     st->op->e
-     ```
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/6-b.png?alt=media&token=46f6c4ee-8c21-4cd8-8f0e-43f13d1e88c3">
 
 ### 離開房間
+* 前端
 
-   * 前端
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/7-a.png?alt=media&token=30c03939-660f-4ced-82bf-d892711edd7d">
 
-     ```flow
-     st=>start: 發送離開訊號至後端
-     op=>operation: 將個人資訊推往後端
-     e=>end: 成功，路由畫面返回房間列表。
+* 後端
 
-     st->op->e
-     ```
-
-
-
-   * 後端
-
-     ```flow
-     st=>start: 接收前端訊號
-     op=>operation: 往 firebase 調用該房間資訊，並且移除使用者
-     e=>end: 發送至前端，結束
-
-     st->op->e
-     ```
-
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/7-b.png?alt=media&token=36ea9a00-7fc2-4bf8-b3c5-c9f45af68baf">
+  
 ### 進入遊戲：
 
-   * 前端
+* 前端
 
-     ```flow
-     st=>start: 由房主點下開始遊戲
-     op=>operation: 往後端推送開始訊號
-     op1=>operation: 房間全體進入戰鬥路由
-     con=>condition: 全體已進入戰鬥路由？
-     op2=>operation: 進入遊戲失敗，回到房間路由。
-     e=>end: 開始戰鬥
-     st->op->op1->con
-     con(yes)->e
-     con(no)->op2
-     ```
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/8-a.png?alt=media&token=b04679dc-ae07-445e-b58d-4885f4e9cdba">
 
+* 後端
 
-
-   * 後端
-
-     ```flow
-     st=>start: 接收房主按下開始遊戲之訊號
-     op=>operation: 往 firebase 註記該房間遊戲中，不可加入。
-     op1=>operation: 往房內玩家推訊號，使其路由進入戰鬥畫面
-     op2=>operation: 往房內玩家推訊號，使其路由進入房間畫面，提供失敗訊息。
-     con=>condition: 全體已進戰鬥畫面？
-     e=>end: 開始主持遊戲
-
-     st->op->op1->con
-     con(yes)->e
-     con(no)->op2
-     ```
-
-
+  <img src="https://firebasestorage.googleapis.com/v0/b/buyao-70f4a.appspot.com/o/8-b.png?alt=media&token=9d153c87-97c5-4f3d-b566-1baccaf55941">
 
 ### 主持遊戲
 
