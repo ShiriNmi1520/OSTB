@@ -245,13 +245,48 @@ mainSocket.on("connection", (socket: any) => {
     // });
   // });
 
-  socket.on("gameStart", () => {
-   const path : any = firebase.database().ref("/room/");
+  socket.on("gameStart", (data : any) => {
+    // 接到房主gameStart，往該房間內所有人推送gameStart(只由房主發送過來，其餘只接收)
+    // 請帶data.host，將作為是否創建status, gameInfo之依據
+    // 目前讓所有player起始6張QQ, 之後張數決定由丟過來的count決定, 執行每回合抽卡麻煩丟1 thx
+   socket.broadcast.to(data.roomId).emit("gameStart", "plz emit to drawCard for get six cards thx");
+   const roomPath : any = firebase.database().ref("/room/");
+   function setGameStatus(): any {
+    return new Promise((res, rej) => {
+      roomPath.child(data.roomId).set({
+        status : "Started",
+        gameInfo :
+        {
+          playerStatus :{}
+        }
+      })
+      .then(() => {
+        const result : object = {gameStartResult : "successful"};
+        res(result);
+      })
+      .catch((err: any) => {
+        const resultErr : object = err;
+        rej(err);
+      });
+    });
+   }
+   async function executeGameStartProcess (): Promise<void> {
+     await setGameStatus()
+     .then((fulfilled : any) => {
+      socket.broadcast.to(data.roomId).emit("gameStart", fulfilled);
+     })
+     .catch((rejected : any) => {
+      socket.broadcast.to(data.roomId).emit("gameStart", rejected);
+     });
+   }
+   if(data.host === true) {
+     executeGameStartProcess();
+   }
   });
 
-  socket.on("drawCard", (count: any) => {
-    giveCard.getRandom(card, count);
-    giveCard.getRandomWithType(count);
+  socket.on("drawCard", (data: any) => {
+    socket.card = giveCard.getRandom(card, data.count);
+    socket.cardType = giveCard.getRandomWithType(data.count);
   });
   // todo: 那個 初始抽牌的部分是根據玩家抽到的角色卡血量來決定應該抽多少張，所以你可能還要再寫一個發角色卡
   // todo: 然後再寫一個每回合的抽卡，感謝。
