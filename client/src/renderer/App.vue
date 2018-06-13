@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="body darkTheme">
-    <router-view :class='{"blur": loading}' @updateRoomId="getRoomId" @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus"
-                 :room-id="roomId" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId" :userStatus="userData"></router-view>
+    <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus"
+                 :roomData="roomData" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId" :userStatus="userData"></router-view>
     <fade-transition>
       <div class="loading" v-if="loading">
         <b-btn v-if="test" @click="testLogin">test</b-btn>
@@ -56,12 +56,12 @@
         createRoom(data) {
           const vm = this;
           console.log(data);
-          vm.roomId = data;
+          vm.roomData = data;
         },
         joinRoom(data) {
           const vm = this;
           console.log(data);
-          vm.roomId = data;
+          vm.roomData = data;
         },
         InGameChat(data) {
           const vm = this;
@@ -77,12 +77,11 @@
         },
         updateRoomStatus(data) {
           const vm = this;
-          vm.roomId.player = data;
+          vm.roomData.player = data;
         },
         gameStart() {
           const vm = this;
           vm.$router.push({ name: 'battle' });
-          // TODO: 如果大家都準備好了就用這個 function 讓大家一起進遊戲。
         },
         getBattleStatus(data) {
           console.log(data);
@@ -102,7 +101,7 @@
           error: false,
           loading: true,
           userData: {},
-          roomId: {},
+          roomData: {},
           errorData: {},
           chat: [],
           roomIdList: [],
@@ -114,7 +113,7 @@
       computed: {
         getLoginStatus() {
           const vm = this;
-          return (vm.userData.login === false && vm.$router.name !== 'login') || (vm.roomId === null && vm.$router.name !== 'login');
+          return (vm.userData.login === false && vm.$router.name !== 'login') || (vm.roomData === null && vm.$router.name !== 'login');
         },
       },
       methods: {
@@ -132,7 +131,7 @@
         },
         getRoomStatus(data) {
           const vm = this;
-          vm.roomId = data;
+          vm.roomData = data;
         },
         testLogin() {
           const vm = this;

@@ -47,7 +47,7 @@
       };
     },
     props: {
-      roomId: {
+      roomData: {
         type: Object,
       },
       clientId: {

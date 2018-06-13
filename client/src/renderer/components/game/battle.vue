@@ -1,11 +1,12 @@
 <template>
   <div class="body darkTheme">
     <div class="main-block-battle">
-      <div class="char">{{4}}</div>
-      <div class="char char--p1">{{4 + 1 > 4 ? 4-4 + 1 : 0}}</div>
-      <div class="char char--p2">{{4 + 2 > 4 ? 4-4 + 2 : 0}}</div>
-      <div class="char char--p3">{{4 + 3 > 4 ? 4-4 + 3 : 0}}</div>
+      <div class="char">{{n}}</div>
+      <div class="char char--p1">{{n + 1 > 4 ? n - 4 + 1 : n + 1}}</div>
+      <div class="char char--p2">{{n + 2 > 4 ? n - 4 + 2 : n + 2}}</div>
+      <div class="char char--p3">{{n + 3 > 4 ? n - 4 + 3 : n + 3}}</div>
       <b-btn primary @click="backToMain">back to main</b-btn>
+      <b-btn @click="drawCard(5)">ドローテスト</b-btn>
     </div>
     <b-row class="CardContainer justify-content-center">
       <b-col class="ml-2" sm="1" center v-for="(data, index) in test">
@@ -14,7 +15,7 @@
             <div class="mainCard" style="text-decoration: none !important;" :id="`Card${index}`">{{data}}</div>
           </template>
           <b-dropdown-item @click="getItemID(index)">詳細</b-dropdown-item>
-          <b-dropdown-item @click="getItemID(index)">出牌</b-dropdown-item>
+          <b-dropdown-item @click="useCard(data)">出牌</b-dropdown-item>
         </b-dropdown>
       </b-col>
     </b-row>
@@ -29,9 +30,18 @@
     <b-row class="CardContainer CardContainer--p1 justify-content-center">
       <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
     </b-row>
-    <div class="allCard">123</div>
-    <div class="p">12344</div>
-    <b-btn>ドローテスト</b-btn>
+    <div>
+      <div>
+        <b-modal ref="selectPlayer" hide-footer title="選擇玩家">
+          <div class="d-block text-center">
+            <div class="block text-white" @click="selectPlayer(0)">玩家一</div>
+            <div class="block text-white" @click="selectPlayer(1)">玩家二</div>
+            <div class="block text-white" @click="selectPlayer(2)">玩家三</div>
+            <div class="block text-white" @click="selectPlayer(3)">玩家四</div>
+          </div>
+        </b-modal>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,23 +50,25 @@
     name: 'battle',
     data() {
       return {
+        show: false,
         view: 'battle',
+        n: 1,
         test: [1, 2, 3, 4, 5],
         player: [{
           id: 0,
-          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          handCard: [],
           life: 4,
         }, {
           id: 1,
-          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          handCard: [],
           life: 4,
         }, {
           id: 2,
-          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          handCard: [],
           life: 4,
         }, {
           id: 3,
-          handCard: [{ id: 5 }, { id: 4 }, { id: 3 }, { id: 2 }],
+          handCard: [],
           life: 4,
         }],
       };
@@ -71,11 +83,17 @@
       },
       useCard(data) {
         const vm = this;
+        this.$refs.selectPlayer.show();
         vm.$socket.emit('useCard', data);
       },
       drawCard(data) {
         const vm = this;
         vm.$socket.emit('drawCard', data);
+      },
+      selectPlayer(data) {
+        const vm = this;
+        vm.$socket.emit('attack', data);
+        this.$refs.selectPlayer.hide();
       },
     },
   };
@@ -175,5 +193,11 @@
     left: unset;
     right: 0;
     transform: translate(345%, -50%) rotate(-90deg);
+  }
+  .block{
+    height: 100px;
+    width: 100px;
+    background-color: #000;
+    display: inline-flex;
   }
 </style>

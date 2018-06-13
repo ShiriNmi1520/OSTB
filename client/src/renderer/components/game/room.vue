@@ -15,13 +15,14 @@
     <b-row>
       <b-col md="12" class="mt-3">
         <b-list-group>
-          <b-list-group-item class="mainContainer mb-2" v-for="obj of roomId.player">{{obj.uid}}
+          <b-list-group-item class="mainContainer mb-2" v-for="obj of roomData.player">{{obj.uid}}
           <span class="float-right" v-if="">🙆‍</span></b-list-group-item>
         </b-list-group>
       </b-col>
     </b-row>
     <b-row>
       <b-col md="6" class="mt-3">
+        <div class="chatContainer p-3">
         <div class="chatContainer p-3">
           <div class="chatTextArea">
             <p v-for="message of chatAll">{{message.name}}: {{message.content}}</p>
@@ -35,11 +36,14 @@
             </b-col>
           </b-row>
         </div>
+        </div>
       </b-col>
       <b-col md="6" class="mt-3">
         <div class="chatContainer">
-          <b-jumbotron class="nav-red btn-click">
+          <b-jumbotron v-if="selfId.object.host === true" class="nav-red btn-click" @click="gameStart">
             <h1 class="text-center p-4">ゲームはここから<br><span class="asobu">開始</span></h1>
+          </b-jumbotron>
+          <b-jumbotron v-if="selfId.object.host === false" class="nav-red btn-click">
             <h1 class="text-center p-4">準備を<br><span class="asobu">する</span></h1>
           </b-jumbotron>
         </div>
@@ -52,13 +56,18 @@
 </template>
 
 <script>
+  function waitForTwoSec() {
+    return new Promise((res) => {
+      setTimeout(() => res(), 2000);
+    });
+  }
   export default {
     name: 'room',
     props: {
       chatAll: {
         type: Array,
       },
-      roomId: {
+      roomData: {
         type: Object,
       },
       loginStatus: {
@@ -81,7 +90,7 @@
       },
       exitRoom() {
         const vm = this;
-        vm.$socket.emit('exitRoom', { host: vm.selfId.object.host, roomId: vm.roomId.id, index: vm.selfId.key });
+        vm.$socket.emit('exitRoom', { host: vm.selfId.object.host, roomId: vm.roomData.id, index: vm.selfId.key });
         vm.$emit('exitRoom', '');
         vm.$router.push({ name: 'main' });
       },
@@ -91,7 +100,7 @@
       },
       gameStart() {
         const vm = this;
-        vm.$socket.emit('gameStart', 'room_id');
+        vm.$socket.emit('gameStart', { host: vm.selfId.object.host, roomId: vm.roomData.id });
       },
       backToLogin() {
         const vm = this;
@@ -101,17 +110,19 @@
     computed: {
       checkRoomIdIsEmptyOrNot() {
         const vm = this;
-        return vm.roomId.id === undefined;
+        return vm.roomData.id === undefined;
       },
     },
-    created() {
+    async created() {
       const vm = this;
-      Object.keys(vm.roomId.player).forEach((key) => {
-        if (vm.roomId.player[key].uid === vm.loginStatus.uid) {
-          vm.selfId = { key, object: vm.roomId.player[key] };
-          return { key, object: vm.roomId.player[key] };
-        }
-        return 0;
+      await waitForTwoSec().then(() => {
+        Object.keys(vm.roomData.player).forEach((key) => {
+          if (vm.roomData.player[key].uid === vm.loginStatus.uid) {
+            vm.selfId = { key, object: vm.roomData.player[key] };
+            return { key, object: vm.roomData.player[key] };
+          }
+          return '';
+        });
       });
     },
   };
