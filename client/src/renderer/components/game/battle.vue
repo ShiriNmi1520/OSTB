@@ -3,9 +3,9 @@
     <h1>現在是{{playerTurn}}的回合</h1>
     <div class="main-block-battle">
       <div class="char">{{n}}</div>
-      <div class="char char--p1">{{n + 1 > 4 ? n - 4 + 1 : n + 1}}</div>
-      <div class="char char--p2">{{n + 2 > 4 ? n - 4 + 2 : n + 2}}</div>
-      <div class="char char--p3">{{n + 3 > 4 ? n - 4 + 3 : n + 3}}</div>
+      <div class="char char--p1">{{n + 1 > 3 ? n - 4 + 1 : n + 1}}</div>
+      <div class="char char--p2">{{n + 2 > 3 ? n - 4 + 2 : n + 2}}</div>
+      <div class="char char--p3">{{n + 3 > 3 ? n - 4 + 3 : n + 3}}</div>
       <b-btn primary @click="backToMain">back to main</b-btn>
       <b-btn @click="drawCard(5)">ドローテスト</b-btn>
       <b-btn @click="showDefence">123</b-btn>
