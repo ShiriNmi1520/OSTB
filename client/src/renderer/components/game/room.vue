@@ -5,7 +5,7 @@
         <div style="margin-top: -.5px" class="topContainer mb-5 p-3">
           <b-row>
             <b-col>
-              <h1>GAME_ROOM_NAME</h1>
+              <h1>{{roomData.room}}</h1>
             </b-col>
               <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="exitRoom">退席</b-btn>
           </b-row>

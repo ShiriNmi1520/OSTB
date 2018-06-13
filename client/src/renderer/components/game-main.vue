@@ -60,7 +60,7 @@
     methods: {
       async gotoRoomList() {
         const vm = this;
-        vm.$socket.emit('getRoomId', { id: vm.clientId });
+        vm.$socket.emit('getRoomList', { id: vm.clientId });
         vm.$emit('updateLoading', true);
         const wait = await waitForTwoSec().then(() => {
           vm.$emit('updateLoading', false);
