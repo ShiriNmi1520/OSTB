@@ -67,7 +67,7 @@
           const vm = this;
           vm.chat.push(data);
         },
-        getRoomId(data) {
+        getRoomList(data) {
           const vm = this;
           vm.roomIdList = data;
         },
