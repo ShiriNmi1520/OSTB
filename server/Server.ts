@@ -267,7 +267,36 @@ mainSocket.on("connection", (socket: any) => {
         status : "Started",
         gameInfo :
         {
-          playerStatus :{}
+          playerStatus :[
+          {
+            id: 0,
+            handCard: [],
+            turn: true,
+            uid: "",
+            life: 4
+          },
+          {
+            id: 1,
+            handCard: [],
+            turn: false,
+            uid: "",
+            life: 4
+          },
+          {
+            id: 2,
+            handCard: [],
+            turn: false,
+            uid: "",
+            life: 4
+          },
+          {
+            id: 3,
+            handCard: [],
+            turn: false,
+            uid: "",
+            life: 4
+          }
+        ]
         }
       })
       .then(() => {
@@ -276,7 +305,7 @@ mainSocket.on("connection", (socket: any) => {
       })
       .catch((err: any) => {
         const resultErr : object = err;
-        rej(err);
+        rej(resultErr);
       });
     });
    }
