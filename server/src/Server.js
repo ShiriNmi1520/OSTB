@@ -196,6 +196,7 @@ mainSocket.on("connection", (socket) => {
         socket.join(data.roomId);
         let error = false;
         const playerPath = firebase.database().ref(`/room/${data.roomId}/player`);
+        const roomPath = firebase.database().ref(`/room/${data.roomId}`);
         const nickNamePath = firebase.database().ref(`/users/${data.userId}/name`);
         let nickName = "";
         playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId });
@@ -216,7 +217,10 @@ mainSocket.on("connection", (socket) => {
         nickNamePath.once("value", (snap) => {
             nickName = snap.val();
         });
-        mainSocket.to(socket.id).emit("joinRoom", { host: false, nickName: nickName, readyStatus: false, id: data.roomId });
+        roomPath.once("value", (snap) => {
+            socket.room = snap.val().room;
+        });
+        mainSocket.to(socket.id).emit("joinRoom", { host: false, nickName: nickName, readyStatus: false, room: socket.room, id: data.roomId });
         // mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
         // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
