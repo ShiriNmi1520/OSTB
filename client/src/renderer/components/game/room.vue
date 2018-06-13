@@ -56,11 +56,6 @@
 </template>
 
 <script>
-  function waitForTwoSec() {
-    return new Promise((res) => {
-      setTimeout(() => res(), 2000);
-    });
-  }
   export default {
     name: 'room',
     props: {
@@ -115,7 +110,19 @@
     },
     async created() {
       const vm = this;
-      await waitForTwoSec().then(() => {
+      vm.$emit('updateLoading', true);
+      function checkRoomDataIsEnterOrNot() {
+        return new Promise((res) => {
+          if (vm.roomData !== undefined) {
+            res();
+          } else {
+            setTimeout(() => {
+              checkRoomDataIsEnterOrNot();
+            }, 1000);
+          }
+        });
+      }
+      await checkRoomDataIsEnterOrNot().then(() => {
         Object.keys(vm.roomData.player).forEach((key) => {
           if (vm.roomData.player[key].uid === vm.loginStatus.uid) {
             vm.selfId = { key, object: vm.roomData.player[key] };
@@ -123,6 +130,7 @@
           }
           return '';
         });
+        vm.$emit('updateLoading', false);
       });
     },
   };
