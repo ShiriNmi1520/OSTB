@@ -235,7 +235,7 @@ mainSocket.on("connection", (socket) => {
             const playerPath = firebase.database().ref(`/room/${data.roomId}/player/`);
             removePlayer.remove();
             playerPath.once("value", (snap) => {
-                socket.broadcast.to(data.roomId).emit("updateRoomStatus", snap.val());
+                socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
             });
             socket.leave(data.roomId);
         }
@@ -264,6 +264,7 @@ mainSocket.on("connection", (socket) => {
         // 請帶data.host，將作為是否創建status, gameInfo之依據
         // 目前讓所有player起始6張QQ, 之後張數決定由丟過來的count決定, 執行每回合抽卡麻煩丟1 thx
         socket.broadcast.to(data.roomId).emit("gameStart", "plz emit to drawCard for get six cards thx");
+        socket.emit("gameStart", "plz emit to drawCard for get six cards thx");
         const roomPath = firebase.database().ref("/room/");
         function setGameStatus() {
             return new Promise((res, rej) => {
