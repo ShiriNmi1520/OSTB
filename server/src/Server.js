@@ -184,22 +184,25 @@ mainSocket.on("connection", (socket) => {
         socket.join(data.uid);
         // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
     });
-    socket.on("getRoomId", (data) => {
+    socket.on("getRoomList", (data) => {
         firebase.database().ref("/room/").once("value", snap => {
-            mainSocket.emit("getRoomId", snap.val());
+            mainSocket.emit("getRoomList", snap.val());
         });
     });
     socket.on("joinRoom", (data) => {
         // 加入其他玩家所創的Room
         // 並將Room內在線人數傳回
         console.log(`joinRoom ${JSON.stringify(data)}`);
+        socket.join(data.roomId);
         let error = false;
-        const path = firebase.database().ref(`/room/${data.roomId}/player`);
+        const playerPath = firebase.database().ref(`/room/${data.roomId}/player`);
         const nickNamePath = firebase.database().ref(`/users/${data.userId}/name`);
         let nickName = "";
-        path.once("value", (snap) => {
+        playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId });
+        playerPath.once("value", (snap) => {
             // mainSocket.socket(socket.id).emit(snap.val());
-            mainSocket.to(socket.id).emit("updateRoomStatus", snap.val());
+            socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
+            socket.emit("updateRoomerStatus", snap.val());
             if (snap.val().length >= 4) {
                 // mainSocket.socket(socket.id).emit("error");
                 mainSocket.to(socket.id).emit("error");
@@ -213,8 +216,6 @@ mainSocket.on("connection", (socket) => {
         nickNamePath.once("value", (snap) => {
             nickName = snap.val();
         });
-        path.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId });
-        socket.join(data.roomId);
         mainSocket.to(socket.id).emit("joinRoom", { host: false, nickName: nickName, readyStatus: false, id: data.roomId });
         // mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
         // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
@@ -231,7 +232,11 @@ mainSocket.on("connection", (socket) => {
         console.log(data);
         if (data.host === false) {
             const removePlayer = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
+            const playerPath = firebase.database().ref(`/room/${data.roomId}/player/`);
             removePlayer.remove();
+            playerPath.once("value", (snap) => {
+                socket.broadcast.to(data.roomId).emit("updateRoomStatus", snap.val());
+            });
             socket.leave(data.roomId);
         }
         // firebase.database().ref("/rooms/").child(data).remove();
@@ -262,7 +267,7 @@ mainSocket.on("connection", (socket) => {
         const roomPath = firebase.database().ref("/room/");
         function setGameStatus() {
             return new Promise((res, rej) => {
-                roomPath.child(data.roomId).set({
+                roomPath.child(data.roomId).update({
                     status: "Started",
                     gameInfo: {
                         playerStatus: {}
@@ -283,9 +288,10 @@ mainSocket.on("connection", (socket) => {
                 yield setGameStatus()
                     .then((fulfilled) => {
                     socket.broadcast.to(data.roomId).emit("gameStart", fulfilled);
+                    socket.emit("gameStart", fulfilled);
                 })
                     .catch((rejected) => {
-                    socket.broadcast.to(data.roomId).emit("gameStart", rejected);
+                    socket.broadcast.to(data.roomId).emit("error", rejected);
                 });
             });
         }
