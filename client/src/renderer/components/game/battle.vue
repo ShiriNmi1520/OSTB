@@ -1,5 +1,6 @@
 <template>
   <div class="body darkTheme">
+    <h1>現在是{{playerTurn}}的回合</h1>
     <div class="main-block-battle">
       <div class="char">{{n}}</div>
       <div class="char char--p1">{{n + 1 > 4 ? n - 4 + 1 : n + 1}}</div>
@@ -7,6 +8,7 @@
       <div class="char char--p3">{{n + 3 > 4 ? n - 4 + 3 : n + 3}}</div>
       <b-btn primary @click="backToMain">back to main</b-btn>
       <b-btn @click="drawCard(5)">ドローテスト</b-btn>
+      <b-btn @click="showDefence">123</b-btn>
     </div>
     <b-row class="CardContainer justify-content-center">
       <b-col class="ml-2" sm="1" center v-for="(data, index) in test">
@@ -32,12 +34,23 @@
     </b-row>
     <div>
       <div>
-        <b-modal ref="selectPlayer" hide-footer title="選擇玩家">
+        <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="選擇玩家">
           <div class="d-block text-center">
             <div class="block text-white" @click="selectPlayer(0)">玩家一</div>
             <div class="block text-white" @click="selectPlayer(1)">玩家二</div>
             <div class="block text-white" @click="selectPlayer(2)">玩家三</div>
             <div class="block text-white" @click="selectPlayer(3)">玩家四</div>
+          </div>
+        </b-modal>
+      </div>
+      <div>
+        <b-modal header-class="text-dark" ref="useDefence" title="戰鬥訊息">
+          <div class="d-block text-center">
+            <h1 class="text-dark">被攻擊了！是否使用防禦卡？</h1>
+          </div>
+          <div slot="modal-footer" class="w-100">
+            <b-btn success class="float-right">是</b-btn>
+            <b-btn danger  class="float-right">否</b-btn>
           </div>
         </b-modal>
       </div>
@@ -57,18 +70,26 @@
         player: [{
           id: 0,
           handCard: [],
+          turn: false,
+          uid: '',
           life: 4,
         }, {
           id: 1,
           handCard: [],
+          turn: true,
+          uid: '',
           life: 4,
         }, {
           id: 2,
           handCard: [],
+          turn: false,
+          uid: '',
           life: 4,
         }, {
           id: 3,
           handCard: [],
+          turn: false,
+          uid: '',
           life: 4,
         }],
       };
@@ -95,7 +116,26 @@
         vm.$socket.emit('attack', data);
         this.$refs.selectPlayer.hide();
       },
+      showDefence() {
+        const vm = this;
+        vm.$refs.useDefence.show();
+      },
     },
+    computed: {
+      playerTurn() {
+        const vm = this;
+        let turn = '';
+        vm.player.forEach((item) => {
+          if (item.turn === true) {
+            turn = item.id;
+          }
+        });
+        return turn;
+      },
+      isSelfTurnOrNot() {
+      },
+    },
+    created() {},
   };
 </script>
 
