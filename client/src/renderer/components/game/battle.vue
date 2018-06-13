@@ -2,16 +2,17 @@
   <div class="body darkTheme">
     <h1>現在是{{playerTurn}}的回合</h1>
     <div class="main-block-battle">
-      <div class="char">{{n}}</div>
-      <div class="char char--p1">{{n + 1 > 3 ? n - 4 + 1 : n + 1}}</div>
-      <div class="char char--p2">{{n + 2 > 3 ? n - 4 + 2 : n + 2}}</div>
-      <div class="char char--p3">{{n + 3 > 3 ? n - 4 + 3 : n + 3}}</div>
+      <div class="char">{{self}}</div>
+      <div class="char char--p1">{{getPlayerId.p1}}</div>
+      <div class="char char--p2">{{getPlayerId.p2}}</div>
+      <div class="char char--p3">{{getPlayerId.p3}}</div>
       <b-btn primary @click="backToMain">back to main</b-btn>
       <b-btn @click="drawCard(5)">ドローテスト</b-btn>
+      <b-btn @click="turnEnd()">回合結束</b-btn>
       <b-btn @click="showDefence">123</b-btn>
     </div>
     <b-row class="CardContainer justify-content-center">
-      <b-col class="ml-2" sm="1" center v-for="(data, index) in test">
+      <b-col class="ml-2" sm="1" center v-for="(data, index) in player[self].handCard">
         <b-dropdown dropup variant="link" size="lg" no-caret>
           <template slot="button-content" style="text-decoration: none !important;">
             <div class="mainCard" style="text-decoration: none !important;" :id="`Card${index}`">{{data}}</div>
@@ -23,14 +24,14 @@
     </b-row>
     <b-row class="CardContainer CardContainer--p3 justify-content-center">
       <b-col sm="1" center>
-        <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
+        <div class="mainCard">カード<br><span class="text-warning h1">x{{player[getPlayerId.p1].handCard.length}}</span></div>
       </b-col>
     </b-row>
     <b-row class="CardContainer CardContainer--p2 justify-content-center">
-      <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
+      <div class="mainCard">カード<br><span class="text-warning h1">x{{player[getPlayerId.p2].handCard.length}}</span></div>
     </b-row>
     <b-row class="CardContainer CardContainer--p1 justify-content-center">
-      <div class="mainCard">カード<br><span class="text-warning h1">x{{test.length}}</span></div>
+      <div class="mainCard">カード<br><span class="text-warning h1">x{{player[getPlayerId.p3].handCard.length}}</span></div>
     </b-row>
     <div>
       <div>
@@ -66,16 +67,17 @@
         show: false,
         view: 'battle',
         n: 1,
+        self: 1,
         test: [1, 2, 3, 4, 5],
         player: [{
           id: 0,
-          handCard: [],
+          handCard: [1, 1, 1, 1, 1],
           turn: false,
           uid: '',
           life: 4,
         }, {
           id: 1,
-          handCard: [],
+          handCard: [1, 0, 1, 0, 1],
           turn: true,
           uid: '',
           life: 4,
@@ -120,6 +122,10 @@
         const vm = this;
         vm.$refs.useDefence.show();
       },
+      turnEnd() {
+        const vm = this;
+        vm.$socket.emit('turnEnd');
+      },
     },
     computed: {
       playerTurn() {
@@ -131,6 +137,13 @@
           }
         });
         return turn;
+      },
+      getPlayerId() {
+        const vm = this;
+        const p1 = vm.self + 1 > 3 ? (vm.self - 4) + 1 : vm.self + 1;
+        const p2 = vm.self + 2 > 3 ? (vm.self - 4) + 2 : vm.self + 2;
+        const p3 = vm.self + 3 > 3 ? (vm.self - 4) + 3 : vm.self + 3;
+        return { p1, p2, p3 };
       },
       isSelfTurnOrNot() {
       },
