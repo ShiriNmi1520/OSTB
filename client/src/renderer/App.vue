@@ -75,7 +75,7 @@
           const vm = this;
           vm.inGameId = data;
         },
-        updateRoomStatus(data) {
+        updateRoomerStatus(data) {
           const vm = this;
           vm.roomData.player = data;
         },
