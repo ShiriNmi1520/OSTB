@@ -5,7 +5,7 @@
         <div style="margin-top: -.5px" class="topContainer mb-5 p-3">
           <b-row>
             <b-col>
-              <h1>{{roomData.room}}</h1>
+              <h1>{{getRoomData.room}}</h1>
             </b-col>
               <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="exitRoom">Exit</b-btn>
           </b-row>
@@ -15,7 +15,7 @@
     <b-row>
       <b-col md="12" class="mt-3">
         <b-list-group>
-          <b-list-group-item class="mainContainer mb-2" v-for="obj of roomData.player">{{obj.uid}}
+          <b-list-group-item class="mainContainer mb-2" v-for="obj of getRoomData.player">{{obj.uid}}
           <span class="float-right" v-if="">🙆‍</span></b-list-group-item>
         </b-list-group>
       </b-col>
@@ -75,6 +75,7 @@
     data() {
       return {
         content: '',
+        getRoomData: {},
         selfId: {},
       };
     },
@@ -85,7 +86,7 @@
       },
       exitRoom() {
         const vm = this;
-        vm.$socket.emit('exitRoom', { host: vm.selfId.object.host, roomId: vm.roomData.id, index: vm.selfId.key });
+        vm.$socket.emit('exitRoom', { host: vm.selfId.object.host, roomId: vm.getRoomData.id, index: vm.selfId.key });
         vm.$emit('exitRoom', '');
         vm.$router.push({ name: 'main' });
       },
@@ -95,7 +96,7 @@
       },
       gameStart() {
         const vm = this;
-        vm.$socket.emit('gameStart', { host: vm.selfId.object.host, roomId: vm.roomData.id });
+        vm.$socket.emit('gameStart', { host: vm.selfId.object.host, roomId: vm.getRoomData.id });
       },
       backToLogin() {
         const vm = this;
@@ -105,7 +106,7 @@
     computed: {
       checkRoomIdIsEmptyOrNot() {
         const vm = this;
-        return vm.roomData.id === undefined;
+        return vm.getRoomData.id === undefined;
       },
     },
     async created() {
@@ -113,7 +114,7 @@
       vm.$emit('updateLoading', true);
       function checkRoomDataIsEnterOrNot() {
         return new Promise((res) => {
-          if (vm.roomData !== undefined) {
+          if (vm.getRoomData !== undefined) {
             res();
           } else {
             setTimeout(() => {
@@ -123,15 +124,22 @@
         });
       }
       await checkRoomDataIsEnterOrNot().then(() => {
-        Object.keys(vm.roomData.player).forEach((key) => {
-          if (vm.roomData.player[key].uid === vm.loginStatus.uid) {
-            vm.selfId = { key, object: vm.roomData.player[key] };
-            return { key, object: vm.roomData.player[key] };
+        vm.getRoomData = vm.roomData;
+        Object.keys(vm.getRoomData.player).forEach((key) => {
+          if (vm.getRoomData.player[key].uid === vm.loginStatus.uid) {
+            vm.selfId = { key, object: vm.getRoomData.player[key] };
+            return { key, object: vm.getRoomData.player[key] };
           }
           return '';
         });
         vm.$emit('updateLoading', false);
       });
+    },
+    watch: {
+      getRoomStatus() {
+        const vm = this;
+        vm.getRoomData = vm.roomData;
+      },
     },
   };
 </script>
