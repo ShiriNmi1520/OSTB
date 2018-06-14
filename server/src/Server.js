@@ -107,8 +107,8 @@ mainSocket.on("connection", (socket) => {
                         .then(() => {
                         console.log("Ready to push player nickName");
                         firebase.auth().onAuthStateChanged((user) => {
-                            console.log(uid);
-                            firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+                            console.log(user.uid);
+                            firebase.database().ref("/users/").child(user.uid).update({ name: data.nickname });
                             const transferData = { type: "success", code: "default", email: data.email,
                                 nickname: data.nickname, uid: user.uid };
                             res(transferData);
