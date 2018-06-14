@@ -81,7 +81,7 @@
     methods: {
       chat() {
         const vm = this;
-        vm.$socket.emit('InGameChat', { name: 'test', content: vm.content });
+        vm.$socket.emit('InGameChat', { senderName: 'test', content: vm.content });
       },
       exitRoom() {
         const vm = this;
