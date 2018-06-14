@@ -126,11 +126,11 @@ mainSocket.on("connection", (socket) => {
             return __awaiter(this, void 0, void 0, function* () {
                 yield registerProcess()
                     .then((fulfilled) => {
-                    mainSocket.to(socket.id).emit("auth", fulfilled);
+                    socket.emit("auth", fulfilled);
                 })
                     .catch((rejected) => {
                     // mainSocket.socket(socket.id).emit(rejected);
-                    mainSocket.to(socket.id).emit("error", rejected);
+                    socket.emit("error", rejected);
                 });
             });
         }
@@ -166,7 +166,7 @@ mainSocket.on("connection", (socket) => {
         let nickName = "";
         let playerData = {};
         nickNamePath.once("value", (snap) => {
-            nickName = snap.val();
+            nickName = snap.val().name;
             console.log(`nickName path ${JSON.stringify(snap.val())}`);
         });
         path.set({
@@ -224,7 +224,7 @@ mainSocket.on("connection", (socket) => {
             return;
         }
         nickNamePath.once("value", (snap) => {
-            nickName = snap.val();
+            nickName = snap.val().name;
         });
         roomPath.once("value", (snap) => {
             socket.room = snap.val().room;

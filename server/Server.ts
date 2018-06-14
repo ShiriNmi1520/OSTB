@@ -111,11 +111,11 @@ mainSocket.on("connection", (socket: any) => {
     async function executeRegisterProcess(): Promise<void> {
       await registerProcess()
       .then((fulfilled : any) => {
-        mainSocket.to(socket.id).emit("auth", fulfilled);
+        socket.emit("auth", fulfilled);
       })
       .catch((rejected : any) => {
         // mainSocket.socket(socket.id).emit(rejected);
-        mainSocket.to(socket.id).emit("error", rejected);
+        socket.emit("error", rejected);
       });
     }
     executeRegisterProcess();
@@ -151,7 +151,7 @@ mainSocket.on("connection", (socket: any) => {
     let nickName: string = "";
     let playerData: object = {};
     nickNamePath.once("value", (snap: any) => {
-      nickName = snap.val();
+      nickName = snap.val().name;
       console.log(`nickName path ${JSON.stringify(snap.val())}`);
     });
     path.set({
@@ -211,7 +211,7 @@ mainSocket.on("connection", (socket: any) => {
       return ;
     }
     nickNamePath.once("value", (snap: any) => {
-      nickName = snap.val();
+      nickName = snap.val().name;
     });
     roomPath.once("value", (snap: any) => {
       socket.room = snap.val().room;
