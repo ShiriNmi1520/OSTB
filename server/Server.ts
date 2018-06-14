@@ -54,7 +54,7 @@ mainSocket.on("connection", (socket: any) => {
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
             firebase.database().ref(`/users/${user.uid}/`).once("value", (snap : any) => {
-              const transferData : object = { type: "success", code: "default", token, nickname: snap.val().name,
+              const transferData : object = { type: "success", code: "default", token, nickname: snap.val(),
                  email: data.email, uid: user.uid};
               res(transferData);
             });
