@@ -82,8 +82,8 @@
           if (data.type === 'join') {
             vm.roomData.player = data.player;
           } else if (data.type === 'exit') {
-            console.log(Object.keys(data.player));
-            delete vm.roomData.player[Object.keys(data.player)];
+            console.dir(data);
+            vm.roomData.player = data.player;
           }
         },
         gameStart() {
@@ -108,7 +108,14 @@
           error: false,
           loading: true,
           userData: {},
-          roomData: {},
+          roomData: {
+            host: false,
+            id: '',
+            nickName: '',
+            player: {},
+            readyStatus: false,
+            room: '',
+          },
           errorData: {},
           chat: [],
           roomIdList: [],

@@ -76,7 +76,14 @@
       return {
         content: '',
         selfId: {},
-        getRoomData: {},
+        getRoomData: {
+          host: false,
+          id: '',
+          nickName: '',
+          player: {},
+          readyStatus: false,
+          room: '',
+        },
       };
     },
     methods: {
@@ -112,7 +119,7 @@
     watch: {
       totalRoomData() {
         const vm = this;
-        vm.$set(vm.getRoomData, vm.roomData);
+        vm.getRoomData = vm.roomData;
       },
     },
     async created() {
