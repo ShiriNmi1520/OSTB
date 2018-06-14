@@ -231,12 +231,13 @@ mainSocket.on("connection", (socket: any) => {
   // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
 
   socket.on("exitRoom", (data: any) => {
-    console.log(data);
+    console.log(`exitRoom ${data}`);
     const removePlayer : any = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
     const playerPath : any = firebase.database().ref(`/room/${data.roomId}/player/`);
     removePlayer.remove();
     playerPath.once("value", (snap : any) => {
       socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
+      socket.emit("updateRoomerStatus", snap.val());
     });
     socket.leave(data.roomId);
     // firebase.database().ref("/rooms/").child(data).remove();
