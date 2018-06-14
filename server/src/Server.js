@@ -211,7 +211,8 @@ mainSocket.on("connection", (socket) => {
         playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId });
         playerPath.once("value", (snap) => {
             // mainSocket.socket(socket.id).emit(snap.val());
-            socket.broadcast.to(data.roomId).emit("updateRoomerStatus", { type: "join", player: snap.val() });
+            // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
+            mainSocket.to(data.roomId).emit("updateRoomerStatus", { type: "join", player: snap.val() });
             socket.emit("updateRoomerStatus", { type: "join", player: snap.val() });
             if (snap.val().length >= 4) {
                 // mainSocket.socket(socket.id).emit("error");
@@ -247,7 +248,8 @@ mainSocket.on("connection", (socket) => {
         const playerPath = firebase.database().ref(`/room/${data.roomId}/player/`);
         removePlayer.remove();
         playerPath.once("value", (snap) => {
-            socket.broadcast.to(data.roomId).emit("updateRoomerStatus", { type: "exit", player: snap.val() });
+            // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "exit", player: snap.val()});
+            mainSocket.to(data.roomId).emit("updateRoomerStatus", { type: "exit", player: snap.val() });
             socket.emit("updateRoomerStatus", { type: "exit", player: snap.val() });
         });
         socket.leave(data.roomId);
