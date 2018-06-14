@@ -111,7 +111,7 @@
         };
       },
       computed: {
-        getLoginStatus() {
+        getLoggedStatus() {
           const vm = this;
           return (vm.userData.login === false && vm.$router.name !== 'login') || (vm.roomData === null && vm.$router.name !== 'login');
         },
@@ -143,9 +143,9 @@
   </script>
 
   <style lang="less">
-    @mainRed: #C05C48;
-    @hoverRed: #86430E;
-    @mainBlack: #474747;
+    @mainRed: #ffa767;
+    @hoverRed: #936236;
+    @mainBlack: #303133;
     * {
       transition: .2s ease-in-out;
       text-decoration: none !important;

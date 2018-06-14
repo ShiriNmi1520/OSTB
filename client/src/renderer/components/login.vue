@@ -2,23 +2,23 @@
   <div class="body">
     <fade-transition>
       <div class="main-block container" v-if="view === 'login'">
-        <h1 class="text-center mt-4">ログイン</h1>
+        <h1 class="text-center mt-4">Login</h1>
         <b-row>
           <b-col sm="8" offset="2" class="mt-4">
-            <b-btn class="btn-red" style=" width:100%;" @click="gotoSignUp">新しい方？</b-btn>
+            <b-btn class="btn-red" style=" width:100%;" @click="gotoSignUp">Newbie?</b-btn>
           </b-col>
         </b-row>
         <b-row class="mt-4">
-          <b-col sm="12" class="text-center">- それとも -</b-col>
+          <b-col sm="12" class="text-center">- or -</b-col>
         </b-row>
         <b-row>
           <b-col sm="8" offset="2" class="mt-4 mb-4">
-            <b-form-input class="darkTheme" placeholder="アカウントを入力" v-model="account"></b-form-input>
+            <b-form-input class="darkTheme" placeholder="Enter Account" v-model="account"></b-form-input>
           </b-col>
         </b-row>
         <b-row>
           <b-col sm="8" offset="2" class="mb-2">
-            <b-form-input type="password" class="darkTheme" placeholder="パスワードを入力" @keyup.native.13="login" v-model="password"></b-form-input>
+            <b-form-input type="password" class="darkTheme" placeholder="Enter Password" @keyup.native.13="login" v-model="password"></b-form-input>
           </b-col>
           <b-col sm="8" offset="2" class="mb-2">
             <p class="text-center text-danger">{{logErr}}</p>
@@ -26,19 +26,19 @@
         </b-row>
         <b-row>
           <b-col sm="8" offset="2">
-            <b-btn class="mb-4 btn-red" style=" width:100%;" @click="login">ログイン</b-btn>
+            <b-btn class="mb-4 btn-red" style=" width:100%;" @click="login">Login</b-btn>
           </b-col>
         </b-row>
         <b-row>
           <b-col sm="8" offset="2" class="mb-4">
-            <b-btn style="width: 100%;" class="mb-4" @click="getSocketId">パスワードを忘れ？</b-btn>
+            <b-btn style="width: 100%;" class="mb-4" @click="getSocketId">Forgot Password?</b-btn>
           </b-col>
         </b-row>
       </div>
     </fade-transition>
     <fade-transition>
       <div class="main-block container" v-if="view === 'signUp'">
-        <h1 class="text-center mt-4">サインアップ</h1>
+        <h1 class="text-center mt-4">Sign In</h1>
         <b-row>
           <b-col sm="8" offset="2" class="mt-4 mb-2">
             <b-form-input class="darkTheme" placeholder="MAILを入力" v-model="account"></b-form-input>
@@ -66,12 +66,12 @@
         </b-row>
         <b-row>
           <b-col sm="8" offset="2">
-            <b-btn class="mb-4 btn-red" style=" width:100%;" @click="signUp">我々にジョイン！</b-btn>
+            <b-btn class="mb-4 btn-red" style=" width:100%;" @click="signUp">Join to us！</b-btn>
           </b-col>
         </b-row>
         <b-row>
           <b-col sm="8" offset="2" class="mb-4">
-            <b-btn style="width: 100%;" @click="backToLogin">アカウント持つ方？</b-btn>
+            <b-btn style="width: 100%;" @click="backToLogin">already had a account?</b-btn>
           </b-col>
         </b-row>
       </div>
