@@ -281,6 +281,9 @@ mainSocket.on("connection", (socket) => {
         const roomPath = firebase.database().ref("/room/");
         function setGameStatus() {
             return new Promise((res, rej) => {
+                firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap) => {
+                    console.log(`gameStart ${snap.val()}`);
+                });
                 roomPath.child(data.roomId).update({
                     status: "Started",
                     gameInfo: {
