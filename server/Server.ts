@@ -198,8 +198,8 @@ mainSocket.on("connection", (socket: any) => {
     playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId});
     playerPath.once("value", (snap: any) => {
       // mainSocket.socket(socket.id).emit(snap.val());
-      socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
-      socket.emit("updateRoomerStatus", snap.val());
+      socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
+      socket.emit("updateRoomerStatus", {type: "join", player: snap.val()});
       if (snap.val().length >= 4) {
         // mainSocket.socket(socket.id).emit("error");
         mainSocket.to(socket.id).emit("error");
@@ -231,12 +231,13 @@ mainSocket.on("connection", (socket: any) => {
   // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
 
   socket.on("exitRoom", (data: any) => {
-    console.log(data);
+    console.log(`exitRoom ${data}`);
     const removePlayer : any = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
     const playerPath : any = firebase.database().ref(`/room/${data.roomId}/player/`);
     removePlayer.remove();
     playerPath.once("value", (snap : any) => {
-      socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
+      socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "exit", player: snap.val()});
+      socket.emit("updateRoomerStatus", {type: "exit", player: snap.val()});
     });
     socket.leave(data.roomId);
     // firebase.database().ref("/rooms/").child(data).remove();

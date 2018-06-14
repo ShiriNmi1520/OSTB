@@ -211,8 +211,8 @@ mainSocket.on("connection", (socket) => {
         playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId });
         playerPath.once("value", (snap) => {
             // mainSocket.socket(socket.id).emit(snap.val());
-            socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
-            socket.emit("updateRoomerStatus", snap.val());
+            socket.broadcast.to(data.roomId).emit("updateRoomerStatus", { type: "join", player: snap.val() });
+            socket.emit("updateRoomerStatus", { type: "join", player: snap.val() });
             if (snap.val().length >= 4) {
                 // mainSocket.socket(socket.id).emit("error");
                 mainSocket.to(socket.id).emit("error");
@@ -242,12 +242,13 @@ mainSocket.on("connection", (socket) => {
     // todo: 返回一下玩家列表、房主token，再寫一個在房間裡面準備（大家都準備好房主才能按開始）的功能，像這樣寫。
     // 玩家列表的格式為： { nickname: '', uid: '', ready: false, master: false, self: false } 有其他的你再加寫。
     socket.on("exitRoom", (data) => {
-        console.log(data);
+        console.log(`exitRoom ${data}`);
         const removePlayer = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
         const playerPath = firebase.database().ref(`/room/${data.roomId}/player/`);
         removePlayer.remove();
         playerPath.once("value", (snap) => {
-            socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
+            socket.broadcast.to(data.roomId).emit("updateRoomerStatus", { type: "exit", player: snap.val() });
+            socket.emit("updateRoomerStatus", { type: "exit", player: snap.val() });
         });
         socket.leave(data.roomId);
         // firebase.database().ref("/rooms/").child(data).remove();
