@@ -7,7 +7,7 @@
             <b-col>
               <h1>{{roomData.room}}</h1>
             </b-col>
-              <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="exitRoom">退席</b-btn>
+              <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="exitRoom">Exit</b-btn>
           </b-row>
         </div>
       </b-col>
@@ -32,7 +32,7 @@
               <b-form-input class="chatInputBox darkTheme" v-model="content"></b-form-input>
             </b-col>
             <b-col md="3">
-              <b-button class="chatButton" @click="chat">送信</b-button>
+              <b-button class="chatButton" @click="chat">Send</b-button>
             </b-col>
           </b-row>
         </div>
@@ -41,10 +41,10 @@
       <b-col md="6" class="mt-3">
         <div class="chatContainer">
           <b-jumbotron v-if="selfId.object.host === true" class="nav-red btn-click" @click="gameStart">
-            <h1 class="text-center p-4">ゲームはここから<br><span class="asobu">開始</span></h1>
+            <h1 class="text-center p-4">Game Start From<br><span class="asobu">Here</span></h1>
           </b-jumbotron>
           <b-jumbotron v-if="selfId.object.host === false" class="nav-red btn-click">
-            <h1 class="text-center p-4">準備を<br><span class="asobu">する</span></h1>
+            <h1 class="text-center p-4">Ready for<br><span class="asobu">Game</span></h1>
           </b-jumbotron>
         </div>
       </b-col>

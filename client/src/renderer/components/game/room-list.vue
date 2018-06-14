@@ -5,9 +5,9 @@
         <div style="margin-top: -.5px" class="topContainer mb-5 p-3">
           <b-row>
             <b-col>
-              <h1>ルームリスト</h1>
+              <h1>Room List</h1>
             </b-col>
-            <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="backToMain">戻す</b-btn>
+            <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="backToMain">back to main</b-btn>
           </b-row>
         </div>
       </b-col>
@@ -16,7 +16,7 @@
       <b-col md="12" class="mt-3" v-for="(obj, index) in roomList">
         <b-btn block href="#" v-b-toggle="'room' + index" class="btn-click">{{obj.room}}</b-btn>
         <b-collapse :id="`room${index}`" accordion="my-accordion" role="tabpanel">
-          <b-btn class="btn-info mt-3 btn-lg" @click="joinRoom(index)">加入</b-btn>
+          <b-btn class="btn-info mt-3 btn-lg" @click="joinRoom(index)">Join</b-btn>
         </b-collapse>
       </b-col>
     </b-row>

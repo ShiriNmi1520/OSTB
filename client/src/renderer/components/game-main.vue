@@ -2,7 +2,7 @@
   <div class="body">
     <b-navbar class="nav-red" toggleable>
         <b-navbar-nav>
-          <b-nav-item right href="#" @click="backToMain">登出</b-nav-item>
+          <b-nav-item right href="#" @click="backToMain">Sign Out</b-nav-item>
         </b-navbar-nav>
     </b-navbar>
     <fade-transition>
@@ -10,15 +10,15 @@
       <b-row class="mt-5">
         <b-col sm="6">
           <b-jumbotron class="nav-red btn-click" @click="gotoRoomList">
-          <h1 class="text-center">ゲームルーム<br><span class="asobu">探す</span></h1>
+          <h1 class="text-center">Search<br><span class="asobu">Game</span></h1>
           </b-jumbotron>
         </b-col>
         <b-col sm="6">
           <b-jumbotron class="nav-red btn-click" v-b-modal.modal1>
-          <h1 class="text-center">プレーヤーと<br><span class="asobu">遊ぶ</span></h1>
+          <h1 class="text-center">Play with<br><span class="asobu">Player</span></h1>
         </b-jumbotron>
-          <b-modal class="text-dark" id="modal1" title="請輸入房間名稱？" @ok="createRoom">
-            <b-form-input v-model="roomName" placeholder="房間名稱"></b-form-input>
+          <b-modal class="text-dark" id="modal1" title="Please Enter Room Name." @ok="createRoom">
+            <b-form-input v-model="roomName" placeholder="Room Name."></b-form-input>
           </b-modal>
       </b-col>
       </b-row>
@@ -82,8 +82,10 @@
       backToMain() {
         const vm = this;
         vm.$emit('backToMain', { type: '', code: '' });
+        vm.$emit('updateLoading', true);
         vm.$socket.emit('logout');
         waitForTwoSec().then(() => {
+          vm.$emit('updateLoading', false);
           vm.$router.push({ name: 'login' });
         });
       },

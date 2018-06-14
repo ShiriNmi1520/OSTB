@@ -111,7 +111,7 @@
         };
       },
       computed: {
-        getLoginStatus() {
+        getLoggedStatus() {
           const vm = this;
           return (vm.userData.login === false && vm.$router.name !== 'login') || (vm.roomData === null && vm.$router.name !== 'login');
         },
