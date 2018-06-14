@@ -66,8 +66,11 @@ mainSocket.on("connection", (socket) => {
                     socket.token = token;
                     firebase.auth().onAuthStateChanged((user) => {
                         if (user) {
-                            const transferData = { type: "success", code: "default", token, email: data.email, uid: user.uid };
-                            res(transferData);
+                            firebase.database().ref(`/users/${user.uid}/`).once("value", (snap) => {
+                                const transferData = { type: "success", code: "default", token, nickname: snap.val().name,
+                                    email: data.email, uid: user.uid };
+                                res(transferData);
+                            });
                         }
                     });
                 })
@@ -97,16 +100,18 @@ mainSocket.on("connection", (socket) => {
     socket.on("register", (data) => {
         let uid = "";
         function registerProcess() {
-            return new Promise((rej) => {
+            return new Promise((res, rej) => {
                 firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
                     .then(() => {
                     firebase.auth().signInWithEmailAndPassword(data.email, data.password)
                         .then(() => {
                         console.log("Ready to push player nickName");
                         firebase.auth().onAuthStateChanged((user) => {
-                            uid = user.uid;
                             console.log(uid);
                             firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+                            const transferData = { type: "success", code: "default", email: data.email,
+                                nickname: data.nickname, uid: user.uid };
+                            res(transferData);
                         });
                     });
                 })
@@ -119,9 +124,13 @@ mainSocket.on("connection", (socket) => {
         }
         function executeRegisterProcess() {
             return __awaiter(this, void 0, void 0, function* () {
-                yield registerProcess().catch((rejected) => {
+                yield registerProcess()
+                    .then((fulfilled) => {
+                    mainSocket.to(socket.id).emit("auth", fulfilled);
+                })
+                    .catch((rejected) => {
                     // mainSocket.socket(socket.id).emit(rejected);
-                    mainSocket.to(socket.id)("error", rejected);
+                    mainSocket.to(socket.id).emit("error", rejected);
                 });
             });
         }

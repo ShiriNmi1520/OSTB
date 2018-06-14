@@ -53,8 +53,11 @@ mainSocket.on("connection", (socket: any) => {
         socket.token = token;
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
-            const transferData : object = { type: "success", code: "default", token, email: data.email, uid: user.uid};
-            res(transferData);
+            firebase.database().ref(`/users/${user.uid}/`).once("value", (snap : any) => {
+              const transferData : object = { type: "success", code: "default", token, nickname: snap.val().name,
+                 email: data.email, uid: user.uid};
+              res(transferData);
+            });
           }
         });
       })
@@ -83,16 +86,18 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("register", (data: any) => {
     let uid: string = "";
       function registerProcess(): any {
-        return new Promise((rej) => {
+        return new Promise((res, rej) => {
           firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
             .then(() => {
               firebase.auth().signInWithEmailAndPassword(data.email, data.password)
                 .then(() => {
                   console.log("Ready to push player nickName");
                   firebase.auth().onAuthStateChanged((user: any) => {
-                  uid = user.uid;
-                  console.log(uid);
-                  firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+                    console.log(uid);
+                    firebase.database().ref("/users/").child(uid).update({ name: data.nickname });
+                    const transferData : object = { type: "success", code: "default", email: data.email
+                      , nickname: data.nickname, uid: user.uid};
+                    res(transferData);
               });
             });
           })
@@ -104,9 +109,13 @@ mainSocket.on("connection", (socket: any) => {
       });
     }
     async function executeRegisterProcess(): Promise<void> {
-      await registerProcess().catch((rejected : any) => {
+      await registerProcess()
+      .then((fulfilled : any) => {
+        mainSocket.to(socket.id).emit("auth", fulfilled);
+      })
+      .catch((rejected : any) => {
         // mainSocket.socket(socket.id).emit(rejected);
-        mainSocket.to(socket.id)("error", rejected);
+        mainSocket.to(socket.id).emit("error", rejected);
       });
     }
     executeRegisterProcess();
