@@ -232,15 +232,13 @@ mainSocket.on("connection", (socket: any) => {
 
   socket.on("exitRoom", (data: any) => {
     console.log(data);
-    if(data.host === false) {
-      const removePlayer : any = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
-      const playerPath : any = firebase.database().ref(`/room/${data.roomId}/player/`);
-      removePlayer.remove();
-      playerPath.once("value", (snap : any) => {
-        socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
-      });
-      socket.leave(data.roomId);
-    }
+    const removePlayer : any = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
+    const playerPath : any = firebase.database().ref(`/room/${data.roomId}/player/`);
+    removePlayer.remove();
+    playerPath.once("value", (snap : any) => {
+      socket.broadcast.to(data.roomId).emit("updateRoomerStatus", snap.val());
+    });
+    socket.leave(data.roomId);
     // firebase.database().ref("/rooms/").child(data).remove();
   });
 
