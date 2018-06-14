@@ -75,8 +75,8 @@
     data() {
       return {
         content: '',
-        getRoomData: {},
         selfId: {},
+        getRoomData: {},
       };
     },
     methods: {
@@ -109,6 +109,12 @@
         return vm.getRoomData.id === undefined;
       },
     },
+    watch: {
+      totalRoomData() {
+        const vm = this;
+        vm.$set(vm.getRoomData, vm.roomData);
+      },
+    },
     async created() {
       const vm = this;
       vm.$emit('updateLoading', true);
@@ -134,12 +140,6 @@
         });
         vm.$emit('updateLoading', false);
       });
-    },
-    watch: {
-      getRoomStatus() {
-        const vm = this;
-        vm.getRoomData = vm.roomData;
-      },
     },
   };
 </script>

@@ -7,6 +7,7 @@
         <b-btn v-if="test" @click="testLogin">test</b-btn>
         <div class="loadingBox">
           <div class="loadingItem-1"></div>
+          <b-button @click="testLogin">回家</b-button>
         </div>
       </div>
       <div class="loading" v-if="error">
@@ -77,7 +78,13 @@
         },
         updateRoomerStatus(data) {
           const vm = this;
-          vm.roomData.player = data;
+          console.log(data.player);
+          if (data.type === 'join') {
+            vm.roomData.player = data.player;
+          } else if (data.type === 'exit') {
+            console.log(Object.keys(data.player));
+            delete vm.roomData.player[Object.keys(data.player)];
+          }
         },
         gameStart() {
           const vm = this;
