@@ -200,7 +200,8 @@ mainSocket.on("connection", (socket: any) => {
       // mainSocket.socket(socket.id).emit(snap.val());
       // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
       mainSocket.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
-      socket.emit("updateRoomerStatus", {type: "join", player: snap.val()});
+      mainSocket.to(socket.id).emit("joinRoom", {type: "join", host: false, nickName: nickName, player: snap.val(),
+       readyStatus: false, room: socket.room, id: data.roomId});
       if (snap.val().length >= 4) {
         // mainSocket.socket(socket.id).emit("error");
         mainSocket.to(socket.id).emit("error");
@@ -217,7 +218,6 @@ mainSocket.on("connection", (socket: any) => {
     roomPath.once("value", (snap: any) => {
       socket.room = snap.val().room;
     });
-    mainSocket.to(socket.id).emit("joinRoom", {host: false, nickName: nickName, readyStatus: false, room: socket.room, id: data.roomId});
     // mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
     // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
