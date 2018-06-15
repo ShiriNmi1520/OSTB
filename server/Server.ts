@@ -274,7 +274,10 @@ mainSocket.on("connection", (socket: any) => {
    function setGameStatus(): any {
     return new Promise((res, rej) => {
       firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap : any) => {
-        console.log(`gameStart ${snap.val()}`);
+        Object.keys(snap.val()).forEach((index) => {
+          // 抓nickName
+          console.log(snap.val()[index].nickName);
+        });
       });
       roomPath.child(data.roomId).update({
         status : "Started",
