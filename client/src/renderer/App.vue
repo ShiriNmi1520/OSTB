@@ -80,10 +80,14 @@
           const vm = this;
           console.log(data.player);
           if (data.type === 'join') {
-            vm.roomData.player = data.player;
+            vm.roomData = Object.assign({}, vm.roomData, {
+              player: data.player,
+            });
           } else if (data.type === 'exit') {
             console.dir(data);
-            vm.roomData.player = data.player;
+            vm.roomData = Object.assign({}, vm.roomData, {
+              player: data.player,
+            });
           }
         },
         gameStart() {

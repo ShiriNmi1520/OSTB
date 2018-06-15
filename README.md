@@ -1,7 +1,8 @@
 # OSTB 架構介紹
 
 期末項目，實現前後端分離。
-
+[![forthebadge](https://forthebadge.com/images/badges/made-with-vue.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/60-percent-of-the-time-works-every-time.svg)](https://forthebadge.com)
 ## 框架
 
 1. 前端使用的框架
