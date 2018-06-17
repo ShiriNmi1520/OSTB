@@ -7,7 +7,6 @@
         <b-btn v-if="test" @click="testLogin">test</b-btn>
         <div class="loadingBox">
           <div class="loadingItem-1"></div>
-          <b-button @click="testLogin">回家</b-button>
         </div>
       </div>
       <div class="loading" v-if="error">
