@@ -321,7 +321,7 @@ mainSocket.on("connection", (socket: any) => {
         }
       })
       .then(() => {
-        const result : object = {gameStartResult : "successful"};
+        const result : object = {gameStartResult : "successful", playerStatus};
         res(result);
       })
       .catch((err: any) => {
@@ -345,8 +345,8 @@ mainSocket.on("connection", (socket: any) => {
    }
   });
 
-  socket.on("drawCard", (data: any) => {
-    socket.card = giveCard.getRandom(card, data.count);
+  socket.on("drawCard", () => {
+    socket.card = giveCard.getRandom(card, 1);
   });
   // todo: 那個 初始抽牌的部分是根據玩家抽到的角色卡血量來決定應該抽多少張，所以你可能還要再寫一個發角色卡
   // todo: 然後再寫一個每回合的抽卡，感謝。
