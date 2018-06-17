@@ -315,8 +315,7 @@ mainSocket.on("connection", (socket) => {
                         // 抓玩家資料
                         playerStatus[counter].uid = snap.val()[index].uid;
                         playerStatus[counter].handCard = giveCard.getRandom(card, 6);
-                        console.log(snap.val()[index].nickName);
-                        counter++;
+                        counter += 1;
                     });
                 });
                 roomPath.child(data.roomId).update({
@@ -339,10 +338,8 @@ mainSocket.on("connection", (socket) => {
             return __awaiter(this, void 0, void 0, function* () {
                 yield setGameStatus()
                     .then((fulfilled) => {
-                    socket.broadcast.to(data.roomId).emit("gameStart", fulfilled);
-                    socket.broadcast.to(data.roomId).emit("getBattleStatus", playerStatus);
-                    socket.emit("gameStart", fulfilled);
-                    socket.emit("getBattleStatus", playerStatus);
+                    socket.broadcast.to(data.roomId).emit("gameStart", fulfilled, playerStatus);
+                    socket.emit("gameStart", fulfilled, playerStatus);
                 })
                     .catch((rejected) => {
                     socket.broadcast.to(data.roomId).emit("error", rejected);
