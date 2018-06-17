@@ -1,4 +1,5 @@
 /.idea
 /server/node_modules
 !/client/README.md
+/client/build/*
 /node_modules
