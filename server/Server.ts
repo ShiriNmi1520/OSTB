@@ -331,8 +331,8 @@ mainSocket.on("connection", (socket: any) => {
    async function executeGameStartProcess (): Promise<void> {
      await setGameStatus()
      .then((fulfilled : any) => {
-      socket.broadcast.to(data.roomId).emit("gameStart", fulfilled, playerStatus);
-      socket.emit("gameStart", fulfilled, playerStatus);
+      socket.broadcast.to(data.roomId).emit("gameStart", {fulfilled, playerStatus: playerStatus});
+      socket.emit("gameStart", {fulfilled, playerStatus: playerStatus});
      })
      .catch((rejected : any) => {
       socket.broadcast.to(data.roomId).emit("error", rejected);

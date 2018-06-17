@@ -340,8 +340,8 @@ mainSocket.on("connection", (socket) => {
             return __awaiter(this, void 0, void 0, function* () {
                 yield setGameStatus()
                     .then((fulfilled) => {
-                    socket.broadcast.to(data.roomId).emit("gameStart", fulfilled, playerStatus);
-                    socket.emit("gameStart", fulfilled, playerStatus);
+                    socket.broadcast.to(data.roomId).emit("gameStart", { fulfilled, playerStatus: playerStatus });
+                    socket.emit("gameStart", { fulfilled, playerStatus: playerStatus });
                 })
                     .catch((rejected) => {
                     socket.broadcast.to(data.roomId).emit("error", rejected);
