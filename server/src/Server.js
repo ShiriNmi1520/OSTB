@@ -317,20 +317,22 @@ mainSocket.on("connection", (socket) => {
                         playerStatus[counter].handCard = giveCard.getRandom(card, 6);
                         counter += 1;
                     });
-                });
-                roomPath.child(data.roomId).update({
-                    status: "Started",
-                    gameInfo: {
-                        playerStatus
-                    }
                 })
                     .then(() => {
-                    const result = { gameStartResult: "successful" };
-                    res(result);
-                })
-                    .catch((err) => {
-                    const resultErr = err;
-                    rej(resultErr);
+                    roomPath.child(data.roomId).update({
+                        status: "Started",
+                        gameInfo: {
+                            playerStatus
+                        }
+                    })
+                        .then(() => {
+                        const result = { gameStartResult: "successful" };
+                        res(result);
+                    })
+                        .catch((err) => {
+                        const resultErr = err;
+                        rej(resultErr);
+                    });
                 });
             });
         }

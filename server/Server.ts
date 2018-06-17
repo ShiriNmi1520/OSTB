@@ -308,21 +308,23 @@ mainSocket.on("connection", (socket: any) => {
           playerStatus[counter].handCard = giveCard.getRandom(card, 6);
           counter += 1;
         });
-      });
-      roomPath.child(data.roomId).update({
-        status : "Started",
-        gameInfo :
-        {
-          playerStatus
-        }
       })
       .then(() => {
-        const result : object = {gameStartResult : "successful"};
-        res(result);
-      })
-      .catch((err: any) => {
-        const resultErr : object = err;
-        rej(resultErr);
+        roomPath.child(data.roomId).update({
+          status : "Started",
+          gameInfo :
+          {
+            playerStatus
+          }
+        })
+        .then(() => {
+          const result : object = {gameStartResult : "successful"};
+          res(result);
+        })
+        .catch((err: any) => {
+          const resultErr : object = err;
+          rej(resultErr);
+        });
       });
     });
    }
