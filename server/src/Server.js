@@ -308,8 +308,8 @@ mainSocket.on("connection", (socket) => {
         ];
         function setGameStatus() {
             return new Promise((res, rej) => {
-                socket.broadcast.to(data.roomId).emit("gameStart", "Game start, enjoy :) -Developer");
-                socket.emit("gameStart", "Game start, enjoy :) -Developer");
+                socket.broadcast.to(data.roomId).emit("gameStart", "None");
+                socket.emit("gameStart", "None");
                 const roomPath = firebase.database().ref("/room/");
                 firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap) => {
                     let counter = 0;
