@@ -5,7 +5,7 @@ export function getRandom(pools : Array<string>, count : number): Array<string> 
 	const arr : Array<string> = [];
 	for (let i : number = 0; i < count; i++) {
 		let pool : any = pools[Math.floor(Math.random() * pools.length)];
-		arr.indexOf(pool) === -1 ? arr.push(pool) : i--;
+		arr.push(pool);
 	}
 	return arr;
 }

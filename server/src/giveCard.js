@@ -6,7 +6,7 @@ function getRandom(pools, count) {
     const arr = [];
     for (let i = 0; i < count; i++) {
         let pool = pools[Math.floor(Math.random() * pools.length)];
-        arr.indexOf(pool) === -1 ? arr.push(pool) : i--;
+        arr.push(pool);
     }
     return arr;
 }

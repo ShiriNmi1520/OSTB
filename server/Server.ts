@@ -268,51 +268,56 @@ mainSocket.on("connection", (socket: any) => {
     // 接到房主gameStart，往該房間內所有人推送gameStart(只由房主發送過來，其餘只接收)
     // 請帶data.host，將作為是否創建status, gameInfo之依據
     // 目前讓所有player起始6張QQ, 之後張數決定由丟過來的count決定, 執行每回合抽卡麻煩丟1 thx
-   socket.broadcast.to(data.roomId).emit("gameStart", "plz emit to drawCard for get six cards thx");
-   socket.emit("gameStart", "plz emit to drawCard for get six cards thx");
+   socket.broadcast.to(data.roomId).emit("gameStart", "Game start, enjoy :) -Developer");
+   socket.emit("gameStart", "Game start, enjoy :) -Developer");
    const roomPath : any = firebase.database().ref("/room/");
+   let playerStatus : Array<any> = [
+    {
+      id: 0,
+      handCard: [],
+      turn: true,
+      uid: "",
+      life: 4
+    },
+    {
+      id: 1,
+      handCard: [],
+      turn: false,
+      uid: "",
+      life: 4
+    },
+    {
+      id: 2,
+      handCard: [],
+      turn: false,
+      uid: "",
+      life: 4
+    },
+    {
+      id: 3,
+      handCard: [],
+      turn: false,
+      uid: "",
+      life: 4
+    }
+   ];
    function setGameStatus(): any {
     return new Promise((res, rej) => {
       firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap : any) => {
+        let counter : number = 0;
         Object.keys(snap.val()).forEach((index) => {
-          // 抓nickName
+          // 抓玩家資料
+          playerStatus[counter].uid = snap.val()[index].uid;
+          playerStatus[counter].handCard = giveCard.getRandom(card, 6);
           console.log(snap.val()[index].nickName);
+          counter ++;
         });
       });
       roomPath.child(data.roomId).update({
         status : "Started",
         gameInfo :
         {
-          playerStatus :[
-          {
-            id: 0,
-            handCard: [],
-            turn: true,
-            uid: "",
-            life: 4
-          },
-          {
-            id: 1,
-            handCard: [],
-            turn: false,
-            uid: "",
-            life: 4
-          },
-          {
-            id: 2,
-            handCard: [],
-            turn: false,
-            uid: "",
-            life: 4
-          },
-          {
-            id: 3,
-            handCard: [],
-            turn: false,
-            uid: "",
-            life: 4
-          }
-        ]
+          playerStatus
         }
       })
       .then(() => {
@@ -342,7 +347,6 @@ mainSocket.on("connection", (socket: any) => {
 
   socket.on("drawCard", (data: any) => {
     socket.card = giveCard.getRandom(card, data.count);
-    socket.cardType = giveCard.getRandomWithType(data.count);
   });
   // todo: 那個 初始抽牌的部分是根據玩家抽到的角色卡血量來決定應該抽多少張，所以你可能還要再寫一個發角色卡
   // todo: 然後再寫一個每回合的抽卡，感謝。
