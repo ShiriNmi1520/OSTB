@@ -1,162 +1,164 @@
 <template>
-  <div id="app" class="body darkTheme">
-    <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus"
-                 :roomData="roomData" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId" :userStatus="userData"></router-view>
-    <fade-transition>
-      <div class="loading" v-if="loading">
-        <b-btn v-if="test" @click="testLogin">test</b-btn>
-        <div class="loadingBox">
-          <div class="loadingItem-1"></div>
-        </div>
+<div id="app" class="body darkTheme">
+  <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus" :roomData="roomData" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId"
+    :userStatus="userData"></router-view>
+  <fade-transition>
+    <div class="loading" v-if="loading">
+      <b-btn v-if="test" @click="testLogin">test</b-btn>
+      <div class="loadingBox">
+        <div class="loadingItem-1"></div>
       </div>
-      <div class="loading" v-if="error">
-        <h1 class="text-white">{{errorData}}</h1>
-      </div>
-    </fade-transition>
-  </div>
+    </div>
+    <div class="loading" v-if="error">
+      <h1 class="text-white">{{errorData}}</h1>
+    </div>
+  </fade-transition>
+</div>
 </template>
 
-  <script>
-    export default {
-      name: 'vplu',
-      sockets: {
-        connect() {
-          const vm = this;
-          vm.loading = false;
-          vm.$socket.emit('userStatus');
-          vm.socketId = vm.$socket.io.engine.id;
-        },
-        error(data) {
-          const vm = this;
-          vm.error = true;
-          vm.errorData = data;
-        },
-        test(data) {
-          if (typeof (data) !== 'object') {
-            console.log(data);
-          } else {
-            Object.keys(data).forEach((key) => {
-              console.log(data[key]);
-            });
-          }
-        },
-        auth(data) {
-          const vm = this;
-          vm.loginStatus = data;
-        },
-        logout(data) {
-          const vm = this;
-          vm.loginStatus = data;
-        },
-        userStatus(data) {
-          const vm = this;
-          vm.userData = data.data;
-          vm.socketIdTest = data.id;
-        },
-        createRoom(data) {
-          const vm = this;
-          console.log(data);
-          vm.roomData = data;
-        },
-        joinRoom(data) {
-          const vm = this;
-          console.log(data);
-          vm.roomData = data;
-        },
-        InGameChat(data) {
-          const vm = this;
-          vm.chat.push(data);
-        },
-        getRoomList(data) {
-          const vm = this;
-          vm.roomIdList = data;
-        },
-        getGameId(data) {
-          const vm = this;
-          vm.inGameId = data;
-        },
-        updateRoomerStatus(data) {
-          const vm = this;
-          console.log(data.player);
-          if (data.type === 'join') {
-            vm.roomData = Object.assign({}, vm.roomData, {
-              player: data.player,
-            });
-          } else if (data.type === 'exit') {
-            console.dir(data);
-            vm.roomData = Object.assign({}, vm.roomData, {
-              player: data.player,
-            });
-          }
-        },
-        gameStart() {
-          const vm = this;
-          vm.$router.push({ name: 'battle' });
-        },
-        getBattleStatus(data) {
-          console.log(data);
-          // TODO: 接收戰鬥資料（玩家血量、手卡數量）
-        },
-        disconnect() {
-          const vm = this;
-          vm.loading = true;
-        },
+<script>
+
+export default {
+  name: 'vplu',
+  sockets: {
+    connect() {
+      const vm = this;
+      vm.loading = false;
+      vm.$socket.emit('userStatus');
+      vm.socketId = vm.$socket.io.engine.id;
+    },
+    error(data) {
+      const vm = this;
+      vm.error = true;
+      vm.errorData = data;
+    },
+    test(data) {
+      if (typeof (data) !== 'object') {
+        console.log(data);
+      } else {
+        Object.keys(data).forEach((key) => {
+          console.log(data[key]);
+        });
+      }
+    },
+    auth(data) {
+      const vm = this;
+      vm.loginStatus = data;
+    },
+    logout(data) {
+      const vm = this;
+      vm.loginStatus = data;
+    },
+    userStatus(data) {
+      const vm = this;
+      vm.userData = data.data;
+      vm.socketIdTest = data.id;
+    },
+    createRoom(data) {
+      const vm = this;
+      console.log(data);
+      vm.roomData = data;
+    },
+    joinRoom(data) {
+      const vm = this;
+      console.log(data);
+      vm.roomData = data;
+    },
+    InGameChat(data) {
+      const vm = this;
+      vm.chat.push(data);
+    },
+    getRoomList(data) {
+      const vm = this;
+      vm.roomIdList = data;
+    },
+    getGameId(data) {
+      const vm = this;
+      vm.inGameId = data;
+    },
+    updateRoomerStatus(data) {
+      const vm = this;
+      console.log(data.player);
+      if (data.type === 'join') {
+        vm.roomData = Object.assign({}, vm.roomData, {
+          player: data.player,
+        });
+      } else if (data.type === 'exit') {
+        console.dir(data);
+        vm.roomData = Object.assign({}, vm.roomData, {
+          player: data.player,
+        });
+      }
+    },
+    gameStart(data) {
+      const vm = this;
+      vm.roomData = Object.assign(vm.roomData, { battle: data });
+      vm.$router.push({ name: 'battle' });
+    },
+    getBattleStatus(data) {
+      console.log(data);
+      // TODO: 接收戰鬥資料（玩家血量、手卡數量）
+    },
+    disconnect() {
+      const vm = this;
+      vm.loading = true;
+    },
+  },
+  data() {
+    return {
+      res: '',
+      socketId: '',
+      view: 'login',
+      loginStatus: {},
+      error: false,
+      loading: true,
+      userData: {},
+      roomData: {
+        host: false,
+        id: '',
+        nickName: '',
+        player: {},
+        readyStatus: false,
+        room: '',
       },
-      data() {
-        return {
-          res: '',
-          socketId: '',
-          view: 'login',
-          loginStatus: {},
-          error: false,
-          loading: true,
-          userData: {},
-          roomData: {
-            host: false,
-            id: '',
-            nickName: '',
-            player: {},
-            readyStatus: false,
-            room: '',
-          },
-          errorData: {},
-          chat: [],
-          roomIdList: [],
-          test: false,
-          inGameId: 0,
-          socketIdTest: '',
-        };
-      },
-      computed: {
-        getLoggedStatus() {
-          const vm = this;
-          return (vm.userData.login === false && vm.$router.name !== 'login') || (vm.roomData === null && vm.$router.name !== 'login');
-        },
-      },
-      methods: {
-        signOut() {
-          const vm = this;
-          vm.login = false;
-        },
-        getLoginStatus(data) {
-          const vm = this;
-          vm.loginStatus = { type: data.type, code: data.code };
-        },
-        getLoadingStatus(data) {
-          const vm = this;
-          vm.loading = data;
-        },
-        getRoomStatus(data) {
-          const vm = this;
-          vm.roomData = data;
-        },
-        testLogin() {
-          const vm = this;
-          vm.$router.push({ name: 'main' });
-          vm.loading = false;
-        },
-      },
+      errorData: {},
+      chat: [],
+      roomIdList: [],
+      test: false,
+      inGameId: 0,
+      socketIdTest: '',
     };
+  },
+  computed: {
+    getLoggedStatus() {
+      const vm = this;
+      return (vm.userData.login === false && vm.$router.name !== 'login') || (vm.roomData === null && vm.$router.name !== 'login');
+    },
+  },
+  methods: {
+    signOut() {
+      const vm = this;
+      vm.login = false;
+    },
+    getLoginStatus(data) {
+      const vm = this;
+      vm.loginStatus = { type: data.type, code: data.code };
+    },
+    getLoadingStatus(data) {
+      const vm = this;
+      vm.loading = data;
+    },
+    getRoomStatus(data) {
+      const vm = this;
+      vm.roomData = data;
+    },
+    testLogin() {
+      const vm = this;
+      vm.$router.push({ name: 'main' });
+      vm.loading = false;
+    },
+  },
+};
   </script>
 
   <style lang="less">
