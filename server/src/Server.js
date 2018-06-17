@@ -32,7 +32,7 @@ const app = express(), FIREBASE_CONFIG = {
     projectId: "buyao-70f4a",
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
-}, card = ["Bang", "Miss"];
+}, card = [0, 1];
 let http2 = new http.Server(app);
 let mainSocket = socket_io_1.default(http2);
 // 生日快樂啦!
@@ -276,10 +276,6 @@ mainSocket.on("connection", (socket) => {
     socket.on("gameStart", (data) => {
         // 接到房主gameStart，往該房間內所有人推送gameStart(只由房主發送過來，其餘只接收)
         // 請帶data.host，將作為是否創建status, gameInfo之依據
-        // 目前讓所有player起始6張QQ, 之後張數決定由丟過來的count決定, 執行每回合抽卡麻煩丟1 thx
-        socket.broadcast.to(data.roomId).emit("gameStart", "Game start, enjoy :) -Developer");
-        socket.emit("gameStart", "Game start, enjoy :) -Developer");
-        const roomPath = firebase.database().ref("/room/");
         let playerStatus = [
             {
                 id: 0,
@@ -312,6 +308,9 @@ mainSocket.on("connection", (socket) => {
         ];
         function setGameStatus() {
             return new Promise((res, rej) => {
+                socket.broadcast.to(data.roomId).emit("gameStart", "Game start, enjoy :) -Developer");
+                socket.emit("gameStart", "Game start, enjoy :) -Developer");
+                const roomPath = firebase.database().ref("/room/");
                 firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap) => {
                     let counter = 0;
                     Object.keys(snap.val()).forEach((index) => {
@@ -329,7 +328,7 @@ mainSocket.on("connection", (socket) => {
                     }
                 })
                     .then(() => {
-                    const result = { gameStartResult: "successful", playerStatus };
+                    const result = { gameStartResult: "successful" };
                     res(result);
                 })
                     .catch((err) => {
@@ -343,7 +342,9 @@ mainSocket.on("connection", (socket) => {
                 yield setGameStatus()
                     .then((fulfilled) => {
                     socket.broadcast.to(data.roomId).emit("gameStart", fulfilled);
+                    socket.broadcast.to(data.roomId).emit("getBattleStatus", playerStatus);
                     socket.emit("gameStart", fulfilled);
+                    socket.emit("getBattleStatus", playerStatus);
                 })
                     .catch((rejected) => {
                     socket.broadcast.to(data.roomId).emit("error", rejected);
@@ -395,26 +396,6 @@ mainSocket.on("connection", (socket) => {
     socket.on("gameOver", () => {
         socket.leave(socket.room);
         socket.room = "";
-    });
-    socket.on("card", (data) => {
-        switch (data.card) {
-            case "Bang":
-                mainSocket.emit("card", { who: data.id, card: data.card, target: data.target });
-                mainSocket.to(socket.id).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
-                // todo: 這邊只要 emit 觸發的事件給我就好 不需要寫訊息喔
-                socket.on("response", (data) => {
-                    switch (data) {
-                        case true:
-                            mainSocket.to(data.id).emit("Attack success!");
-                            mainSocket.to(data.target).emit("You lost 1 life!");
-                            // 這裡直接丟資料回來給我 不需要訊息
-                            break;
-                        case false:
-                            mainSocket.to(data.id).emit("Attack fail!");
-                        // 這裡直接丟資料回來給我 不需要訊息
-                    }
-                });
-        }
     });
     socket.on("ShutdownSignal", () => {
         socket.emit("Server is going down in five minutes");

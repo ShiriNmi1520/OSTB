@@ -15,7 +15,7 @@ const app: any = express(),
     storageBucket: "buyao-70f4a.appspot.com",
     messagingSenderId: "409751210552"
   },
-  card: Array<string> = ["Bang", "Miss"];
+  card: Array<number> = [0, 1];
 let http2: any = new http.Server(app);
 let mainSocket: any = io(http2);
 // 生日快樂啦!
@@ -267,42 +267,41 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("gameStart", (data : any) => {
     // 接到房主gameStart，往該房間內所有人推送gameStart(只由房主發送過來，其餘只接收)
     // 請帶data.host，將作為是否創建status, gameInfo之依據
-    // 目前讓所有player起始6張QQ, 之後張數決定由丟過來的count決定, 執行每回合抽卡麻煩丟1 thx
-   socket.broadcast.to(data.roomId).emit("gameStart", "Game start, enjoy :) -Developer");
-   socket.emit("gameStart", "Game start, enjoy :) -Developer");
-   const roomPath : any = firebase.database().ref("/room/");
-   let playerStatus : Array<any> = [
-    {
-      id: 0,
-      handCard: [],
-      turn: true,
-      uid: "",
-      life: 4
-    },
-    {
-      id: 1,
-      handCard: [],
-      turn: false,
-      uid: "",
-      life: 4
-    },
-    {
-      id: 2,
-      handCard: [],
-      turn: false,
-      uid: "",
-      life: 4
-    },
-    {
-      id: 3,
-      handCard: [],
-      turn: false,
-      uid: "",
-      life: 4
-    }
-   ];
+    let playerStatus : Array<any> = [
+      {
+        id: 0,
+        handCard: [],
+        turn: true,
+        uid: "",
+        life: 4
+      },
+      {
+        id: 1,
+        handCard: [],
+        turn: false,
+        uid: "",
+        life: 4
+      },
+      {
+        id: 2,
+        handCard: [],
+        turn: false,
+        uid: "",
+        life: 4
+      },
+      {
+        id: 3,
+        handCard: [],
+        turn: false,
+        uid: "",
+        life: 4
+      }
+    ];
    function setGameStatus(): any {
     return new Promise((res, rej) => {
+      socket.broadcast.to(data.roomId).emit("gameStart", "Game start, enjoy :) -Developer");
+      socket.emit("gameStart", "Game start, enjoy :) -Developer");
+      const roomPath : any = firebase.database().ref("/room/");
       firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap : any) => {
         let counter : number = 0;
         Object.keys(snap.val()).forEach((index) => {
@@ -321,7 +320,7 @@ mainSocket.on("connection", (socket: any) => {
         }
       })
       .then(() => {
-        const result : object = {gameStartResult : "successful", playerStatus};
+        const result : object = {gameStartResult : "successful"};
         res(result);
       })
       .catch((err: any) => {
@@ -334,7 +333,9 @@ mainSocket.on("connection", (socket: any) => {
      await setGameStatus()
      .then((fulfilled : any) => {
       socket.broadcast.to(data.roomId).emit("gameStart", fulfilled);
+      socket.broadcast.to(data.roomId).emit("getBattleStatus", playerStatus);
       socket.emit("gameStart", fulfilled);
+      socket.emit("getBattleStatus", playerStatus);
      })
      .catch((rejected : any) => {
       socket.broadcast.to(data.roomId).emit("error", rejected);
@@ -386,27 +387,6 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("gameOver", () => {
     socket.leave(socket.room);
     socket.room = "";
-  });
-
-  socket.on("card", (data: any) => {
-    switch (data.card) {
-      case "Bang":
-        mainSocket.emit("card", { who: data.id, card: data.card, target: data.target });
-        mainSocket.to(socket.id).emit(`You've been attacked by ${data.id}\nDid u have "miss"?`);
-        // todo: 這邊只要 emit 觸發的事件給我就好 不需要寫訊息喔
-        socket.on("response", (data: any) => {
-          switch (data) {
-            case true:
-              mainSocket.to(data.id).emit("Attack success!");
-              mainSocket.to(data.target).emit("You lost 1 life!");
-              // 這裡直接丟資料回來給我 不需要訊息
-              break;
-            case false:
-              mainSocket.to(data.id).emit("Attack fail!");
-            // 這裡直接丟資料回來給我 不需要訊息
-          }
-        });
-    }
   });
 
   socket.on("ShutdownSignal", () => {

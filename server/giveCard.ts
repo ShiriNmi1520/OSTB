@@ -1,7 +1,7 @@
 const cards : Array<string> = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 const types : Array<string> = ["♠", "♥", "♣", "♦"];
 
-export function getRandom(pools : Array<string>, count : number): Array<string> {
+export function getRandom(pools : Array<number>, count : number): Array<string> {
 	const arr : Array<string> = [];
 	for (let i : number = 0; i < count; i++) {
 		let pool : any = pools[Math.floor(Math.random() * pools.length)];
