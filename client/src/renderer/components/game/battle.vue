@@ -1,21 +1,27 @@
 <template>
 <div class="body darkTheme">
-  <h1>Now it's {{playerTurn}}'s turn</h1>
+  <div class="turnBorad">
+    <h1>Now it's {{playerTurn}}'s turn</h1>
+  </div>
   <div class="main-block-battle">
-    <div class="char">{{self}}</div>
-    <div class="char char--p1">{{getPlayerId.p1}}</div>
-    <div class="char char--p2">{{getPlayerId.p2}}</div>
-    <div class="char char--p3">{{getPlayerId.p3}}</div>
-    <b-btn primary @click="backToMain">back to main</b-btn>
-    <b-btn @click="drawCard(5)">draw test</b-btn>
-    <b-btn @click="turnEnd()">turn end</b-btn>
-    <b-btn @click="showDefence">123</b-btn>
+    <div class="lifeContainer lifeContainer-self">
+      <div class="life life-self" :style="{width: getSelfLife / 4 * 100 + '%',}">{{self}}</div>
+    </div>
+    <div class="lifeContainer lifeContainer-p1">
+      <div class="life life-p1" :style="{height: getPOneLife / 4 * 100 + '%',}">{{getPlayerId.p1}}</div>
+    </div>
+    <div class="lifeContainer lifeContainer-p2">
+      <div class="life life-p2" :style="{width: getPTwoLife / 4 * 100 + '%',}">{{getPlayerId.p2}}</div>
+    </div>
+    <div class="lifeContainer lifeContainer-p3">
+      <div class="life life-p3" :style="{height: getPThreeLife / 4 * 100 + '%',}">{{getPlayerId.p3}}</div>
+    </div>
   </div>
   <b-row class="CardContainer justify-content-center">
     <b-col class="ml-2" sm="1" center v-for="(data, index) in roomData.battle.playerStatus[self].handCard">
       <b-dropdown dropup variant="link" size="lg" no-caret>
         <template slot="button-content" style="text-decoration: none !important;">
-            <div class="mainCard" style="text-decoration: none !important;" :id="`Card${index}`">{{data}}</div>
+            <div :class="'card_' + data" class="mainCard" style="text-decoration: none !important;" :id="`Card${index}`">{{data}}</div>
           </template>
         <b-dropdown-item @click="getItemID(index)">more</b-dropdown-item>
         <b-dropdown-item @click="useCard(data)">use the card</b-dropdown-item>
@@ -24,14 +30,14 @@
   </b-row>
   <b-row class="CardContainer CardContainer--p3 justify-content-center">
     <b-col sm="1" center>
-      <div class="mainCard">カード<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p1].handCard.length}}</span></div>
+      <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p3].handCard.length}}</span></div>
     </b-col>
   </b-row>
   <b-row class="CardContainer CardContainer--p2 justify-content-center">
-    <div class="mainCard">カード<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p2].handCard.length}}</span></div>
+    <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p2].handCard.length}}</span></div>
   </b-row>
   <b-row class="CardContainer CardContainer--p1 justify-content-center">
-    <div class="mainCard">カード<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p3].handCard.length}}</span></div>
+    <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p1].handCard.length}}</span></div>
   </b-row>
   <div>
     <div>
@@ -56,6 +62,14 @@
       </b-modal>
     </div>
   </div>
+
+    <div v-if="test" class="testBorad">
+      <b-btn @click="lifeTest()">全體-1血量</b-btn>
+      <b-btn primary @click="backToMain">back to main</b-btn>
+      <b-btn @click="drawCard(5)">draw test</b-btn>
+      <b-btn @click="turnEnd()">turn end</b-btn>
+      <b-btn @click="showDefence">123</b-btn>
+    </div>
 </div>
 </template>
 
@@ -75,6 +89,7 @@ export default {
       show: false,
       view: 'battle',
       self: 2,
+      test: false,
     };
   },
   methods: {
@@ -109,6 +124,14 @@ export default {
       const vm = this;
       vm.$socket.emit('turnEnd');
     },
+    lifeTest() {
+      const vm = this;
+      Object.keys(vm.roomData.battle.playerStatus).forEach((key) => {
+        if (vm.roomData.battle.playerStatus[key] !== undefined) {
+          vm.roomData.battle.playerStatus[key].life = 2;
+        }
+      });
+    },
   },
   computed: {
     playerTurn() {
@@ -132,9 +155,21 @@ export default {
         p3,
       };
     },
-    test() {
+    getSelfLife() {
       const vm = this;
-      return typeof (vm.roomData.battle.playerStatus);
+      return vm.roomData.battle.playerStatus[`${vm.self}`].life;
+    },
+    getPOneLife() {
+      const vm = this;
+      return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].life;
+    },
+    getPTwoLife() {
+      const vm = this;
+      return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].life;
+    },
+    getPThreeLife() {
+      const vm = this;
+      return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].life;
     },
     isSelfTurnOrNot() {},
   },
@@ -177,29 +212,85 @@ export default {
 @mainRed: #ffa767;
 @hoverRed: #936236;
 @mainBlack: #303133;
+@atk: #1b998b;
+@def: #f5c93c;
+@life: #D7263D;
+.blockTheme() {
+  box-shadow: 0 .5px 15px 1px rgba(0, 0, 0, 0.2);
+}
 *::-webkit-scrollbar {
-    width: 0;
+  border-radius: 5px;
+  background-color: rgba(255,255,255, 0.2);
+  width: 0;
 }
 .main-block-battle {
-    position: absolute;
-    height: 30rem;
-    width: 50rem;
-    background-color: rgba(0,0,0,0.3);
-    border: 5px #FF6773 solid;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  height: 30rem;
+  width: 50rem;
+  background-color: rgba(0,0,0,0.3);
+  border: 5px @mainRed solid;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-.char {
+.life {
     position: absolute;
-    height: 10rem;
-    width: 6rem;
     bottom: 0;
+    height: 3rem;
+    width: 6rem;
     left: 50%;
-    background-color: #fff;
+    background-color: @life;
     transform: translateX(-50%);
     color: #000;
 }
+.life-self {
+  width: 100%;
+}
+.life-p1 {
+  left: unset;
+  top: 50%;
+  transform: translate(-157%, -50%);
+  height: 100%;
+}
+.life-p2 {
+  width: 100%;
+}
+.life-p3 {
+  height: 100%;
+  top: 50%;
+  transform: translate(25%, -50%);
+}
+.lifeContainer {
+  position: absolute;
+}
+.lifeContainer-self {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  bottom: 0% !important;
+}
+.lifeContainer-p1 {
+  height: 70%;
+  right: -7% !important;
+  left: unset;
+  top: 50%;
+  transform: translate(-157%, -50%);
+}
+
+.lifeContainer-p2 {
+  width: 70%;
+  top: 10% !important;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lifeContainer-p3 {
+  height: 70%;
+  left: -2.7% !important;
+  top: 50%;
+  transform: translate(24%, -50%);
+}
+
 .CardContainer {
     position: absolute;
     width: 100%;
@@ -208,70 +299,84 @@ export default {
     transform: translateX(-53%);
 }
 .mainCard {
-    height: 10rem;
-    width: 6rem;
-    margin-left: 10px;
-    background-color: #fff;
-    color: #000;
-    transition: 0.2s ease-in;
+  height: 10rem;
+  width: 6rem;
+  margin-left: 10px;
+  background-color: #fff;
+  color: #000;
+  transition: 0.2s ease-in;
+  border-radius: 3px;
+  .blockTheme();
 }
 .mainCard:hover {
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 .mainCardMenu {
-    position: absolute;
-    width: 6rem;
-    height: 10rem;
-    top: -100%;
-    background-color: @mainRed;
-}
-.char--p3 {
-    top: 50%;
-    left: 4%;
-    transform: translateY(-50%) rotate(-270deg);
+  position: absolute;
+  width: 6rem;
+  height: 10rem;
+  top: -100%;
+  background-color: @mainRed;
 }
 .CardContainer--p3 {
-    position: absolute;
-    height: 100%;
-    width: unset;
-    top: calc(50% - 2px);
-    bottom: unset;
-    right: unset;
-    left: 0;
-    transform: translate(-280%, -56%) rotate(-270deg);
-}
-.char--p2 {
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%) rotate(-180deg);
+  position: absolute;
+  height: 100%;
+  width: unset;
+  top: calc(50% - 2px);
+  bottom: unset;
+  right: unset;
+  left: 0;
+  transform: translate(-280%, -56%) rotate(-270deg);
 }
 .CardContainer--p2 {
-    position: absolute;
-    width: 100%;
-    bottom: unset;
-    top: 0;
-    left: 50%;
-    right: unset;
-    transform: translate(-48%, -50%) rotate(-180deg);
-}
-.char--p1 {
-    top: 50%;
-    left: unset;
-    right: 0;
-    transform: translate(-35%,-50%) rotate(-90deg);
+  position: absolute;
+  width: 100%;
+  bottom: unset;
+  top: 0;
+  left: 50%;
+  right: unset;
+  transform: translate(-48%, -50%) rotate(-180deg);
 }
 .CardContainer--p1 {
-    height: 100%;
-    width: unset;
-    top: 50%;
-    left: unset;
-    right: 0;
-    transform: translate(345%, -50%) rotate(-90deg);
+  height: 100%;
+  width: unset;
+  top: 50%;
+  left: unset;
+  right: 0;
+  transform: translate(345%, -50%) rotate(-90deg);
 }
 .block {
-    height: 100px;
-    width: 100px;
-    background-color: #000;
-    display: inline-flex;
+  height: 100px;
+  width: 100px;
+  background-color: #000;
+  display: inline-flex;
+}
+.card_0{
+  background-color: @atk !important;
+}
+.card_1{
+  background-color: @def !important;
+}
+.turnBorad{
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 30%;
+  border-left: transparent;
+  border-top: transparent;
+  border-radius: 3px;
+  background: @mainRed;
+  padding: 15px;
+  z-index: 0;
+  .blockTheme();
+  h1 {
+    font-size: 2.5rem;
+  }
+}
+.testBorad{
+  z-index: 199999;
+  button{
+    z-index: 2000000;
+  }
 }
 </style>
