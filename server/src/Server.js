@@ -177,7 +177,8 @@ mainSocket.on("connection", (socket) => {
             uid: data.uid,
             nickName: nickName,
             host: true,
-            readyStatus: true
+            readyStatus: true,
+            socketId: data.socketId
         }).then(() => {
             playerPath.once("value", (snap) => {
                 playerData = snap.val();
@@ -208,7 +209,7 @@ mainSocket.on("connection", (socket) => {
         const roomPath = firebase.database().ref(`/room/${data.roomId}`);
         const nickNamePath = firebase.database().ref(`/users/${data.userId}/name`);
         let nickName = "";
-        playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId });
+        playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId, socketId: data.socketId });
         playerPath.once("value", (snap) => {
             // mainSocket.socket(socket.id).emit(snap.val());
             // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
@@ -282,28 +283,32 @@ mainSocket.on("connection", (socket) => {
                 handCard: [],
                 turn: true,
                 uid: "",
-                life: 4
+                life: 4,
+                socketId: ""
             },
             {
                 id: 1,
                 handCard: [],
                 turn: false,
                 uid: "",
-                life: 4
+                life: 4,
+                socketId: ""
             },
             {
                 id: 2,
                 handCard: [],
                 turn: false,
                 uid: "",
-                life: 4
+                life: 4,
+                socketId: ""
             },
             {
                 id: 3,
                 handCard: [],
                 turn: false,
                 uid: "",
-                life: 4
+                life: 4,
+                socketId: ""
             }
         ];
         function setGameStatus() {
@@ -314,6 +319,7 @@ mainSocket.on("connection", (socket) => {
                     Object.keys(snap.val()).forEach((index) => {
                         // 抓玩家資料
                         playerStatus[counter].uid = snap.val()[index].uid;
+                        playerStatus[counter].socketId = snap.val()[index].socketId;
                         playerStatus[counter].handCard = giveCard.getRandom(card, 6);
                         counter += 1;
                     });
@@ -351,6 +357,19 @@ mainSocket.on("connection", (socket) => {
         if (data.host === true) {
             executeGameStartProcess();
         }
+    });
+    socket.on("useCard", (data) => {
+        firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap) => {
+            let update = snap.val();
+            switch (snap.val()[data.cardUserInGameId].handCard[data.usingCard]) {
+                // 0為攻擊
+                case 0: {
+                    update[data.cardUserInGameId].handCard.splice(data.usingCard, 1);
+                    mainSocket.in(data.roomId).emit("battleLive", `玩家${data.cardUserInGameId}決定bang掉玩家${data.targetUserInGameId}`);
+                    mainSocket.to(update[data.targetUserInGameId].socketId).emit("def", "");
+                }
+            }
+        });
     });
     socket.on("drawCard", () => {
         socket.card = giveCard.getRandom(card, 1);
