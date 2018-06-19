@@ -92,6 +92,12 @@ export default {
       usingCard: 0,
     };
   },
+  sockets: {
+    def() {
+      const vm = this;
+      vm.$refs.useDefence.show();
+    },
+  },
   methods: {
     backToMain() {
       const vm = this;
@@ -111,8 +117,12 @@ export default {
       const vm = this;
       vm.$socket.emit('useCard', { roomId: vm.roomData.id,
         cardUserId: vm.roomData.battle.playerStatus[`${vm.self}`].uid,
+        cardUserInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
         usingCard: vm.usingCard,
-        targetUserId: vm.roomData.battle.playerStatus[`${data}`].uid });
+        targetUserId: vm.roomData.battle.playerStatus[`${data}`].uid,
+        targetUserInGameId: vm.roomData.battle.playerStatus[`${data}`].id,
+      },
+      );
     },
     drawCard(data) {
       const vm = this;
