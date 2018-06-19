@@ -98,11 +98,11 @@ export default {
       vm.$set(vm.roomData, 'battle', data);
       vm.$router.push({ name: 'battle' });
     },
-    // getBattleStatus(data) {
-    //   const vm = this;
-    //
-    //   // TODO: 接收戰鬥資料（玩家血量、手卡數量）
-    // },
+    getBattleStatus(data) {
+      const vm = this;
+      vm.$set(vm.roomData, 'battle', data);
+      // TODO: 接收戰鬥資料（玩家血量、手卡數量）
+    },
     disconnect() {
       const vm = this;
       vm.loading = true;

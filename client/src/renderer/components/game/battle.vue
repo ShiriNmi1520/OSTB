@@ -24,7 +24,7 @@
             <div :class="'card_' + data" class="mainCard" style="text-decoration: none !important;" :key="`Card${index}`"><span class="cardText">{{data === 0 ? 'ATK' : 'DEF'}}</span></div>
           </template>
         <b-dropdown-item @click="getItemID(index)">more</b-dropdown-item>
-        <b-dropdown-item v-if="data === 0 && isSelfTurnOrNot === true" @click="useCard(data)">use the card</b-dropdown-item>
+        <b-dropdown-item v-if="data === 0 && isSelfTurnOrNot === true" @click="showSelectPlayer(index)">use the card</b-dropdown-item>
       </b-dropdown>
     </b-col>
   </b-row>
@@ -43,10 +43,9 @@
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
         <div class="d-block text-center">
-          <div class="block text-white" @click="selectPlayer(0)">Player 1</div>
-          <div class="block text-white" @click="selectPlayer(1)">Player 2</div>
-          <div class="block text-white" @click="selectPlayer(2)">Player 3</div>
-          <div class="block text-white" @click="selectPlayer(3)">Player 4</div>
+          <div class="block text-white" @click="useCard(getPlayerId.p1)">Player {{roomData.battle.playerStatus[getPlayerId.p1].nickName}}</div>
+          <div class="block text-white" @click="useCard(getPlayerId.p2)">Player {{roomData.battle.playerStatus[getPlayerId.p2].nickName}}</div>
+          <div class="block text-white" @click="useCard(getPlayerId.p3)">Player {{roomData.battle.playerStatus[getPlayerId.p3].nickName}}</div>
         </div>
       </b-modal>
     </div>
@@ -90,6 +89,7 @@ export default {
       view: 'battle',
       self: 2,
       test: false,
+      usingCard: 0,
     };
   },
   methods: {
@@ -102,10 +102,17 @@ export default {
     getItemID(data) {
       console.log(data);
     },
+    showSelectPlayer(data) {
+      const vm = this;
+      vm.$refs.selectPlayer.show();
+      vm.usingCard = data;
+    },
     useCard(data) {
       const vm = this;
-      this.$refs.selectPlayer.show();
-      vm.$socket.emit('useCard', data);
+      vm.$socket.emit('useCard', { roomId: vm.roomData.id,
+        cardUserId: vm.roomData.battle.playerStatus[`${vm.self}`].uid,
+        usingCard: vm.usingCard,
+        targetUserId: vm.roomData.battle.playerStatus[`${data}`].uid });
     },
     drawCard(data) {
       const vm = this;
