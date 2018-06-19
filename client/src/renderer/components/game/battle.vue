@@ -5,26 +5,26 @@
   </div>
   <div class="main-block-battle">
     <div class="lifeContainer lifeContainer-self">
-      <div class="life life-self" :style="{width: getSelfLife / 4 * 100 + '%',}">{{self}}</div>
+      <div class="life life-self" :style="{width: getSelfLife / 4 * 100 + '%',}"><span>{{getSelfLife}}</span></div>
     </div>
     <div class="lifeContainer lifeContainer-p1">
-      <div class="life life-p1" :style="{height: getPOneLife / 4 * 100 + '%',}">{{getPlayerId.p1}}</div>
+      <div class="life life-p1" :style="{height: getPOneLife / 4 * 100 + '%',}"><span>{{getPOneLife}}</span></div>
     </div>
     <div class="lifeContainer lifeContainer-p2">
-      <div class="life life-p2" :style="{width: getPTwoLife / 4 * 100 + '%',}">{{getPlayerId.p2}}</div>
+      <div class="life life-p2" :style="{width: getPTwoLife / 4 * 100 + '%',}"><span>{{getPTwoLife}}</span></div>
     </div>
     <div class="lifeContainer lifeContainer-p3">
-      <div class="life life-p3" :style="{height: getPThreeLife / 4 * 100 + '%',}">{{getPlayerId.p3}}</div>
+      <div class="life life-p3" :style="{height: getPThreeLife / 4 * 100 + '%',}"><span>{{getPThreeLife}}</span></div>
     </div>
   </div>
   <b-row class="CardContainer justify-content-center">
     <b-col class="ml-2" sm="1" center v-for="(data, index) in roomData.battle.playerStatus[self].handCard">
       <b-dropdown dropup variant="link" size="lg" no-caret>
         <template slot="button-content" style="text-decoration: none !important;">
-            <div :class="'card_' + data" class="mainCard" style="text-decoration: none !important;" :id="`Card${index}`">{{data}}</div>
+            <div :class="'card_' + data" class="mainCard" style="text-decoration: none !important;" :key="`Card${index}`"><span class="cardText">{{data === 0 ? 'ATK' : 'DEF'}}</span></div>
           </template>
         <b-dropdown-item @click="getItemID(index)">more</b-dropdown-item>
-        <b-dropdown-item @click="useCard(data)">use the card</b-dropdown-item>
+        <b-dropdown-item v-if="data === 0 && isSelfTurnOrNot === true" @click="useCard(data)">use the card</b-dropdown-item>
       </b-dropdown>
     </b-col>
   </b-row>
@@ -171,7 +171,10 @@ export default {
       const vm = this;
       return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].life;
     },
-    isSelfTurnOrNot() {},
+    isSelfTurnOrNot() {
+      const vm = this;
+      return vm.roomData.battle.playerStatus[vm.self].turn;
+    },
   },
   created() {
     const vm = this;
@@ -209,12 +212,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@mainRed: #ffa767;
-@hoverRed: #936236;
+@mainRed: #78C2C4;
+@hoverRed: #6699A1;
 @mainBlack: #303133;
-@atk: #1b998b;
-@def: #f5c93c;
-@life: #D7263D;
+@atk: #A28C37;
+@def: #E79460;
+@life: #64363C;
 .blockTheme() {
   box-shadow: 0 .5px 15px 1px rgba(0, 0, 0, 0.2);
 }
@@ -232,6 +235,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  .blockTheme();
 }
 .life {
     position: absolute;
@@ -242,6 +246,16 @@ export default {
     background-color: @life;
     transform: translateX(-50%);
     color: #000;
+    border-radius: 3px;
+    span{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #FFF;
+      font-size: 2rem;
+    }
+    .blockTheme();
 }
 .life-self {
   width: 100%;
@@ -299,6 +313,7 @@ export default {
     transform: translateX(-53%);
 }
 .mainCard {
+  position: relative;
   height: 10rem;
   width: 6rem;
   margin-left: 10px;
@@ -307,6 +322,13 @@ export default {
   transition: 0.2s ease-in;
   border-radius: 3px;
   .blockTheme();
+  .cardText{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #2E294E;
+  }
 }
 .mainCard:hover {
   transform: scale(1.2);

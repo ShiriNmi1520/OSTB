@@ -67,9 +67,9 @@
 </script>
 
 <style lang="less" scoped>
-  @mainRed: #C05C48;
-  @hoverRed: #86430E;
-  @mainBlack: #474747;
+  @mainRed: #78C2C4;
+  @hoverRed: #6699A1;
+  @mainBlack: #2E294E;
   @mainBlackTrans: rgba(0,0,0,0.3);
   .blockTheme() {
     border-radius: 7px;

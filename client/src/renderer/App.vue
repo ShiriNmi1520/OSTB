@@ -1,7 +1,9 @@
 <template>
 <div id="app" class="body darkTheme">
-  <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus" :roomData="roomData" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId"
-    :userStatus="userData"></router-view>
+  <transition name="router-anim" mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+    <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus" :roomData="roomData" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId"
+      :userStatus="userData"></router-view>
+  </transition>
   <fade-transition>
     <div class="loading" v-if="loading">
       <b-btn v-if="test" @click="testLogin">test</b-btn>
@@ -12,6 +14,7 @@
     <div class="loading" v-if="error">
       <h1 class="text-white">{{errorData}}</h1>
     </div>
+    <b-btn class="test" v-if="test" @click="battleLifeTest()">lifeTest</b-btn>
   </fade-transition>
 </div>
 </template>
@@ -92,7 +95,7 @@ export default {
     },
     gameStart(data) {
       const vm = this;
-      vm.roomData = Object.assign(vm.roomData, { battle: data });
+      vm.$set(vm.roomData, 'battle', data);
       vm.$router.push({ name: 'battle' });
     },
     // getBattleStatus(data) {
@@ -115,6 +118,9 @@ export default {
       loading: true,
       userData: {},
       roomData: {
+        battle: {
+          playerStatus: {},
+        },
         host: false,
         id: '',
         nickName: '',
@@ -158,13 +164,20 @@ export default {
       vm.$router.push({ name: 'main' });
       vm.loading = false;
     },
+    battleLifeTest() {
+      const vm = this;
+      Object.keys(vm.roomData.battle.playerStatus).forEach((key) => {
+        vm.roomData.battle.playerStatus[key].life = 1;
+      });
+    },
   },
 };
   </script>
 
   <style lang="less">
-    @mainRed: #ffa767;
-    @hoverRed: #936236;
+    @import  '../../node_modules/animate.css/animate.css';
+    @mainRed: #78C2C4;
+    @hoverRed: #6699A1;
     @mainBlack: #303133;
     * {
       transition: .2s ease-in-out;
@@ -268,5 +281,9 @@ export default {
       to {
         transform: rotate(360deg);
       }
+    }
+    .test{
+      position: fixed;
+      z-index: 9999999999999;
     }
   </style>

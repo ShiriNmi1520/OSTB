@@ -98,8 +98,8 @@
   };
 </script>
 <style lang="less" scoped>
-  @mainRed: #ffa767;
-  @hoverRed: #936236;
+  @mainRed: #78C2C4;
+  @hoverRed: #6699A1;
   @mainBlack: #303133;
   .nav-red {
     background-color: @mainRed;
