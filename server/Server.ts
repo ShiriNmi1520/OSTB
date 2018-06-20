@@ -352,19 +352,19 @@ mainSocket.on("connection", (socket: any) => {
   // roomId & ans & userInGameId
   socket.on("defAns", (data : any) => {
     firebase.database().ref(`room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
-      let update : Array<any> = snap.val();
+      let playerStatus : Array<any> = snap.val();
       if(data.ans === false) {
-        let playerLife : number = update[data.userInGameId].life;
-        update[data.userInGameId].life = playerLife - 1;
+        let playerLife : number = playerStatus[data.userInGameId].life;
+        playerStatus[data.userInGameId].life = playerLife - 1;
         firebase.database().ref(`/room/`).child(data.roomId).update({
           status : "inRound",
           gameInfo :
           {
-            update
+            playerStatus
           }
         })
         .then(() => {
-          mainSocket.in(data.roomId).emit("getBattleStatus", update);
+          mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
         });
         mainSocket.in(data.roomId).emit("battleLoading", "");
       }
@@ -374,42 +374,42 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("turnEnd", (data: any) => {
     let whoIsNext : number = data.inGameId + 1 > 3 ? (data.inGameId - 4) + 1 : data.inGameId + 1;
     firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
-      let update : Array<any> = snap.val();
-      update[data.inGameId].turn = false;
-      update[whoIsNext].turn = true;
+      let playerStatus : Array<any> = snap.val();
+      playerStatus[data.inGameId].turn = false;
+      playerStatus[whoIsNext].turn = true;
       firebase.database().ref(`/room/`).child(data.roomId).update({
         status : "inRound",
         gameInfo :
         {
-          update
+          playerStatus
         }
       })
       .then(() => {
-        mainSocket.in(data.roomId).emit("getBattleStatus", update);
+        mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
       });
     });
   });
 
   socket.on("useCard", (data : any) => {
     firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
-      let update : Array<any> = snap.val();
+      let playerStatus : Array<any> = snap.val();
       switch(snap.val()[data.cardUserInGameId].handCard[data.usingCard]) {
         // 0為攻擊
         case 0: {
-          update[data.cardUserInGameId].handCard.splice(data.usingCard, 1);
+          playerStatus[data.cardUserInGameId].handCard.splice(data.usingCard, 1);
           mainSocket.in(data.roomId).emit("battleLive",
             `玩家${data.cardUserInGameId}決定bang掉玩家${data.targetUserInGameId}`);
-          mainSocket.to(update[data.targetUserInGameId].socketId).emit("def", "");
+          mainSocket.to(playerStatus[data.targetUserInGameId].socketId).emit("def", "");
           mainSocket.in(data.roomId).emit("battleLoading", "");
           firebase.database().ref(`/room/`).child(data.roomId).update({
             status : "inRound",
             gameInfo :
             {
-              update
+              playerStatus
             }
           })
           .then(() => {
-            mainSocket.in(data.roomId).emit("getBattleStatus", update);
+            mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
           });
         }
       }
