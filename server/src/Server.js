@@ -367,6 +367,12 @@ mainSocket.on("connection", (socket) => {
                     update[data.cardUserInGameId].handCard.splice(data.usingCard, 1);
                     mainSocket.in(data.roomId).emit("battleLive", `玩家${data.cardUserInGameId}決定bang掉玩家${data.targetUserInGameId}`);
                     mainSocket.to(update[data.targetUserInGameId].socketId).emit("def", "");
+                    firebase.database().ref(`/room/`).child(data.roomId).update({
+                        status: "inRound",
+                        gameInfo: {
+                            update
+                        }
+                    });
                 }
             }
         });
