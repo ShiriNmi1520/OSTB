@@ -358,6 +358,22 @@ mainSocket.on("connection", (socket) => {
             executeGameStartProcess();
         }
     });
+    // roomId & ans & targetUserInGameId
+    socket.on("defAns", (data) => {
+        firebase.database().ref(`room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap) => {
+            let update = snap.val();
+            if (data.ans === false) {
+                let playerLife = update[data.targetUserInGameId].life;
+                update[data.targetUserInGameId].life = playerLife - 1;
+                firebase.database().ref(`/room/`).child(data.roomId).update({
+                    status: "inRound",
+                    gameInfo: {
+                        update
+                    }
+                });
+            }
+        });
+    });
     socket.on("useCard", (data) => {
         firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap) => {
             let update = snap.val();
