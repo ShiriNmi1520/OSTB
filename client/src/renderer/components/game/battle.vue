@@ -165,15 +165,17 @@ export default {
     },
   },
   computed: {
-    playerTurn() {
-      const vm = this;
-      let turn = '';
-      Object.keys(vm.roomData.battle.playerStatus).forEach((key) => {
-        if (vm.roomData.battle.playerStatus[key].turn === true) {
-          turn = key;
-        }
-      });
-      return turn;
+    playerTurn: {
+      get() {
+        const vm = this;
+        let turn = '';
+        Object.keys(vm.roomData.battle.playerStatus).forEach((key) => {
+          if (vm.roomData.battle.playerStatus[key].turn === true) {
+            turn = key;
+          }
+        });
+        return turn;
+      },
     },
     getPlayerId() {
       const vm = this;
