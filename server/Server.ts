@@ -395,7 +395,7 @@ mainSocket.on("connection", (socket: any) => {
       let update : Array<any> = snap.val();
       switch(snap.val()[data.cardUserInGameId].handCard[data.usingCard]) {
         // 0為攻擊
-        case "0": {
+        case 0: {
           update[data.cardUserInGameId].handCard.splice(data.usingCard, 1);
           mainSocket.in(data.roomId).emit("battleLive",
             `玩家${data.cardUserInGameId}決定bang掉玩家${data.targetUserInGameId}`);
