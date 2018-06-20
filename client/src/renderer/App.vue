@@ -14,6 +14,9 @@
     <div class="loading" v-if="error">
       <h1 class="text-white">{{errorData}}</h1>
     </div>
+    <div class="loading" v-if="battleLoading">
+      <h1 class="text-white">等待防禦事件處理中</h1>
+    </div>
     <b-btn class="test" v-if="test" @click="battleLifeTest()">lifeTest</b-btn>
   </fade-transition>
 </div>
@@ -100,8 +103,12 @@ export default {
     },
     getBattleStatus(data) {
       const vm = this;
-      vm.$set(vm.roomData, 'battle', data);
+      vm.$set(vm.roomData.battle, 'playerStatus', data);
       // TODO: 接收戰鬥資料（玩家血量、手卡數量）
+    },
+    battleLoading() {
+      const vm = this;
+      vm.battleLoading = !vm.battleLoading;
     },
     disconnect() {
       const vm = this;
@@ -111,6 +118,7 @@ export default {
   data() {
     return {
       res: '',
+      battleLoading: false,
       socketId: '',
       view: 'login',
       loginStatus: {},

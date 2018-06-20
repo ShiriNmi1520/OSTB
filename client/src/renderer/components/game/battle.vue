@@ -4,6 +4,7 @@
     <h1>Now it's {{playerTurn}}'s turn</h1>
   </div>
   <div class="main-block-battle">
+    <b-btn @click="turnEnd()">turn end</b-btn>
     <div class="lifeContainer lifeContainer-self">
       <div class="life life-self" :style="{width: getSelfLife / 4 * 100 + '%',}"><span>{{getSelfLife}}</span></div>
     </div>
@@ -43,21 +44,22 @@
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
         <div class="d-block text-center">
-          <div class="block text-white" @click="useCard(getPlayerId.p1)">Player {{roomData.battle.playerStatus[getPlayerId.p1].nickName}}</div>
-          <div class="block text-white" @click="useCard(getPlayerId.p2)">Player {{roomData.battle.playerStatus[getPlayerId.p2].nickName}}</div>
-          <div class="block text-white" @click="useCard(getPlayerId.p3)">Player {{roomData.battle.playerStatus[getPlayerId.p3].nickName}}</div>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)">Player {{roomData.battle.playerStatus[getPlayerId.p1].nickName}}</b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)">Player {{roomData.battle.playerStatus[getPlayerId.p2].nickName}}</b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)">Player {{roomData.battle.playerStatus[getPlayerId.p3].nickName}}</b-btn>
         </div>
       </b-modal>
     </div>
     <div>
-      <b-modal header-class="text-dark" ref="useDefence" title="Battle Message" @ok="useDefenceCard()">
+      <b-modal header-class="text-dark" ref="useDefence" title="Battle Message">
         <div class="d-block text-center">
           <h1 class="text-dark">You have been hit! Do you want to use defence card?</h1>
         </div>
         <div slot="modal-footer" class="w-100">
-          <b-btn success class="float-right">Yes</b-btn>
-          <b-btn danger class="float-right">No</b-btn>
+          <b-btn success class="float-right" @click="useDefenceCard(true)">Yes</b-btn>
+          <b-btn danger class="float-right" @click="useDefenceCard(false)">No</b-btn>
         </div>
+        <div footer>123</div>
       </b-modal>
     </div>
   </div>
@@ -66,7 +68,6 @@
       <b-btn @click="lifeTest()">全體-1血量</b-btn>
       <b-btn primary @click="backToMain">back to main</b-btn>
       <b-btn @click="drawCard(5)">draw test</b-btn>
-      <b-btn @click="turnEnd()">turn end</b-btn>
       <b-btn @click="showDefence">123</b-btn>
     </div>
 </div>
@@ -121,14 +122,19 @@ export default {
         usingCard: vm.usingCard,
         targetUserId: vm.roomData.battle.playerStatus[`${data}`].uid,
         targetUserInGameId: vm.roomData.battle.playerStatus[`${data}`].id,
-      },
-      );
+      });
+      vm.$refs.selectPlayer.hide();
     },
-    useDefenceCard() {
+    useDefenceCard(data) {
       const vm = this;
       const index = vm.roomData.battle.PlayerStatus[`${self}`].handCard.indexOf(1);
       vm.usingCard = index;
-      vm.$socket.emit('def', index);
+      vm.$socket.emit('defAns', { roomId: vm.roomData.id,
+        userInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
+        usingCard: vm.usingCard,
+        ans: data,
+      });
+      vm.$refs.useDefence.hide();
     },
     drawCard(data) {
       const vm = this;
@@ -145,7 +151,9 @@ export default {
     },
     turnEnd() {
       const vm = this;
-      vm.$socket.emit('turnEnd');
+      vm.$socket.emit('turnEnd', { roomId: vm.roomData.id,
+        inGameId: vm.self,
+      });
     },
     lifeTest() {
       const vm = this;
