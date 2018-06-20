@@ -103,7 +103,7 @@ export default {
     },
     getBattleStatus(data) {
       const vm = this;
-      vm.$set(vm.roomData.battle, 'playerStatus', data);
+      vm.$set(vm.roomData, 'battle', data);
       // TODO: 接收戰鬥資料（玩家血量、手卡數量）
     },
     battleLoading() {
