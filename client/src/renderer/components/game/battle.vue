@@ -50,7 +50,7 @@
       </b-modal>
     </div>
     <div>
-      <b-modal header-class="text-dark" ref="useDefence" title="Battle Message" @ok="useDefence()">
+      <b-modal header-class="text-dark" ref="useDefence" title="Battle Message" @ok="useDefenceCard()">
         <div class="d-block text-center">
           <h1 class="text-dark">You have been hit! Do you want to use defence card?</h1>
         </div>
@@ -124,7 +124,7 @@ export default {
       },
       );
     },
-    useDefence() {
+    useDefenceCard() {
       const vm = this;
       const index = vm.roomData.battle.PlayerStatus[`${self}`].handCard.indexOf(1);
       vm.usingCard = index;
