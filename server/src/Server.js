@@ -372,7 +372,7 @@ mainSocket.on("connection", (socket) => {
                     }
                 })
                     .then(() => {
-                    mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
+                    mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
                 });
                 mainSocket.in(data.roomId).emit("battleLoading", "");
             }
@@ -391,7 +391,7 @@ mainSocket.on("connection", (socket) => {
                 }
             })
                 .then(() => {
-                mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
+                mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
             });
         });
     });
@@ -412,7 +412,7 @@ mainSocket.on("connection", (socket) => {
                         }
                     })
                         .then(() => {
-                        mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
+                        mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
                     });
                 }
             }

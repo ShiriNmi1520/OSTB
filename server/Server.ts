@@ -5,6 +5,7 @@ import * as http from "http";
 import io from "socket.io";
 import express = require("express");
 import jwt = require("jsonwebtoken");
+import { platform } from "os";
 
 const app: any = express(),
   FIREBASE_CONFIG: object = {
@@ -364,7 +365,7 @@ mainSocket.on("connection", (socket: any) => {
           }
         })
         .then(() => {
-          mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
+          mainSocket.in(data.roomId).emit("getBattleStatus", {playerStatus: playerStatus});
         });
         mainSocket.in(data.roomId).emit("battleLoading", "");
       }
@@ -385,7 +386,7 @@ mainSocket.on("connection", (socket: any) => {
         }
       })
       .then(() => {
-        mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
+        mainSocket.in(data.roomId).emit("getBattleStatus", {playerStatus: playerStatus});
       });
     });
   });
@@ -409,7 +410,7 @@ mainSocket.on("connection", (socket: any) => {
             }
           })
           .then(() => {
-            mainSocket.in(data.roomId).emit("getBattleStatus", playerStatus);
+            mainSocket.in(data.roomId).emit("getBattleStatus", {playerStatus: playerStatus});
           });
         }
       }
