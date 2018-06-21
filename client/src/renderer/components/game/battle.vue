@@ -56,8 +56,8 @@
           <h1 class="text-dark">You have been hit! Do you want to use defence card?</h1>
         </div>
         <div slot="modal-footer" class="w-100">
-          <b-btn success class="float-right" @click="useDefenceCard(true)">Yes</b-btn>
-          <b-btn danger class="float-right" @click="useDefenceCard(false)">No</b-btn>
+          <b-btn success class="float-right" @click="useDefenceCard({ans: true})">Yes</b-btn>
+          <b-btn danger class="float-right" @click="useDefenceCard({ans: false})">No</b-btn>
         </div>
         <div footer>123</div>
       </b-modal>
@@ -128,12 +128,12 @@ export default {
     },
     useDefenceCard(data) {
       const vm = this;
-      const index = vm.roomData.battle.PlayerStatus[`${self}`].handCard.indexOf(1);
+      const index = vm.roomData.battle.playerStatus[`${vm.self}`].handCard.indexOf(1);
       vm.usingCard = index;
       vm.$socket.emit('defAns', { roomId: vm.roomData.id,
         userInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
         usingCard: vm.usingCard,
-        ans: data,
+        ans: data.ans,
       });
       vm.$refs.useDefence.hide();
     },
