@@ -167,8 +167,8 @@ mainSocket.on("connection", (socket) => {
         let playerData = {};
         nickNamePath.once("value", (snap) => {
             nickName = snap.val().name;
-            console.log(`nickName path ${JSON.stringify(snap.val())}`);
         });
+        console.log(`create ${nickName}`);
         path.set({
             room: data.roomId,
             player: {}
