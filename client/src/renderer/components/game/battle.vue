@@ -59,7 +59,13 @@
           <b-btn success class="float-right" @click="useDefenceCard({ans: true})">Yes</b-btn>
           <b-btn danger class="float-right" @click="useDefenceCard({ans: false})">No</b-btn>
         </div>
-        <div footer>123</div>
+      </b-modal>
+    </div>
+    <div>
+      <b-modal header-class="text-dark" ref="useDefence" title="Battle Message" ok-only @ok="backToMain">
+        <div class="d-block text-center">
+          <h1 class="text-dark">Dead!, we will bring you to the main page.</h1>
+        </div>
       </b-modal>
     </div>
   </div>
