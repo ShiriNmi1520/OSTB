@@ -391,6 +391,7 @@ mainSocket.on("connection", (socket) => {
                 playerStatus[data.userInGameId].life = playerLife - 1;
                 if (playerStatus[data.userInGameId].life === 0) {
                     playerStatus[data.userInGameId].dead = true;
+                    mainSocket.to(playerStatus[data.userInGameId].socketId).emit("dead");
                 }
                 firebase.database().ref(`/room/`).child(data.roomId).update({
                     status: "inRound",
