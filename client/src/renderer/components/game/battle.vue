@@ -4,7 +4,7 @@
     <h1>Now it's {{playerTurn}}'s turn</h1>
   </div>
   <div class="main-block-battle">
-    <b-btn @click="turnEnd()">turn end</b-btn>
+    <b-btn v-if="isSelfTurnOrNot" @click="turnEnd()">turn end</b-btn>
     <div class="lifeContainer lifeContainer-self">
       <div class="life life-self" :style="{width: getSelfLife / 4 * 100 + '%',}"><span>{{getSelfLife}}</span></div>
     </div>
