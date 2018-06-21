@@ -31,14 +31,14 @@
   </b-row>
 <b-row class="CardContainer CardContainer--p3 justify-content-center">
   <b-col sm="1" center>
-    <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{getPOneHandCardCount}}</span></div>
+    <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard">x{{getPOneHandCardCount}}</span></div>
   </b-col>
 </b-row>
 <b-row class="CardContainer CardContainer--p2 justify-content-center">
-  <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{getPTwoHandCardCount}}</span></div>
+  <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard">x{{getPTwoHandCardCount}}</span></div>
 </b-row>
 <b-row class="CardContainer CardContainer--p1 justify-content-center">
-  <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{getPThreeHandCardCount}}</span></div>
+  <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard">x{{getPThreeHandCardCount}}</span></div>
 </b-row>
   <div>
     <div>
@@ -194,6 +194,13 @@ export default {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
         return vm.roomData.battle.playerStatus[`${vm.self}`].life;
+      }
+      return 'error';
+    },
+    getSelfNickname() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.self}`].nickName;
       }
       return 'error';
     },
