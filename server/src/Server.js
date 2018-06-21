@@ -167,8 +167,8 @@ mainSocket.on("connection", (socket) => {
         let playerData = {};
         nickNamePath.once("value", (snap) => {
             nickName = snap.val().name;
-            console.log(`nickName path ${JSON.stringify(snap.val())}`);
         });
+        console.log(`create ${nickName}`);
         path.set({
             room: data.roomId,
             player: {}
@@ -208,8 +208,11 @@ mainSocket.on("connection", (socket) => {
         let room = "";
         const playerPath = firebase.database().ref(`/room/${data.roomId}/player`);
         const roomPath = firebase.database().ref(`/room/${data.roomId}`);
-        const nickNamePath = firebase.database().ref(`/users/${data.userId}/name`);
+        const nickNamePath = firebase.database().ref(`/users/${data.userId}/`);
         let nickName = "";
+        nickNamePath.once("value", (snap) => {
+            nickName = snap.val().name;
+        });
         playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId, socketId: data.socketId });
         playerPath.once("value", (snap) => {
             // mainSocket.socket(socket.id).emit(snap.val());
