@@ -365,6 +365,7 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("defAns", (data : any) => {
     firebase.database().ref(`room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
       let playerStatus : Array<any> = snap.val();
+      let life : number = playerStatus[data.inGameId].life;
       if(data.ans === true) {
         playerStatus[data.userInGameId].handCard.splice(data.usingCard, 1);
         firebase.database().ref(`/room/`).child(data.roomId).update({
@@ -380,10 +381,10 @@ mainSocket.on("connection", (socket: any) => {
         mainSocket.in(data.roomId).emit("battleLoading", "");
       }
       if(data.ans === false) {
-        let playerLife : number = playerStatus[data.userInGameId].life;
-        playerStatus[data.userInGameId].life = playerLife - 1;
-        if(playerStatus[data.userInGameId].life === 0) {
+        life -= 1;
+        if(life === 0) {
           playerStatus[data.userInGameId].dead = true;
+          mainSocket.to(playerStatus[data.userInGameId].socketId).emit("dead");
         }
         firebase.database().ref(`/room/`).child(data.roomId).update({
           status : "inRound",
