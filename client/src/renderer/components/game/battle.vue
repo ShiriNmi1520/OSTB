@@ -29,17 +29,17 @@
       </b-dropdown>
     </b-col>
   </b-row>
-  <!-- <b-row class="CardContainer CardContainer--p3 justify-content-center">
-    <b-col sm="1" center>
-      <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{roomData.battle.playerStatus[getPlayerId.p3].handCard.length}}</span></div>
-    </b-col>
-  </b-row>
-  <b-row class="CardContainer CardContainer--p2 justify-content-center">
-    <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{roomData.battle.playerStatus[getPlayerId.p2].handCard.length}}</span></div>
-  </b-row>
-  <b-row class="CardContainer CardContainer--p1 justify-content-center">
-    <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{roomData.battle.playerStatus[getPlayerId.p1].handCard.length}}</span></div>
-  </b-row> -->
+<b-row class="CardContainer CardContainer--p3 justify-content-center">
+  <b-col sm="1" center>
+    <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{getPOneHandCardCount}}</span></div>
+  </b-col>
+</b-row>
+<b-row class="CardContainer CardContainer--p2 justify-content-center">
+  <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{getPTwoHandCardCount}}</span></div>
+</b-row>
+<b-row class="CardContainer CardContainer--p1 justify-content-center">
+  <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{getPThreeHandCardCount}}</span></div>
+</b-row>
   <div>
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
@@ -222,6 +222,34 @@ export default {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
         return vm.roomData.battle.playerStatus[vm.self].turn;
+      }
+      return 'error';
+    },
+    getSelfHandCardCount() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.self}`].handCard.length;
+      }
+      return 'error';
+    },
+    getPOneHandCardCount() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].handCard.length;
+      }
+      return 'error';
+    },
+    getPTwoHandCardCount() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].handCard.length;
+      }
+      return 'error';
+    },
+    getPThreeHandCardCount() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].handCard.length;
       }
       return 'error';
     },
