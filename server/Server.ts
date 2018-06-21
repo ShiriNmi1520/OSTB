@@ -193,6 +193,7 @@ mainSocket.on("connection", (socket: any) => {
     console.log(`joinRoom ${JSON.stringify(data)}`);
     socket.join(data.roomId);
     let error : any = false;
+    let room : String = "";
     const playerPath: any = firebase.database().ref(`/room/${data.roomId}/player`);
     const roomPath: any = firebase.database().ref(`/room/${data.roomId}`);
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/name`);
@@ -202,8 +203,9 @@ mainSocket.on("connection", (socket: any) => {
       // mainSocket.socket(socket.id).emit(snap.val());
       // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
       mainSocket.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
+      roomPath.once("value", (snap : any) => {room = snap.val().room;});
       mainSocket.to(socket.id).emit("joinRoom", {type: "join", host: false, nickName: nickName, player: snap.val(),
-       readyStatus: false, room: socket.room, id: data.roomId});
+       readyStatus: false, room: room, id: data.roomId});
       if (snap.val().length >= 4) {
         // mainSocket.socket(socket.id).emit("error");
         mainSocket.to(socket.id).emit("error");
