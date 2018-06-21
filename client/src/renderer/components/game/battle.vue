@@ -260,6 +260,13 @@ export default {
       }
       return 'error';
     },
+    getSelfDeadOrNot() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus[vm.self].life === 0) {
+        return true;
+      }
+      return true;
+    },
   },
   created() {
     const vm = this;

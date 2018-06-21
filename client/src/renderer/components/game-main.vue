@@ -22,7 +22,7 @@
           </b-modal>
       </b-col>
       </b-row>
-      <b-btn @click="gotoBattle">test</b-btn>
+<!--  <b-btn @click="gotoBattle">test</b-btn>   -->
       <h1 style="font-size: 5rem; color: #2490A9; margin: 15px;">早安窩ㄉ朋友 天氣一好， 天空就是藍ㄉ 認同請分享</h1>
     </b-container>
     </fade-transition>
