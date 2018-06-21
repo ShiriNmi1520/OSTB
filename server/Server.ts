@@ -279,7 +279,8 @@ mainSocket.on("connection", (socket: any) => {
         uid: "",
         life: 4,
         socketId: "",
-        nickName: ""
+        nickName: "",
+        dead: false
       },
       {
         id: 1,
@@ -288,7 +289,8 @@ mainSocket.on("connection", (socket: any) => {
         uid: "",
         life: 4,
         socketId: "",
-        nickName: ""
+        nickName: "",
+        dead: false
       },
       {
         id: 2,
@@ -297,7 +299,8 @@ mainSocket.on("connection", (socket: any) => {
         uid: "",
         life: 4,
         socketId: "",
-        nickName: ""
+        nickName: "",
+        dead: false
       },
       {
         id: 3,
@@ -306,7 +309,8 @@ mainSocket.on("connection", (socket: any) => {
         uid: "",
         life: 4,
         socketId: "",
-        nickName: ""
+        nickName: "",
+        dead: false
       }
     ];
    function setGameStatus(): any {
@@ -378,6 +382,9 @@ mainSocket.on("connection", (socket: any) => {
       if(data.ans === false) {
         let playerLife : number = playerStatus[data.userInGameId].life;
         playerStatus[data.userInGameId].life = playerLife - 1;
+        if(playerStatus[data.userInGameId].life === 0) {
+          playerStatus[data.userInGameId].dead = true;
+        }
         firebase.database().ref(`/room/`).child(data.roomId).update({
           status : "inRound",
           gameInfo :
