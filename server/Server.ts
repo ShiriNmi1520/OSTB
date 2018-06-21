@@ -380,8 +380,8 @@ mainSocket.on("connection", (socket: any) => {
         mainSocket.in(data.roomId).emit("battleLoading", "");
       }
       if(data.ans === false) {
-        let playerLife : number = playerStatus[data.inGameId].life;
-        playerStatus[data.inGameId].life = playerLife - 1;
+        let playerLife : number = playerStatus[data.userInGameId].life;
+        playerStatus[data.userInGameId].life = playerLife - 1;
         if(playerStatus[data.userInGameId].life === 0) {
           playerStatus[data.userInGameId].dead = true;
           mainSocket.to(playerStatus[data.userInGameId].socketId).emit("dead");
