@@ -89,6 +89,9 @@ export default {
     loginStatus: {
       type: Object,
     },
+    clientId: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -105,6 +108,10 @@ export default {
       const vm = this;
       vm.$refs.useDefence.show();
     },
+    dead() {
+      const vm = this;
+      vm.$refs.deadModal.show();
+    },
   },
   methods: {
     backToMain() {
@@ -112,6 +119,7 @@ export default {
       vm.$router.push({
         name: 'main',
       });
+      vm.$refs.deadModal.hide();
     },
     getItemID(data) {
       console.log(data);
@@ -140,6 +148,7 @@ export default {
         userInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
         usingCard: vm.usingCard,
         ans: data.ans,
+        socketId: vm.clientId,
       });
       vm.$refs.useDefence.hide();
     },
