@@ -405,8 +405,13 @@ mainSocket.on("connection", (socket: any) => {
     firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
       let playerStatus : Array<any> = snap.val();
       playerStatus[data.inGameId].turn = false;
+      if(playerStatus[whoIsNext].dead === true) {
+        playerStatus[whoIsNext + 1].turn = true;
+        playerStatus[whoIsNext + 1].handCard.push(giveCard.getRandom(card, 1));
+      } else {
       playerStatus[whoIsNext].turn = true;
       playerStatus[whoIsNext].handCard.push(giveCard.getRandom(card, 1));
+      }
       firebase.database().ref(`/room/`).child(data.roomId).update({
         status : "inRound",
         gameInfo :
