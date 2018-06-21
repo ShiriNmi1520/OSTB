@@ -127,7 +127,7 @@ export default {
       userData: {},
       roomData: {
         battle: {
-          playerStatus: {},
+          playerStatus: [{}, {}, {}, {}],
         },
         host: false,
         id: '',

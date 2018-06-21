@@ -1,5 +1,5 @@
 <template>
-<div class="body darkTheme">
+<div class="body darkTheme" v-if="roomData.battle.playerStatus">
   <div class="turnBorad">
     <h1>Now it's {{playerTurn}}'s turn</h1>
   </div>
@@ -29,17 +29,17 @@
       </b-dropdown>
     </b-col>
   </b-row>
-  <b-row class="CardContainer CardContainer--p3 justify-content-center">
+  <!-- <b-row class="CardContainer CardContainer--p3 justify-content-center">
     <b-col sm="1" center>
-      <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p3].handCard.length}}</span></div>
+      <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{roomData.battle.playerStatus[getPlayerId.p3].handCard.length}}</span></div>
     </b-col>
   </b-row>
   <b-row class="CardContainer CardContainer--p2 justify-content-center">
-    <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p2].handCard.length}}</span></div>
+    <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{roomData.battle.playerStatus[getPlayerId.p2].handCard.length}}</span></div>
   </b-row>
   <b-row class="CardContainer CardContainer--p1 justify-content-center">
-    <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1">x{{roomData.battle.playerStatus[getPlayerId.p1].handCard.length}}</span></div>
-  </b-row>
+    <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard.length">x{{roomData.battle.playerStatus[getPlayerId.p1].handCard.length}}</span></div>
+  </b-row> -->
   <div>
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
@@ -91,6 +91,7 @@ export default {
       self: 2,
       test: false,
       usingCard: 0,
+      turn: 0,
     };
   },
   sockets: {
@@ -165,9 +166,9 @@ export default {
     },
   },
   computed: {
-    playerTurn: {
-      get() {
-        const vm = this;
+    playerTurn() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus.length) {
         let turn = '';
         Object.keys(vm.roomData.battle.playerStatus).forEach((key) => {
           if (vm.roomData.battle.playerStatus[key].turn === true) {
@@ -175,7 +176,8 @@ export default {
           }
         });
         return turn;
-      },
+      }
+      return 'error';
     },
     getPlayerId() {
       const vm = this;
@@ -190,23 +192,38 @@ export default {
     },
     getSelfLife() {
       const vm = this;
-      return vm.roomData.battle.playerStatus[`${vm.self}`].life;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.self}`].life;
+      }
+      return 'error';
     },
     getPOneLife() {
       const vm = this;
-      return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].life;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].life;
+      }
+      return 'error';
     },
     getPTwoLife() {
       const vm = this;
-      return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].life;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].life;
+      }
+      return 'error';
     },
     getPThreeLife() {
       const vm = this;
-      return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].life;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].life;
+      }
+      return 'error';
     },
     isSelfTurnOrNot() {
       const vm = this;
-      return vm.roomData.battle.playerStatus[vm.self].turn;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[vm.self].turn;
+      }
+      return 'error';
     },
   },
   created() {
