@@ -62,7 +62,7 @@
       </b-modal>
     </div>
     <div>
-      <b-modal header-class="text-dark" ref="useDefence" title="Battle Message" ok-only @ok="backToMain">
+      <b-modal header-class="text-dark" ref="deadModal" title="Battle Message" ok-only @ok="backToMain">
         <div class="d-block text-center">
           <h1 class="text-dark">Dead!, we will bring you to the main page.</h1>
         </div>
