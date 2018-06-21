@@ -284,7 +284,8 @@ mainSocket.on("connection", (socket) => {
                 turn: true,
                 uid: "",
                 life: 4,
-                socketId: ""
+                socketId: "",
+                nickName: ""
             },
             {
                 id: 1,
@@ -292,7 +293,8 @@ mainSocket.on("connection", (socket) => {
                 turn: false,
                 uid: "",
                 life: 4,
-                socketId: ""
+                socketId: "",
+                nickName: ""
             },
             {
                 id: 2,
@@ -300,7 +302,8 @@ mainSocket.on("connection", (socket) => {
                 turn: false,
                 uid: "",
                 life: 4,
-                socketId: ""
+                socketId: "",
+                nickName: ""
             },
             {
                 id: 3,
@@ -308,7 +311,8 @@ mainSocket.on("connection", (socket) => {
                 turn: false,
                 uid: "",
                 life: 4,
-                socketId: ""
+                socketId: "",
+                nickName: ""
             }
         ];
         function setGameStatus() {
@@ -320,6 +324,7 @@ mainSocket.on("connection", (socket) => {
                         // 抓玩家資料
                         playerStatus[counter].uid = snap.val()[index].uid;
                         playerStatus[counter].socketId = snap.val()[index].socketId;
+                        playerStatus[counter].nickName = snap.val()[index].nickName;
                         playerStatus[counter].handCard = giveCard.getRandom(card, 6);
                         counter += 1;
                     });
@@ -362,6 +367,19 @@ mainSocket.on("connection", (socket) => {
     socket.on("defAns", (data) => {
         firebase.database().ref(`room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap) => {
             let playerStatus = snap.val();
+            if (data.ans === true) {
+                playerStatus[data.userInGameId].handCard.splice(data.usingCard, 1);
+                firebase.database().ref(`/room/`).child(data.roomId).update({
+                    status: "inRound",
+                    gameInfo: {
+                        playerStatus
+                    }
+                })
+                    .then(() => {
+                    mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
+                });
+                mainSocket.in(data.roomId).emit("battleLoading", "");
+            }
             if (data.ans === false) {
                 let playerLife = playerStatus[data.userInGameId].life;
                 playerStatus[data.userInGameId].life = playerLife - 1;
