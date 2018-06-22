@@ -44,9 +44,9 @@
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
         <div class="d-block text-center">
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)">Player {{roomData.battle.playerStatus[getPlayerId.p1].nickName}}</b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)">Player {{roomData.battle.playerStatus[getPlayerId.p2].nickName}}</b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)">Player {{roomData.battle.playerStatus[getPlayerId.p3].nickName}}</b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)">{{getPOneNickname}}</b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)">{{getPTwoNickname}}</b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)">{{getPThreeNickname}}</b-btn>
         </div>
       </b-modal>
     </div>
@@ -216,6 +216,27 @@ export default {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
         return vm.roomData.battle.playerStatus[`${vm.self}`].nickName;
+      }
+      return 'error';
+    },
+    getPOneNickname() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].nickName;
+      }
+      return 'error';
+    },
+    getPTwoNickname() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].nickName;
+      }
+      return 'error';
+    },
+    getPThreeNickname() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].nickName;
       }
       return 'error';
     },

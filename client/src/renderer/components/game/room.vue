@@ -15,7 +15,7 @@
     <b-row>
       <b-col md="12" class="mt-3">
         <b-list-group>
-          <b-list-group-item class="mainContainer mb-2" v-for="(obj, index) in player" :key="obj.uid">{{obj.uid}}
+          <b-list-group-item class="mainContainer mb-2" v-for="(obj, index) in player" :key="obj.uid">{{obj.nickName}}
           <span class="float-right" v-if="">🙆‍</span></b-list-group-item>
         </b-list-group>
       </b-col>
