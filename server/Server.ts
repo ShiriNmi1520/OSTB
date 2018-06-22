@@ -45,38 +45,40 @@ mainSocket.on("connection", (socket: any) => {
   socket.on("auth", (data: any) => {
     function loginProcess(): any {
       return new Promise((res, rej) => {
-      firebase.auth().signInWithEmailAndPassword(data.email, data.password)
-      .then(() => {
-        const profileForToken: object = { email: data.email, password: data.password };
-        const token: string = jwt.sign(profileForToken, "token", {
-          expiresIn: 60 * 60 * 24
-        });
-        socket.token = token;
-        firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
-            firebase.database().ref(`/users/${user.uid}/`).once("value", (snap : any) => {
-              const transferData : object = { type: "success", code: "default", token, nickname: snap.val(),
-                 email: data.email, uid: user.uid};
-              res(transferData);
+        firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+          .then(() => {
+            const profileForToken: object = { email: data.email, password: data.password };
+            const token: string = jwt.sign(profileForToken, "token", {
+              expiresIn: 60 * 60 * 24
             });
-          }
-        });
-      })
-      // todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
-      // todo: 再加一個 uid 感恩。
-      .catch((error) => {
-        const errorCode: string = error.code;
-        const transferData : object = { type: "error", code: `${errorCode}` };
-        rej(transferData);
-        });
+            socket.token = token;
+            firebase.auth().onAuthStateChanged((user) => {
+              if (user) {
+                firebase.database().ref(`/users/${user.uid}/`).once("value", (snap: any) => {
+                  const transferData: object = {
+                    type: "success", code: "default", token, nickname: snap.val(),
+                    email: data.email, uid: user.uid
+                  };
+                  res(transferData);
+                });
+              }
+            });
+          })
+          // todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
+          // todo: 再加一個 uid 感恩。
+          .catch((error) => {
+            const errorCode: string = error.code;
+            const transferData: object = { type: "error", code: `${errorCode}` };
+            rej(transferData);
+          });
       });
     }
     async function executeLoginProcess(): Promise<void> {
-      await loginProcess().then((fulfilled : any) => {
+      await loginProcess().then((fulfilled: any) => {
         console.log(socket.id);
         // mainSocket.socket(socket.id).emit(fulfilled);
         mainSocket.to(socket.id).emit("auth", fulfilled);
-      }).catch((rejected : any) => {
+      }).catch((rejected: any) => {
         // mainSocket.socket(socket.id).emit(rejected);
         mainSocket.to(socket.id).emit("auth", rejected);
       });
@@ -86,41 +88,43 @@ mainSocket.on("connection", (socket: any) => {
 
   socket.on("register", (data: any) => {
     let uid: string = "";
-      function registerProcess(): any {
-        return new Promise((res, rej) => {
-          firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
-            .then(() => {
-              firebase.auth().signInWithEmailAndPassword(data.email, data.password)
-                .then(() => {
-                  console.log("Ready to push player nickName");
-                  firebase.auth().onAuthStateChanged((user: any) => {
-                    console.log(user.uid);
-                    firebase.database().ref("/users/").child(user.uid).update({ name: data.nickname });
-                    const transferData : object = { type: "success", code: "default", email: data.email
-                      , nickname: data.nickname, uid: user.uid};
-                    res(transferData);
+    function registerProcess(): any {
+      return new Promise((res, rej) => {
+        firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
+          .then(() => {
+            firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+              .then(() => {
+                console.log("Ready to push player nickName");
+                firebase.auth().onAuthStateChanged((user: any) => {
+                  console.log(user.uid);
+                  firebase.database().ref("/users/").child(user.uid).update({ name: data.nickname });
+                  const transferData: object = {
+                    type: "success", code: "default", email: data.email
+                    , nickname: data.nickname, uid: user.uid
+                  };
+                  res(transferData);
+                });
               });
-            });
           })
           .catch((error) => {
             let errorCode: string = error.code;
-            const transferData : object = { type: "error", code: `${errorCode}` };
+            const transferData: object = { type: "error", code: `${errorCode}` };
             rej(transferData);
-        });
+          });
       });
     }
     async function executeRegisterProcess(): Promise<void> {
       await registerProcess()
-      .then((fulfilled : any) => {
-        socket.emit("auth", fulfilled);
-      })
-      .catch((rejected : any) => {
-        // mainSocket.socket(socket.id).emit(rejected);
-        socket.emit("error", rejected);
-      });
+        .then((fulfilled: any) => {
+          socket.emit("auth", fulfilled);
+        })
+        .catch((rejected: any) => {
+          // mainSocket.socket(socket.id).emit(rejected);
+          socket.emit("error", rejected);
+        });
     }
     executeRegisterProcess();
-   });
+  });
   // todo: 另外那個 註冊的時候往 firebase 推 mail 的話會有命名規範的問題（不可以有.)，再一起想看看怎麼處理，感恩。
   // todo: 註冊的時候順便往 firebase 的 users/${userEmail} 底下推暱稱，接的格式用 data.nickname，感謝。
   // todo: 註冊的時候順便網 firebase 的 users/${userEmail} 底下推ＵＩＤ，接的格式用 data.uid，感謝。
@@ -153,30 +157,34 @@ mainSocket.on("connection", (socket: any) => {
     let playerData: object = {};
     nickNamePath.once("value", (snap: any) => {
       nickName = snap.val().name;
-    });
-    console.log(`create ${nickName}`);
-    path.set({
-      room: data.roomId,
-      player: {}
-    });
-    playerPath.push({
-      uid: data.uid,
-      nickName: nickName,
-      host: true,
-      readyStatus: true,
-      socketId: data.socketId
-    }).then(() => {
-      playerPath.once("value", (snap: any) => {
-        playerData = snap.val();
-      }).then(() => {
-        nickNamePath.once("value", (snap : any) => {
-          mainSocket.to(socket.id).emit("createRoom", {host: true, id: data.uid, nickName: snap.val().name,
-            player: playerData, room: data.roomId, readyStatus: true});
+    })
+      .then(() => {
+        console.log(`create ${nickName}`);
+        path.set({
+          room: data.roomId,
+          player: {}
+        });
+        playerPath.push({
+          uid: data.uid,
+          nickName: nickName,
+          host: true,
+          readyStatus: true,
+          socketId: data.socketId
+        }).then(() => {
+          playerPath.once("value", (snap: any) => {
+            playerData = snap.val();
+          }).then(() => {
+            nickNamePath.once("value", (snap: any) => {
+              mainSocket.to(socket.id).emit("createRoom", {
+                host: true, id: data.uid, nickName: snap.val().name,
+                player: playerData, room: data.roomId, readyStatus: true
+              });
+            });
+          });
+        }).catch((err: any) => {
+          console.log(err);
         });
       });
-    }).catch((err: any) => {
-      console.log(err);
-    });
     socket.join(data.uid);
     // 這裡測試用，我加了 'room': data, 不對的話可以自行刪除。
   });
@@ -192,43 +200,47 @@ mainSocket.on("connection", (socket: any) => {
     // 並將Room內在線人數傳回
     console.log(`joinRoom ${JSON.stringify(data)}`);
     socket.join(data.roomId);
-    let error : any = false;
-    let room : String = "";
+    let error: any = false;
+    let room: String = "";
     const playerPath: any = firebase.database().ref(`/room/${data.roomId}/player`);
     const roomPath: any = firebase.database().ref(`/room/${data.roomId}`);
     const nickNamePath: any = firebase.database().ref(`/users/${data.userId}/`);
     let nickName: string = "";
-    nickNamePath.once("value", (snap : any) => {
-      nickName = snap.val().name;
-    });
-    playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId, socketId: data.socketId});
-    playerPath.once("value", (snap: any) => {
-      // mainSocket.socket(socket.id).emit(snap.val());
-      // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
-      mainSocket.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
-      roomPath.once("value", (snap : any) => {room = snap.val().room;});
-      mainSocket.to(socket.id).emit("joinRoom", {type: "join", host: false, nickName: nickName, player: snap.val(),
-       readyStatus: false, room: room, id: data.roomId});
-      if (snap.val().length >= 4) {
-        // mainSocket.socket(socket.id).emit("error");
-        mainSocket.to(socket.id).emit("error");
-        error = true;
-      return error;
-      }
-    });
-    if (error === true) {
-      return ;
-    }
     nickNamePath.once("value", (snap: any) => {
       nickName = snap.val().name;
-    });
-    roomPath.once("value", (snap: any) => {
-      socket.room = snap.val().room;
-    });
+    })
+      .then(() => {
+        playerPath.push({ host: false, nickName: nickName, readyStatus: false, uid: data.userId, socketId: data.socketId });
+        playerPath.once("value", (snap: any) => {
+          // mainSocket.socket(socket.id).emit(snap.val());
+          // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "join", player: snap.val()});
+          mainSocket.to(data.roomId).emit("updateRoomerStatus", { type: "join", player: snap.val() });
+          roomPath.once("value", (snap: any) => { room = snap.val().room; });
+          mainSocket.to(socket.id).emit("joinRoom", {
+            type: "join", host: false, nickName: nickName, player: snap.val(),
+            readyStatus: false, room: room, id: data.roomId
+          });
+          if (snap.val().length >= 4) {
+            // mainSocket.socket(socket.id).emit("error");
+            mainSocket.to(socket.id).emit("error");
+            error = true;
+            return error;
+          }
+        });
+        if (error === true) {
+          return;
+        }
+        nickNamePath.once("value", (snap: any) => {
+          nickName = snap.val().name;
+        });
+        roomPath.once("value", (snap: any) => {
+          socket.room = snap.val().room;
+        });
+      });
     // mainSocket.to(socket.id).emit("joinRoom", "Player joined!");
     // todo: 往 firebase 也推一下吧？我不確定你的房間的系統架構到底長怎樣...
     // todo: 記得往我這邊也丟一下資料，原本就在房間的人也更新一下資料。
-    });
+  });
 
   socket.on("InGameChat", (data: any) => {
     if (data.senderName && data.content) {
@@ -240,13 +252,13 @@ mainSocket.on("connection", (socket: any) => {
 
   socket.on("exitRoom", (data: any) => {
     console.log(`exitRoom ${data}`);
-    const removePlayer : any = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
-    const playerPath : any = firebase.database().ref(`/room/${data.roomId}/player/`);
+    const removePlayer: any = firebase.database().ref(`/room/${data.roomId}/player/${data.index}`);
+    const playerPath: any = firebase.database().ref(`/room/${data.roomId}/player/`);
     removePlayer.remove();
-    playerPath.once("value", (snap : any) => {
+    playerPath.once("value", (snap: any) => {
       // socket.broadcast.to(data.roomId).emit("updateRoomerStatus", {type: "exit", player: snap.val()});
-      mainSocket.to(data.roomId).emit("updateRoomerStatus", {type: "exit", player: snap.val()});
-      socket.emit("updateRoomerStatus", {type: "exit", player: snap.val()});
+      mainSocket.to(data.roomId).emit("updateRoomerStatus", { type: "exit", player: snap.val() });
+      socket.emit("updateRoomerStatus", { type: "exit", player: snap.val() });
     });
     socket.leave(data.roomId);
     // firebase.database().ref("/rooms/").child(data).remove();
@@ -260,21 +272,21 @@ mainSocket.on("connection", (socket: any) => {
   //       // mainSocket.to(data.clientId).emit("userStatus", {data : transferData, id : socket.id});
   //     }
   //   });
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     firebase.database().ref("/users/").child(user.uid).once("value", snap => {
-    //       socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
-    //     });
-    //   } else {
-    //     socket.emit("userStatus", { login: false });
-    //   }
-    // });
+  // firebase.auth().onAuthStateChanged((user) => {
+  //   if (user) {
+  //     firebase.database().ref("/users/").child(user.uid).once("value", snap => {
+  //       socket.emit("userStatus", { email: user.email, uid: user.uid, nickname: snap.val()});
+  //     });
+  //   } else {
+  //     socket.emit("userStatus", { login: false });
+  //   }
+  // });
   // });
 
-  socket.on("gameStart", (data : any) => {
+  socket.on("gameStart", (data: any) => {
     // 接到房主gameStart，往該房間內所有人推送gameStart(只由房主發送過來，其餘只接收)
     // 請帶data.host，將作為是否創建status, gameInfo之依據
-    let playerStatus : Array<any> = [
+    let playerStatus: Array<any> = [
       {
         id: 0,
         handCard: [],
@@ -316,123 +328,123 @@ mainSocket.on("connection", (socket: any) => {
         dead: false
       }
     ];
-   function setGameStatus(): any {
-    return new Promise((res, rej) => {
-      const roomPath : any = firebase.database().ref("/room/");
-      firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap : any) => {
-        let counter : number = 0;
-        Object.keys(snap.val()).forEach((index) => {
-          // 抓玩家資料
-          playerStatus[counter].uid = snap.val()[index].uid;
-          playerStatus[counter].socketId = snap.val()[index].socketId;
-          playerStatus[counter].nickName = snap.val()[index].nickName;
-          playerStatus[counter].handCard = giveCard.getRandom(card, 6);
-          counter += 1;
-        });
-      })
-      .then(() => {
-        roomPath.child(data.roomId).update({
-          status : "Started",
-          gameInfo :
-          {
-            playerStatus
-          }
+    function setGameStatus(): any {
+      return new Promise((res, rej) => {
+        const roomPath: any = firebase.database().ref("/room/");
+        firebase.database().ref(`/room/${data.roomId}/player`).once("value", (snap: any) => {
+          let counter: number = 0;
+          Object.keys(snap.val()).forEach((index) => {
+            // 抓玩家資料
+            playerStatus[counter].uid = snap.val()[index].uid;
+            playerStatus[counter].socketId = snap.val()[index].socketId;
+            playerStatus[counter].nickName = snap.val()[index].nickName;
+            playerStatus[counter].handCard = giveCard.getRandom(card, 6);
+            counter += 1;
+          });
         })
-        .then(() => {
-          const result : object = {gameStartResult : "successful"};
-          res(result);
-        })
-        .catch((err: any) => {
-          const resultErr : object = err;
-          rej(resultErr);
-        });
+          .then(() => {
+            roomPath.child(data.roomId).update({
+              status: "Started",
+              gameInfo:
+              {
+                playerStatus
+              }
+            })
+              .then(() => {
+                const result: object = { gameStartResult: "successful" };
+                res(result);
+              })
+              .catch((err: any) => {
+                const resultErr: object = err;
+                rej(resultErr);
+              });
+          });
       });
-    });
-   }
-   async function executeGameStartProcess (): Promise<void> {
-     await setGameStatus()
-     .then((fulfilled : any) => {
-      socket.broadcast.to(data.roomId).emit("gameStart", {fulfilled, playerStatus: playerStatus});
-      socket.emit("gameStart", {fulfilled, playerStatus: playerStatus});
-     })
-     .catch((rejected : any) => {
-      socket.broadcast.to(data.roomId).emit("error", rejected);
-     });
-   }
-   if(data.host === true) {
-     executeGameStartProcess();
-   }
+    }
+    async function executeGameStartProcess(): Promise<void> {
+      await setGameStatus()
+        .then((fulfilled: any) => {
+          socket.broadcast.to(data.roomId).emit("gameStart", { fulfilled, playerStatus: playerStatus });
+          socket.emit("gameStart", { fulfilled, playerStatus: playerStatus });
+        })
+        .catch((rejected: any) => {
+          socket.broadcast.to(data.roomId).emit("error", rejected);
+        });
+    }
+    if (data.host === true) {
+      executeGameStartProcess();
+    }
   });
 
   // roomId & ans & userInGameId
-  socket.on("defAns", (data : any) => {
-    firebase.database().ref(`room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
-      let playerStatus : Array<any> = snap.val();
-      if(data.ans === true) {
+  socket.on("defAns", (data: any) => {
+    firebase.database().ref(`room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap: any) => {
+      let playerStatus: Array<any> = snap.val();
+      if (data.ans === true) {
         playerStatus[data.userInGameId].handCard.splice(data.usingCard, 1);
         firebase.database().ref(`/room/`).child(data.roomId).update({
-          status : "inRound",
-          gameInfo :
+          status: "inRound",
+          gameInfo:
           {
             playerStatus
           }
         })
-        .then(() => {
-          mainSocket.in(data.roomId).emit("getBattleStatus", {playerStatus: playerStatus});
-        });
+          .then(() => {
+            mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
+          });
         mainSocket.in(data.roomId).emit("battleLoading", "");
       }
-      if(data.ans === false) {
-        let playerLife : number = playerStatus[data.userInGameId].life;
+      if (data.ans === false) {
+        let playerLife: number = playerStatus[data.userInGameId].life;
         playerStatus[data.userInGameId].life = playerLife - 1;
-        if(playerStatus[data.userInGameId].life === 0) {
+        if (playerStatus[data.userInGameId].life === 0) {
           playerStatus[data.userInGameId].dead = true;
           mainSocket.to(data.socketId).emit("dead");
         }
         firebase.database().ref(`/room/`).child(data.roomId).update({
-          status : "inRound",
-          gameInfo :
+          status: "inRound",
+          gameInfo:
           {
             playerStatus
           }
         })
-        .then(() => {
-          mainSocket.in(data.roomId).emit("getBattleStatus", {playerStatus: playerStatus});
-        });
+          .then(() => {
+            mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
+          });
         mainSocket.in(data.roomId).emit("battleLoading", "");
       }
     });
   });
 
   socket.on("turnEnd", (data: any) => {
-    let whoIsNext : number = data.inGameId + 1 > 3 ? (data.inGameId - 4) + 1 : data.inGameId + 1;
-    firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
-      let playerStatus : Array<any> = snap.val();
+    let whoIsNext: number = data.inGameId + 1 > 3 ? (data.inGameId - 4) + 1 : data.inGameId + 1;
+    firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap: any) => {
+      let playerStatus: Array<any> = snap.val();
       playerStatus[data.inGameId].turn = false;
-      if(playerStatus[whoIsNext].dead === true) {
+      if (playerStatus[whoIsNext].dead === true) {
         playerStatus[whoIsNext + 1].turn = true;
         playerStatus[whoIsNext + 1].handCard.push(giveCard.getRandom(card, 1));
       } else {
-      playerStatus[whoIsNext].turn = true;
-      playerStatus[whoIsNext].handCard.push(giveCard.getRandom(card, 1));
+        playerStatus[whoIsNext].turn = true;
+        playerStatus[whoIsNext].handCard.push(giveCard.getRandom(card, 1));
       }
       firebase.database().ref(`/room/`).child(data.roomId).update({
-        status : "inRound",
-        gameInfo :
+        status: "inRound",
+        gameInfo:
         {
           playerStatus
         }
       })
-      .then(() => {
-        mainSocket.in(data.roomId).emit("getBattleStatus", {playerStatus: playerStatus});
-      });
+        .then(() => {
+          mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
+        });
     });
   });
 
-  socket.on("useCard", (data : any) => {
-    firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap : any) => {
-      let playerStatus : Array<any> = snap.val();
-      switch(snap.val()[data.cardUserInGameId].handCard[data.usingCard]) {
+  socket.on("useCard", (data: any) => {
+    firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap: any) => {
+      let playerStatus: Array<any> = snap.val();
+      switch (snap.val()[data.cardUserInGameId].handCard[data.usingCard]) {
         // 0為攻擊
         case 0: {
           playerStatus[data.cardUserInGameId].handCard.splice(data.usingCard, 1);
@@ -441,15 +453,15 @@ mainSocket.on("connection", (socket: any) => {
           mainSocket.to(playerStatus[data.targetUserInGameId].socketId).emit("def", "");
           mainSocket.in(data.roomId).emit("battleLoading", "");
           firebase.database().ref(`/room/`).child(data.roomId).update({
-            status : "inRound",
-            gameInfo :
+            status: "inRound",
+            gameInfo:
             {
               playerStatus
             }
           })
-          .then(() => {
-            mainSocket.in(data.roomId).emit("getBattleStatus", {playerStatus: playerStatus});
-          });
+            .then(() => {
+              mainSocket.in(data.roomId).emit("getBattleStatus", { playerStatus: playerStatus });
+            });
         }
       }
     });
