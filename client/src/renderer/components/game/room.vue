@@ -112,6 +112,14 @@
         const vm = this;
         return vm.roomData.player;
       },
+      getPOneName() {
+        const vm = this;
+        const result = [];
+        Object.keys(vm.roomData.player).forEach((key) => {
+          result.push(vm.roomData.player[key].nickName);
+          return result;
+        });
+      },
     },
     async created() {
       const vm = this;

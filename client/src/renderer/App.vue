@@ -68,7 +68,7 @@ export default {
     joinRoom(data) {
       const vm = this;
       console.log(data);
-      vm.roomData = data;
+      vm.$set(vm.roomData, data);
     },
     InGameChat(data) {
       const vm = this;
