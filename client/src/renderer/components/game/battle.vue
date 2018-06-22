@@ -44,9 +44,9 @@
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
         <div class="d-block text-center">
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)">{{getPOneNickname}}</b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)">{{getPTwoNickname}}</b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)">{{getPThreeNickname}}</b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)"><span>{{getPOneNickname}}</span></b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)"><span>{{getPTwoNickname}}</span></b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)"><span>{{getPThreeNickname}}</span></b-btn>
         </div>
       </b-modal>
     </div>
@@ -496,10 +496,29 @@ export default {
   transform: translate(345%, -50%) rotate(-90deg);
 }
 .block {
-  height: 100px;
-  width: 100px;
-  background-color: #000;
+  height: 50px;
+  width: 100%;
+  margin-top: 1rem;
+  background-color: @mainRed;
   display: inline-flex;
+  position: relative;
+  span {
+    font-size: 1.4em;
+    color: #f7f7f7;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+.block:hover {
+  background-color: @hoverRed;
+}
+.block:active {
+  background-color: @hoverRed !important;
+}
+.block:focus {
+  background-color: @hoverRed !important;
 }
 .card_0{
   background-color: @atk !important;
