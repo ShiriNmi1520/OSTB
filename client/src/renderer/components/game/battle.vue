@@ -132,20 +132,20 @@ export default {
     useCard(data) {
       const vm = this;
       vm.$socket.emit('useCard', { roomId: vm.roomData.id,
-        cardUserId: vm.roomData.battle.playerStatus[`${vm.self}`].uid,
-        cardUserInGameId: `${vm.roomData.battle.playerStatus[`${vm.self}`].id}`,
+        cardUserId: vm.roomData.battle.playerStatus[vm.self].uid,
+        cardUserInGameId: vm.roomData.battle.playerStatus[vm.self].id,
         usingCard: vm.usingCard,
-        targetUserId: vm.roomData.battle.playerStatus[`${data}`].uid,
-        targetUserInGameId: `${vm.roomData.battle.playerStatus[`${data}`].id}`,
+        targetUserId: vm.roomData.battle.playerStatus[data].uid,
+        targetUserInGameId: vm.roomData.battle.playerStatus[data].id,
       });
       vm.$refs.selectPlayer.hide();
     },
     useDefenceCard(data) {
       const vm = this;
-      const index = vm.roomData.battle.playerStatus[`${vm.self}`].handCard.indexOf(1);
+      const index = vm.roomData.battle.playerStatus[vm.self].handCard.indexOf(1);
       vm.usingCard = index;
       vm.$socket.emit('defAns', { roomId: vm.roomData.id,
-        userInGameId: `${vm.roomData.battle.playerStatus[`${vm.self}`].id}`,
+        userInGameId: vm.roomData.battle.playerStatus[vm.self].id,
         usingCard: vm.usingCard,
         ans: data.ans,
         socketId: vm.clientId,
@@ -208,56 +208,56 @@ export default {
     getSelfLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.self}`].life;
+        return vm.roomData.battle.playerStatus[vm.self].life;
       }
       return 'error';
     },
     getSelfNickname() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.self}`].nickName;
+        return vm.roomData.battle.playerStatus[vm.self].nickName;
       }
       return 'error';
     },
     getPOneNickname() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].nickName;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p1].nickName;
       }
       return 'error';
     },
     getPTwoNickname() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].nickName;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p2].nickName;
       }
       return 'error';
     },
     getPThreeNickname() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].nickName;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p3].nickName;
       }
       return 'error';
     },
     getPOneLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].life;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p1].life;
       }
       return 'error';
     },
     getPTwoLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].life;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p2].life;
       }
       return 'error';
     },
     getPThreeLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].life;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p3].life;
       }
       return 'error';
     },
@@ -271,28 +271,28 @@ export default {
     getSelfHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.self}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.self].handCard.length;
       }
       return 'error';
     },
     getPOneHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p1].handCard.length;
       }
       return 'error';
     },
     getPTwoHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p2].handCard.length;
       }
       return 'error';
     },
     getPThreeHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p3].handCard.length;
       }
       return 'error';
     },
