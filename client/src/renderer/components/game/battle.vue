@@ -44,9 +44,9 @@
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
         <div class="d-block text-center">
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)"><span>{{getPOneNickname}}</span></b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)"><span>{{getPTwoNickname}}</span></b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)"><span>{{getPThreeNickname}}</span></b-btn>
+          <b-btn class="block text-white" @click="useCard(1)"><span>{{getPOneNickname}}</span></b-btn>
+          <b-btn class="block text-white" @click="useCard(2)"><span>{{getPTwoNickname}}</span></b-btn>
+          <b-btn class="block text-white" @click="useCard(3)"><span>{{getPThreeNickname}}</span></b-btn>
         </div>
       </b-modal>
     </div>
