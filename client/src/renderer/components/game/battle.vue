@@ -145,7 +145,7 @@ export default {
       const index = vm.roomData.battle.playerStatus[vm.self].handCard.indexOf(1);
       vm.usingCard = index;
       vm.$socket.emit('defAns', { roomId: vm.roomData.id,
-        userInGameId: vm.roomData.battle.playerStatus[vm.self].id,
+        userInGameId: parseInt(vm.roomData.battle.playerStatus[vm.self].id, 0),
         usingCard: vm.usingCard,
         ans: data.ans,
         socketId: vm.clientId,

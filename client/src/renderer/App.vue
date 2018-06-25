@@ -62,12 +62,12 @@ export default {
     },
     createRoom(data) {
       const vm = this;
-      console.log(data);
+      console.log(data, 'createRoom');
       vm.roomData = data;
     },
     joinRoom(data) {
       const vm = this;
-      console.log(data);
+      console.log(data, 'joinRoom');
       vm.$set(vm.roomData, data);
     },
     InGameChat(data) {
@@ -84,7 +84,7 @@ export default {
     },
     updateRoomerStatus(data) {
       const vm = this;
-      console.log(data.player);
+      console.log(data.player, 'updateRoomerStatus');
       if (data.type === 'join') {
         vm.roomData = Object.assign({}, vm.roomData, {
           player: data.player,
