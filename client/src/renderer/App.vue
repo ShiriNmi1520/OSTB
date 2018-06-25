@@ -101,6 +101,9 @@ export default {
       vm.$set(vm.roomData, 'battle', data);
       vm.$router.push({ name: 'battle' });
     },
+    battleLive(data) {
+      console.log(data);
+    },
     getBattleStatus(data) {
       const vm = this;
       vm.$set(vm.roomData, 'battle', data);
