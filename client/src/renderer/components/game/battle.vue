@@ -44,9 +44,9 @@
     <div>
       <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
         <div class="d-block text-center">
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)">Player {{roomData.battle.playerStatus[getPlayerId.p1].nickName}}</b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)">Player {{roomData.battle.playerStatus[getPlayerId.p2].nickName}}</b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)">Player {{roomData.battle.playerStatus[getPlayerId.p3].nickName}}</b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)"><span>{{getPOneNickname}}</span></b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)"><span>{{getPTwoNickname}}</span></b-btn>
+          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)"><span>{{getPThreeNickname}}</span></b-btn>
         </div>
       </b-modal>
     </div>
@@ -132,20 +132,20 @@ export default {
     useCard(data) {
       const vm = this;
       vm.$socket.emit('useCard', { roomId: vm.roomData.id,
-        cardUserId: vm.roomData.battle.playerStatus[`${vm.self}`].uid,
-        cardUserInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
+        cardUserId: vm.roomData.battle.playerStatus[vm.self].uid,
+        cardUserInGameId: vm.roomData.battle.playerStatus[vm.self].id,
         usingCard: vm.usingCard,
-        targetUserId: vm.roomData.battle.playerStatus[`${data}`].uid,
-        targetUserInGameId: vm.roomData.battle.playerStatus[`${data}`].id,
+        targetUserId: vm.roomData.battle.playerStatus[data].uid,
+        targetUserInGameId: vm.roomData.battle.playerStatus[data].id,
       });
       vm.$refs.selectPlayer.hide();
     },
     useDefenceCard(data) {
       const vm = this;
-      const index = vm.roomData.battle.playerStatus[`${vm.self}`].handCard.indexOf(1);
+      const index = vm.roomData.battle.playerStatus[vm.self].handCard.indexOf(1);
       vm.usingCard = index;
       vm.$socket.emit('defAns', { roomId: vm.roomData.id,
-        userInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
+        userInGameId: parseInt(vm.roomData.battle.playerStatus[vm.self].id, 0),
         usingCard: vm.usingCard,
         ans: data.ans,
         socketId: vm.clientId,
@@ -208,35 +208,56 @@ export default {
     getSelfLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.self}`].life;
+        return vm.roomData.battle.playerStatus[vm.self].life;
       }
       return 'error';
     },
     getSelfNickname() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.self}`].nickName;
+        return vm.roomData.battle.playerStatus[vm.self].nickName;
+      }
+      return 'error';
+    },
+    getPOneNickname() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p1].nickName;
+      }
+      return 'error';
+    },
+    getPTwoNickname() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p2].nickName;
+      }
+      return 'error';
+    },
+    getPThreeNickname() {
+      const vm = this;
+      if (vm.roomData.battle.playerStatus) {
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p3].nickName;
       }
       return 'error';
     },
     getPOneLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].life;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p1].life;
       }
       return 'error';
     },
     getPTwoLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].life;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p2].life;
       }
       return 'error';
     },
     getPThreeLife() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].life;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p3].life;
       }
       return 'error';
     },
@@ -250,28 +271,28 @@ export default {
     getSelfHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.self}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.self].handCard.length;
       }
       return 'error';
     },
     getPOneHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p1}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p1].handCard.length;
       }
       return 'error';
     },
     getPTwoHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p2}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p2].handCard.length;
       }
       return 'error';
     },
     getPThreeHandCardCount() {
       const vm = this;
       if (vm.roomData.battle.playerStatus) {
-        return vm.roomData.battle.playerStatus[`${vm.getPlayerId.p3}`].handCard.length;
+        return vm.roomData.battle.playerStatus[vm.getPlayerId.p3].handCard.length;
       }
       return 'error';
     },
@@ -475,10 +496,29 @@ export default {
   transform: translate(345%, -50%) rotate(-90deg);
 }
 .block {
-  height: 100px;
-  width: 100px;
-  background-color: #000;
+  height: 50px;
+  width: 100%;
+  margin-top: 1rem;
+  background-color: @mainRed;
   display: inline-flex;
+  position: relative;
+  span {
+    font-size: 1.4em;
+    color: #f7f7f7;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+.block:hover {
+  background-color: @hoverRed;
+}
+.block:active {
+  background-color: @hoverRed !important;
+}
+.block:focus {
+  background-color: @hoverRed !important;
 }
 .card_0{
   background-color: @atk !important;
