@@ -133,10 +133,10 @@ export default {
       const vm = this;
       vm.$socket.emit('useCard', { roomId: vm.roomData.id,
         cardUserId: vm.roomData.battle.playerStatus[`${vm.self}`].uid,
-        cardUserInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
+        cardUserInGameId: `${vm.roomData.battle.playerStatus[`${vm.self}`].id}`,
         usingCard: vm.usingCard,
         targetUserId: vm.roomData.battle.playerStatus[`${data}`].uid,
-        targetUserInGameId: vm.roomData.battle.playerStatus[`${data}`].id,
+        targetUserInGameId: `${vm.roomData.battle.playerStatus[`${data}`].id}`,
       });
       vm.$refs.selectPlayer.hide();
     },
@@ -145,7 +145,7 @@ export default {
       const index = vm.roomData.battle.playerStatus[`${vm.self}`].handCard.indexOf(1);
       vm.usingCard = index;
       vm.$socket.emit('defAns', { roomId: vm.roomData.id,
-        userInGameId: vm.roomData.battle.playerStatus[`${vm.self}`].id,
+        userInGameId: `${vm.roomData.battle.playerStatus[`${vm.self}`].id}`,
         usingCard: vm.usingCard,
         ans: data.ans,
         socketId: vm.clientId,
