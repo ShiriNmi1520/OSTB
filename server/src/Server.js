@@ -388,8 +388,7 @@ mainSocket.on("connection", (socket) => {
         firebase.database().ref(`room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap) => {
             let playerStatus = snap.val();
             if (data.ans === true) {
-                mainSocket.in(data.roomId).emit("battleLive", `${data.userInGameId}巧妙地閃過了這次的攻擊!`);
-                playerStatus[data.userInGameId].handCard.splice(data.usingCard, 1);
+                playerStatus[Number(data.userInGameId)].handCard.splice(data.usingCard, 1);
                 firebase.database().ref(`/room/`).child(data.roomId).update({
                     status: "inRound",
                     gameInfo: {
@@ -402,12 +401,10 @@ mainSocket.on("connection", (socket) => {
                 mainSocket.in(data.roomId).emit("battleLoading", "");
             }
             if (data.ans === false) {
-                mainSocket.in(data.roomId).emit("battleLive", `${data.userInGameId}沒能閃過這次攻擊，扣了一生命!`);
-                let playerLife = playerStatus[data.userInGameId].life;
-                playerStatus[data.userInGameId].life = playerLife - 1;
-                if (playerStatus[data.userInGameId].life === 0) {
-                    mainSocket.in(data.roomId).emit("battleLive", `${data.userInGameId}被bang掉了，幫QQ`);
-                    playerStatus[data.userInGameId].dead = true;
+                let playerLife = playerStatus[+data.userInGameId].life;
+                playerStatus[Number(data.userInGameId)].life = playerLife - 1;
+                if (playerStatus[Number(data.userInGameId)].life === 0) {
+                    playerStatus[Number(data.userInGameId)].dead = true;
                     mainSocket.to(data.socketId).emit("dead");
                 }
                 firebase.database().ref(`/room/`).child(data.roomId).update({
@@ -425,17 +422,14 @@ mainSocket.on("connection", (socket) => {
     });
     socket.on("turnEnd", (data) => {
         let whoIsNext = data.inGameId + 1 > 3 ? (data.inGameId - 4) + 1 : data.inGameId + 1;
-        mainSocket.in(data.roomId).emit("battleLive", `${data.inGameId}的回合結束了!`);
         firebase.database().ref(`/room/${data.roomId}/gameInfo/playerStatus/`).once("value", (snap) => {
             let playerStatus = snap.val();
             playerStatus[data.inGameId].turn = false;
             if (playerStatus[whoIsNext].dead === true) {
-                mainSocket.in(data.roomId).emit("battleLive", `現在是${whoIsNext + 1}的回合!`);
                 playerStatus[whoIsNext + 1].turn = true;
                 playerStatus[whoIsNext + 1].handCard.push(giveCard.getRandom(card, 1));
             }
             else {
-                mainSocket.in(data.roomId).emit("battleLive", `現在是${whoIsNext}的回合!`);
                 playerStatus[whoIsNext].turn = true;
                 playerStatus[whoIsNext].handCard.push(giveCard.getRandom(card, 1));
             }
@@ -457,7 +451,6 @@ mainSocket.on("connection", (socket) => {
                 // 0為攻擊
                 case 0: {
                     playerStatus[data.cardUserInGameId].handCard.splice(data.usingCard, 1);
-                    mainSocket.in(data.roomId).emit("battleLive", `玩家${data.cardUserInGameId}決定bang掉玩家${data.targetUserInGameId}`);
                     mainSocket.to(playerStatus[data.targetUserInGameId].socketId).emit("def", "");
                     mainSocket.in(data.roomId).emit("battleLoading", "");
                     firebase.database().ref(`/room/`).child(data.roomId).update({
