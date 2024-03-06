@@ -57,7 +57,7 @@ mainSocket.on('connection', (socket: Socket) => {
 
   socket.on('auth', (data: LoginUser) => {
     function loginProcess (): any {
-      return new Promise((res, rej) => {
+      return new Promise((resolve, reject) => {
         signInWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
           .then(() => {
             const tokenPayload = { email: data.email, password: data.password }
@@ -77,7 +77,7 @@ mainSocket.on('connection', (socket: Socket) => {
                     email: data.email,
                     uid: user.uid
                   }
-                  res(transferData)
+                  resolve(transferData)
                 })
               }
             })
@@ -87,7 +87,7 @@ mainSocket.on('connection', (socket: Socket) => {
           .catch(error => {
             const errorCode = error.code
             const transferData: LoginResponse = { type: 'error', code: `${errorCode}` }
-            rej(transferData)
+            reject(transferData)
           })
       })
     }
@@ -101,7 +101,7 @@ mainSocket.on('connection', (socket: Socket) => {
 
   socket.on('register', (data: RegisterUser) => {
     function registerProcess (): any {
-      return new Promise((res, rej) => {
+      return new Promise((resolve, reject) => {
         createUserWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
           .then(() => {
             signInWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
@@ -118,7 +118,7 @@ mainSocket.on('connection', (socket: Socket) => {
                       nickname: data.nickname,
                       uid: user.uid
                     }
-                    res(transferData)
+                    resolve(transferData)
                   })
                 })
               })
@@ -126,7 +126,7 @@ mainSocket.on('connection', (socket: Socket) => {
           .catch(error => {
             const errorCode: string = error.code
             const transferData: RegisterResponse = { type: 'error', code: `${errorCode}` }
-            rej(transferData)
+            reject(transferData)
           })
       })
     }
@@ -330,7 +330,7 @@ mainSocket.on('connection', (socket: Socket) => {
     ]
 
     function setGameStatus (): any {
-      return new Promise((res, rej) => {
+      return new Promise((resolve, reject) => {
         const roomPath: any = firebase.database().ref('/room/')
         firebase.database().ref(`/room/${data.roomId}/player`).once('value', (snap: any) => {
           let counter = 0
@@ -353,11 +353,11 @@ mainSocket.on('connection', (socket: Socket) => {
             })
               .then(() => {
                 const result: Record<string, unknown> = { gameStartResult: 'successful' }
-                res(result)
+                resolve(result)
               })
               .catch((err: any) => {
                 const resultErr: Record<string, unknown> = err
-                rej(resultErr)
+                reject(resultErr)
               })
           })
       })
