@@ -1,87 +1,224 @@
 <template>
-<div class="body darkTheme" v-if="roomData.battle.playerStatus">
-  <div class="turnBorad">
-    <h1>Now it's {{playerTurn}}'s turn</h1>
-  </div>
-  <div class="main-block-battle">
-    <b-btn v-if="isSelfTurnOrNot" @click="turnEnd()">turn end</b-btn>
-    <div class="lifeContainer lifeContainer-self">
-      <div class="life life-self" :style="{width: getSelfLife / 4 * 100 + '%',}"><span>{{getSelfLife}}</span></div>
+  <div
+    v-if="roomData.battle.playerStatus"
+    class="body darkTheme"
+  >
+    <div class="turnBorad">
+      <h1>Now it's {{ playerTurn }}'s turn</h1>
     </div>
-    <div class="lifeContainer lifeContainer-p1">
-      <div class="life life-p1" :style="{height: getPOneLife / 4 * 100 + '%',}"><span>{{getPOneLife}}</span></div>
+    <div class="main-block-battle">
+      <b-btn
+        v-if="isSelfTurnOrNot"
+        @click="turnEnd()"
+      >
+        turn end
+      </b-btn>
+      <div class="lifeContainer lifeContainer-self">
+        <div
+          class="life life-self"
+          :style="{width: getSelfLife / 4 * 100 + '%',}"
+        >
+          <span>{{ getSelfLife }}</span>
+        </div>
+      </div>
+      <div class="lifeContainer lifeContainer-p1">
+        <div
+          class="life life-p1"
+          :style="{height: getPOneLife / 4 * 100 + '%',}"
+        >
+          <span>{{ getPOneLife }}</span>
+        </div>
+      </div>
+      <div class="lifeContainer lifeContainer-p2">
+        <div
+          class="life life-p2"
+          :style="{width: getPTwoLife / 4 * 100 + '%',}"
+        >
+          <span>{{ getPTwoLife }}</span>
+        </div>
+      </div>
+      <div class="lifeContainer lifeContainer-p3">
+        <div
+          class="life life-p3"
+          :style="{height: getPThreeLife / 4 * 100 + '%',}"
+        >
+          <span>{{ getPThreeLife }}</span>
+        </div>
+      </div>
     </div>
-    <div class="lifeContainer lifeContainer-p2">
-      <div class="life life-p2" :style="{width: getPTwoLife / 4 * 100 + '%',}"><span>{{getPTwoLife}}</span></div>
-    </div>
-    <div class="lifeContainer lifeContainer-p3">
-      <div class="life life-p3" :style="{height: getPThreeLife / 4 * 100 + '%',}"><span>{{getPThreeLife}}</span></div>
-    </div>
-  </div>
-  <b-row class="CardContainer justify-content-center">
-    <b-col class="ml-2" sm="1" center v-for="(data, index) in roomData.battle.playerStatus[self].handCard">
-      <b-dropdown dropup variant="link" size="lg" no-caret>
-        <template slot="button-content" style="text-decoration: none !important;">
-            <div :class="'card_' + data" class="mainCard" style="text-decoration: none !important;" :key="`Card${index}`"><span class="cardText">{{data === 0 ? 'ATK' : 'DEF'}}</span></div>
+    <b-row class="CardContainer justify-content-center">
+      <b-col
+        v-for="(data, index) in roomData.battle.playerStatus[self].handCard"
+        class="ml-2"
+        sm="1"
+        center
+      >
+        <b-dropdown
+          dropup
+          variant="link"
+          size="lg"
+          no-caret
+        >
+          <template
+            #button-content
+            style="text-decoration: none !important;"
+          >
+            <div
+              :key="`Card${index}`"
+              :class="'card_' + data"
+              class="mainCard"
+              style="text-decoration: none !important;"
+            >
+              <span class="cardText">{{ data === 0 ? 'ATK' : 'DEF' }}</span>
+            </div>
           </template>
-        <b-dropdown-item @click="getItemID(index)">more</b-dropdown-item>
-        <b-dropdown-item v-if="data === 0 && isSelfTurnOrNot === true" @click="showSelectPlayer(index)">use the card</b-dropdown-item>
-      </b-dropdown>
-    </b-col>
-  </b-row>
-<b-row class="CardContainer CardContainer--p3 justify-content-center">
-  <b-col sm="1" center>
-    <div class="mainCard">Player {{getPlayerId.p3}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard">x{{getPOneHandCardCount}}</span></div>
-  </b-col>
-</b-row>
-<b-row class="CardContainer CardContainer--p2 justify-content-center">
-  <div class="mainCard">Player {{getPlayerId.p2}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard">x{{getPTwoHandCardCount}}</span></div>
-</b-row>
-<b-row class="CardContainer CardContainer--p1 justify-content-center">
-  <div class="mainCard">Player {{getPlayerId.p1}} <br>Card<br><span class="text-warning h1" v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard">x{{getPThreeHandCardCount}}</span></div>
-</b-row>
-  <div>
-    <div>
-      <b-modal header-class="text-dark" ref="selectPlayer" hide-footer title="Select Player">
-        <div class="d-block text-center">
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p1)"><span>{{getPOneNickname}}</span></b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p2)"><span>{{getPTwoNickname}}</span></b-btn>
-          <b-btn class="block text-white" @click="useCard(getPlayerId.p3)"><span>{{getPThreeNickname}}</span></b-btn>
+          <b-dropdown-item @click="getItemID(index)">
+            more
+          </b-dropdown-item>
+          <b-dropdown-item
+            v-if="data === 0 && isSelfTurnOrNot === true"
+            @click="showSelectPlayer(index)"
+          >
+            use the card
+          </b-dropdown-item>
+        </b-dropdown>
+      </b-col>
+    </b-row>
+    <b-row class="CardContainer CardContainer--p3 justify-content-center">
+      <b-col
+        sm="1"
+        center
+      >
+        <div class="mainCard">
+          Player {{ getPlayerId.p3 }} <br>Card<br><span
+            v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard"
+            class="text-warning h1"
+          >x{{ getPOneHandCardCount }}</span>
         </div>
-      </b-modal>
+      </b-col>
+    </b-row>
+    <b-row class="CardContainer CardContainer--p2 justify-content-center">
+      <div class="mainCard">
+        Player {{ getPlayerId.p2 }} <br>Card<br><span
+          v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard"
+          class="text-warning h1"
+        >x{{ getPTwoHandCardCount }}</span>
+      </div>
+    </b-row>
+    <b-row class="CardContainer CardContainer--p1 justify-content-center">
+      <div class="mainCard">
+        Player {{ getPlayerId.p1 }} <br>Card<br><span
+          v-if="roomData.battle.playerStatus[getPlayerId.p3].handCard"
+          class="text-warning h1"
+        >x{{ getPThreeHandCardCount }}</span>
+      </div>
+    </b-row>
+    <div>
+      <div>
+        <b-modal
+          ref="selectPlayer"
+          header-class="text-dark"
+          hide-footer
+          title="Select Player"
+        >
+          <div class="d-block text-center">
+            <b-btn
+              class="block text-white"
+              @click="useCard(getPlayerId.p1)"
+            >
+              <span>{{ getPOneNickname }}</span>
+            </b-btn>
+            <b-btn
+              class="block text-white"
+              @click="useCard(getPlayerId.p2)"
+            >
+              <span>{{ getPTwoNickname }}</span>
+            </b-btn>
+            <b-btn
+              class="block text-white"
+              @click="useCard(getPlayerId.p3)"
+            >
+              <span>{{ getPThreeNickname }}</span>
+            </b-btn>
+          </div>
+        </b-modal>
+      </div>
+      <div>
+        <b-modal
+          ref="useDefence"
+          header-class="text-dark"
+          title="Battle Message"
+        >
+          <div class="d-block text-center">
+            <h1 class="text-dark">
+              You have been hit! Do you want to use defence card?
+            </h1>
+          </div>
+          <template #modal-footer>
+            <div 
+              class="w-100"
+            >
+              <b-btn
+                success
+                class="float-right"
+                @click="useDefenceCard({ans: true})"
+              >
+                Yes
+              </b-btn>
+              <b-btn
+                danger
+                class="float-right"
+                @click="useDefenceCard({ans: false})"
+              >
+                No
+              </b-btn>
+            </div>
+          </template>
+        </b-modal>
+      </div>
+      <div>
+        <b-modal
+          ref="deadModal"
+          header-class="text-dark"
+          title="Battle Message"
+          ok-only
+          @ok="backToMain"
+        >
+          <div class="d-block text-center">
+            <h1 class="text-dark">
+              Dead!, we will bring you to the main page.
+            </h1>
+          </div>
+        </b-modal>
+      </div>
     </div>
-    <div>
-      <b-modal header-class="text-dark" ref="useDefence" title="Battle Message">
-        <div class="d-block text-center">
-          <h1 class="text-dark">You have been hit! Do you want to use defence card?</h1>
-        </div>
-        <div slot="modal-footer" class="w-100">
-          <b-btn success class="float-right" @click="useDefenceCard({ans: true})">Yes</b-btn>
-          <b-btn danger class="float-right" @click="useDefenceCard({ans: false})">No</b-btn>
-        </div>
-      </b-modal>
-    </div>
-    <div>
-      <b-modal header-class="text-dark" ref="deadModal" title="Battle Message" ok-only @ok="backToMain">
-        <div class="d-block text-center">
-          <h1 class="text-dark">Dead!, we will bring you to the main page.</h1>
-        </div>
-      </b-modal>
+
+    <div
+      v-if="test"
+      class="testBorad"
+    >
+      <b-btn @click="lifeTest()">
+        全體-1血量
+      </b-btn>
+      <b-btn
+        primary
+        @click="backToMain"
+      >
+        back to main
+      </b-btn>
+      <b-btn @click="drawCard(5)">
+        draw test
+      </b-btn>
+      <b-btn @click="showDefence">
+        123
+      </b-btn>
     </div>
   </div>
-
-    <div v-if="test" class="testBorad">
-      <b-btn @click="lifeTest()">全體-1血量</b-btn>
-      <b-btn primary @click="backToMain">back to main</b-btn>
-      <b-btn @click="drawCard(5)">draw test</b-btn>
-      <b-btn @click="showDefence">123</b-btn>
-    </div>
-</div>
 </template>
 
 <script>
 export default {
-  name: 'battle',
+  name: 'Battle',
   props: {
     roomData: {
       type: Object,
@@ -111,73 +248,6 @@ export default {
     dead() {
       const vm = this;
       vm.$refs.deadModal.show();
-    },
-  },
-  methods: {
-    backToMain() {
-      const vm = this;
-      vm.$router.push({
-        name: 'main',
-      });
-      vm.$refs.deadModal.hide();
-    },
-    getItemID(data) {
-      console.log(data);
-    },
-    showSelectPlayer(data) {
-      const vm = this;
-      vm.$refs.selectPlayer.show();
-      vm.usingCard = data;
-    },
-    useCard(data) {
-      const vm = this;
-      vm.$socket.emit('useCard', { roomId: vm.roomData.id,
-        cardUserId: vm.roomData.battle.playerStatus[vm.self].uid,
-        cardUserInGameId: vm.roomData.battle.playerStatus[vm.self].id,
-        usingCard: vm.usingCard,
-        targetUserId: vm.roomData.battle.playerStatus[data].uid,
-        targetUserInGameId: vm.roomData.battle.playerStatus[data].id,
-      });
-      vm.$refs.selectPlayer.hide();
-    },
-    useDefenceCard(data) {
-      const vm = this;
-      const index = vm.roomData.battle.playerStatus[vm.self].handCard.indexOf(1);
-      vm.usingCard = index;
-      vm.$socket.emit('defAns', { roomId: vm.roomData.id,
-        userInGameId: parseInt(vm.roomData.battle.playerStatus[vm.self].id, 0),
-        usingCard: vm.usingCard,
-        ans: data.ans,
-        socketId: vm.clientId,
-      });
-      vm.$refs.useDefence.hide();
-    },
-    drawCard(data) {
-      const vm = this;
-      vm.$socket.emit('drawCard', data);
-    },
-    selectPlayer(data) {
-      const vm = this;
-      vm.$socket.emit('attack', data);
-      this.$refs.selectPlayer.hide();
-    },
-    showDefence() {
-      const vm = this;
-      vm.$refs.useDefence.show();
-    },
-    turnEnd() {
-      const vm = this;
-      vm.$socket.emit('turnEnd', { roomId: vm.roomData.id,
-        inGameId: vm.self,
-      });
-    },
-    lifeTest() {
-      const vm = this;
-      Object.keys(vm.roomData.battle.playerStatus).forEach((key) => {
-        if (vm.roomData.battle.playerStatus[key] !== undefined) {
-          vm.roomData.battle.playerStatus[key].life = 2;
-        }
-      });
     },
   },
   computed: {
@@ -335,6 +405,73 @@ export default {
       console.log(err);
       console.log(typeof (vm.roomData.battle.playerStatus));
     });
+  },
+  methods: {
+    backToMain() {
+      const vm = this;
+      vm.$router.push({
+        name: 'main',
+      });
+      vm.$refs.deadModal.hide();
+    },
+    getItemID(data) {
+      console.log(data);
+    },
+    showSelectPlayer(data) {
+      const vm = this;
+      vm.$refs.selectPlayer.show();
+      vm.usingCard = data;
+    },
+    useCard(data) {
+      const vm = this;
+      vm.$socket.emit('useCard', { roomId: vm.roomData.id,
+        cardUserId: vm.roomData.battle.playerStatus[vm.self].uid,
+        cardUserInGameId: vm.roomData.battle.playerStatus[vm.self].id,
+        usingCard: vm.usingCard,
+        targetUserId: vm.roomData.battle.playerStatus[data].uid,
+        targetUserInGameId: vm.roomData.battle.playerStatus[data].id,
+      });
+      vm.$refs.selectPlayer.hide();
+    },
+    useDefenceCard(data) {
+      const vm = this;
+      const index = vm.roomData.battle.playerStatus[vm.self].handCard.indexOf(1);
+      vm.usingCard = index;
+      vm.$socket.emit('defAns', { roomId: vm.roomData.id,
+        userInGameId: parseInt(vm.roomData.battle.playerStatus[vm.self].id, 0),
+        usingCard: vm.usingCard,
+        ans: data.ans,
+        socketId: vm.clientId,
+      });
+      vm.$refs.useDefence.hide();
+    },
+    drawCard(data) {
+      const vm = this;
+      vm.$socket.emit('drawCard', data);
+    },
+    selectPlayer(data) {
+      const vm = this;
+      vm.$socket.emit('attack', data);
+      this.$refs.selectPlayer.hide();
+    },
+    showDefence() {
+      const vm = this;
+      vm.$refs.useDefence.show();
+    },
+    turnEnd() {
+      const vm = this;
+      vm.$socket.emit('turnEnd', { roomId: vm.roomData.id,
+        inGameId: vm.self,
+      });
+    },
+    lifeTest() {
+      const vm = this;
+      Object.keys(vm.roomData.battle.playerStatus).forEach((key) => {
+        if (vm.roomData.battle.playerStatus[key] !== undefined) {
+          vm.roomData.battle.playerStatus[key].life = 2;
+        }
+      });
+    },
   },
 };
 </script>
