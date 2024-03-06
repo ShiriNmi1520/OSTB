@@ -1,8 +1,7 @@
 {
-  "name": "vuesocketio",
+  "name": "ostb",
   "version": "1.0.0",
   "description": "A re-start project for final",
-  "main": "Server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,19 +10,10 @@
     "socket-io",
     "express"
   ],
+  "workspaces": [
+    "packages/*"
+  ],
   "author": "Y.C.Huang",
   "license": "ISC",
-  "dependencies": {
-    "@types/socket.io": "^1.4.34",
-    "express": "^4.16.3",
-    "firebase": "^5.0.2",
-    "http": "0.0.0",
-    "jsonwebtoken": "^8.2.1",
-    "socket.io": "^2.1.0",
-    "tslint": "^5.10.0",
-    "typescript": "^2.8.3"
-  },
-  "devDependencies": {
-    "@types/node": "^10.3.0"
-  }
+  "packageManager": "yarn@4.1.0"
 }
