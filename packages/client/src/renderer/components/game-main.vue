@@ -1,30 +1,59 @@
 <template>
   <div class="body">
-    <b-navbar class="nav-red" toggleable>
-        <b-navbar-nav>
-          <b-nav-item right href="#" @click="backToMain">Sign Out</b-nav-item>
-        </b-navbar-nav>
+    <b-navbar
+      class="nav-red"
+      toggleable
+    >
+      <b-navbar-nav>
+        <b-nav-item
+          right
+          href="#"
+          @click="backToMain"
+        >
+          Sign Out
+        </b-nav-item>
+      </b-navbar-nav>
     </b-navbar>
     <fade-transition>
-    <b-container>
-      <b-row class="mt-5">
-        <b-col sm="6">
-          <b-jumbotron class="nav-red btn-click" @click="gotoRoomList">
-          <h1 class="text-center">Search<br><span class="asobu">Game</span></h1>
-          </b-jumbotron>
-        </b-col>
-        <b-col sm="6">
-          <b-jumbotron class="nav-red btn-click" v-b-modal.modal1>
-          <h1 class="text-center">Play with<br><span class="asobu">Player</span></h1>
-        </b-jumbotron>
-          <b-modal class="text-dark" id="modal1" title="Please Enter Room Name." @ok="createRoom">
-            <b-form-input v-model="roomName" placeholder="Room Name."></b-form-input>
-          </b-modal>
-      </b-col>
-      </b-row>
-<!--  <b-btn @click="gotoBattle">test</b-btn>   -->
-      <h1 style="font-size: 5rem; color: #2490A9; margin: 15px;">早安窩ㄉ朋友 天氣一好， 天空就是藍ㄉ 認同請分享</h1>
-    </b-container>
+      <b-container>
+        <b-row class="mt-5">
+          <b-col sm="6">
+            <b-jumbotron
+              class="nav-red btn-click"
+              @click="gotoRoomList"
+            >
+              <h1 class="text-center">
+                Search<br><span class="asobu">Game</span>
+              </h1>
+            </b-jumbotron>
+          </b-col>
+          <b-col sm="6">
+            <b-jumbotron
+              v-b-modal.modal1
+              class="nav-red btn-click"
+            >
+              <h1 class="text-center">
+                Play with<br><span class="asobu">Player</span>
+              </h1>
+            </b-jumbotron>
+            <b-modal
+              id="modal1"
+              class="text-dark"
+              title="Please Enter Room Name."
+              @ok="createRoom"
+            >
+              <b-form-input
+                v-model="roomName"
+                placeholder="Room Name."
+              />
+            </b-modal>
+          </b-col>
+        </b-row>
+        <!--  <b-btn @click="gotoBattle">test</b-btn>   -->
+        <h1 style="font-size: 5rem; color: #2490A9; margin: 15px;">
+          早安窩ㄉ朋友 天氣一好， 天空就是藍ㄉ 認同請分享
+        </h1>
+      </b-container>
     </fade-transition>
   </div>
 </template>
@@ -38,14 +67,7 @@
     });
   }
   export default {
-    name: 'game-main',
-    data() {
-      return {
-        view: 'main',
-        loading: false,
-        roomName: '',
-      };
-    },
+    name: 'GameMain',
     props: {
       roomData: {
         type: Object,
@@ -56,6 +78,13 @@
       loginStatus: {
         type: Object,
       },
+    },
+    data() {
+      return {
+        view: 'main',
+        loading: false,
+        roomName: '',
+      };
     },
     methods: {
       async gotoRoomList() {

@@ -1,31 +1,70 @@
 <template>
-<div id="app" class="body darkTheme">
-  <transition name="router-anim" mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-    <router-view :class='{"blur": loading}' @backToMain="getLoginStatus" @updateLoading="getLoadingStatus" @exitRoom="getRoomStatus" :loginStatus="loginStatus" :roomData="roomData" :chatAll="chat" :roomList="roomIdList" :game-id="inGameId" :clientId="socketId"
-      :userStatus="userData"></router-view>
-  </transition>
-  <fade-transition>
-    <div class="loading" v-if="loading">
-      <b-btn v-if="test" @click="testLogin">test</b-btn>
-      <div class="loadingBox">
-        <div class="loadingItem-1"></div>
+  <div
+    id="app"
+    class="body darkTheme"
+  >
+    <transition
+      name="router-anim"
+      mode="out-in"
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+    >
+      <router-view
+        :class="{&quot;blur&quot;: loading}"
+        :login-status="loginStatus"
+        :room-data="roomData"
+        :chat-all="chat"
+        :room-list="roomIdList"
+@back-to-main="getLoginStatus" :game-id="inGameId" :client-id="socketId" :user-status="userData" @update-loading="getLoadingStatus"
+        @exit-room="getRoomStatus"
+      />
+    </transition>
+    <fade-transition>
+      <div
+        v-if="loading"
+        class="loading"
+      >
+        <b-btn
+          v-if="test"
+          @click="testLogin"
+        >
+          test
+        </b-btn>
+        <div class="loadingBox">
+          <div class="loadingItem-1" />
+        </div>
       </div>
-    </div>
-    <div class="loading" v-if="error">
-      <h1 class="text-white">{{errorData}}</h1>
-    </div>
-    <div class="loading" v-if="battleLoading">
-      <h1 class="text-white">等待防禦事件處理中</h1>
-    </div>
-    <b-btn class="test" v-if="test" @click="battleLifeTest()">lifeTest</b-btn>
-  </fade-transition>
-</div>
+      <div
+        v-if="error"
+        class="loading"
+      >
+        <h1 class="text-white">
+          {{ errorData }}
+        </h1>
+      </div>
+      <div
+        v-if="battleLoading"
+        class="loading"
+      >
+        <h1 class="text-white">
+          等待防禦事件處理中
+        </h1>
+      </div>
+      <b-btn
+        v-if="test"
+        class="test"
+        @click="battleLifeTest()"
+      >
+        lifeTest
+      </b-btn>
+    </fade-transition>
+  </div>
 </template>
 
 <script>
 
 export default {
-  name: 'vplu',
+  name: 'Vplu',
   sockets: {
     connect() {
       const vm = this;
@@ -186,7 +225,7 @@ export default {
   </script>
 
   <style lang="less">
-    @import  '../../node_modules/animate.css/animate.css';
+    @import  '../../../../node_modules/animate.css/animate.css';
     @mainRed: #78C2C4;
     @hoverRed: #6699A1;
     @mainBlack: #303133;

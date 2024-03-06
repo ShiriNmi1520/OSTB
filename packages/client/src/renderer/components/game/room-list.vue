@@ -2,21 +2,51 @@
   <div class="customContainer">
     <b-row class="justify-content-md-center">
       <b-col md="12">
-        <div style="margin-top: -.5px" class="topContainer mb-5 p-3">
+        <div
+          style="margin-top: -.5px"
+          class="topContainer mb-5 p-3"
+        >
           <b-row>
             <b-col>
               <h1>Room List</h1>
             </b-col>
-            <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="backToMain">back to main</b-btn>
+            <b-btn
+              class="darkTheme"
+              style="margin-left: -5rem;"
+              lg
+              @click="backToMain"
+            >
+              back to main
+            </b-btn>
           </b-row>
         </div>
       </b-col>
     </b-row>
     <b-row>
-      <b-col md="12" class="mt-3" v-for="(obj, index) in roomList">
-        <b-btn block href="#" v-b-toggle="'room' + index" class="btn-click">{{obj.room}}</b-btn>
-        <b-collapse :id="`room${index}`" accordion="my-accordion" role="tabpanel">
-          <b-btn class="btn-info mt-3 btn-lg" @click="joinRoom(index)">Join</b-btn>
+      <b-col
+        v-for="(obj, index) in roomList"
+        md="12"
+        class="mt-3"
+      >
+        <b-btn
+          v-b-toggle="'room' + index"
+          block
+          href="#"
+          class="btn-click"
+        >
+          {{ obj.room }}
+        </b-btn>
+        <b-collapse
+          :id="`room${index}`"
+          accordion="my-accordion"
+          role="tabpanel"
+        >
+          <b-btn
+            class="btn-info mt-3 btn-lg"
+            @click="joinRoom(index)"
+          >
+            Join
+          </b-btn>
         </b-collapse>
       </b-col>
     </b-row>
@@ -32,7 +62,7 @@
     });
   }
   export default {
-    name: 'room-list',
+    name: 'RoomList',
     props: {
       roomList: {
         type: Object,

@@ -2,62 +2,114 @@
   <div class="customContainer">
     <b-row class="justify-content-md-center">
       <b-col md="12">
-        <div style="margin-top: -.5px" class="topContainer mb-5 p-3">
+        <div
+          style="margin-top: -.5px"
+          class="topContainer mb-5 p-3"
+        >
           <b-row>
             <b-col>
-              <h1>{{roomData.room}}</h1>
+              <h1>{{ roomData.room }}</h1>
             </b-col>
-              <b-btn class="darkTheme" style="margin-left: -5rem;" lg @click="exitRoom">Exit</b-btn>
+            <b-btn
+              class="darkTheme"
+              style="margin-left: -5rem;"
+              lg
+              @click="exitRoom"
+            >
+              Exit
+            </b-btn>
           </b-row>
         </div>
       </b-col>
     </b-row>
     <b-row>
-      <b-col md="12" class="mt-3">
+      <b-col
+        md="12"
+        class="mt-3"
+      >
         <b-list-group>
-          <b-list-group-item class="mainContainer mb-2" v-for="(obj, index) in player" :key="obj.uid">{{obj.nickName}}
-          <span class="float-right" v-if="">🙆‍</span></b-list-group-item>
+          <b-list-group-item
+            v-for="(obj, index) in player"
+            :key="obj.uid"
+            class="mainContainer mb-2"
+          >
+            {{ obj.nickName }}
+            <span
+              v-if=""
+              class="float-right"
+            >🙆‍</span>
+          </b-list-group-item>
         </b-list-group>
       </b-col>
     </b-row>
     <b-row>
-      <b-col md="6" class="mt-3">
+      <b-col
+        md="6"
+        class="mt-3"
+      >
         <div class="chatContainer p-3">
-        <div class="chatContainer p-3">
-          <div class="chatTextArea">
-            <p v-for="message of chatAll">{{message.name}}: {{message.content}}</p>
+          <div class="chatContainer p-3">
+            <div class="chatTextArea">
+              <p v-for="message of chatAll">
+                {{ message.name }}: {{ message.content }}
+              </p>
+            </div>
+            <b-row class="chatFunctionArea justify-content-md-center">
+              <b-col md="9">
+                <b-form-input
+                  v-model="content"
+                  class="chatInputBox darkTheme"
+                />
+              </b-col>
+              <b-col md="3">
+                <b-button
+                  class="chatButton"
+                  @click="chat"
+                >
+                  Send
+                </b-button>
+              </b-col>
+            </b-row>
           </div>
-          <b-row class="chatFunctionArea justify-content-md-center">
-            <b-col md="9">
-              <b-form-input class="chatInputBox darkTheme" v-model="content"></b-form-input>
-            </b-col>
-            <b-col md="3">
-              <b-button class="chatButton" @click="chat">Send</b-button>
-            </b-col>
-          </b-row>
-        </div>
         </div>
       </b-col>
-      <b-col md="6" class="mt-3">
+      <b-col
+        md="6"
+        class="mt-3"
+      >
         <div class="chatContainer">
-          <b-jumbotron v-if="selfId.object.host === true" class="nav-red btn-click" @click="gameStart">
-            <h1 class="text-center p-4">Game Start From<br><span class="asobu">Here</span></h1>
+          <b-jumbotron
+            v-if="selfId.object.host === true"
+            class="nav-red btn-click"
+            @click="gameStart"
+          >
+            <h1 class="text-center p-4">
+              Game Start From<br><span class="asobu">Here</span>
+            </h1>
           </b-jumbotron>
-          <b-jumbotron v-if="selfId.object.host === false" class="nav-red btn-click" @click="ready">
-            <h1 class="text-center p-4">Ready for<br><span class="asobu">Game</span></h1>
+          <b-jumbotron
+            v-if="selfId.object.host === false"
+            class="nav-red btn-click"
+            @click="ready"
+          >
+            <h1 class="text-center p-4">
+              Ready for<br><span class="asobu">Game</span>
+            </h1>
           </b-jumbotron>
         </div>
       </b-col>
     </b-row>
     <div v-if="checkRoomIdIsEmptyOrNot">
-      <b-btn @click="backToLogin()">back to login</b-btn>
+      <b-btn @click="backToLogin()">
+        back to login
+      </b-btn>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'room',
+    name: 'Room',
     props: {
       chatAll: {
         type: Array,
@@ -77,31 +129,6 @@
         content: '',
         selfId: {},
       };
-    },
-    methods: {
-      chat() {
-        const vm = this;
-        vm.$socket.emit('InGameChat', { senderName: 'test', content: vm.content });
-      },
-      exitRoom() {
-        const vm = this;
-        vm.$socket.emit('exitRoom', { host: vm.selfId.object.host, roomId: vm.roomData.id, index: vm.selfId.key });
-        vm.$emit('exitRoom', '');
-        vm.$router.push({ name: 'main' });
-      },
-      ready() {
-        const vm = this;
-        vm.roomData.player[vm.selfId.key].readyStatus = !vm.roomData.player[vm.selfId
-          .key].readyStatus;
-      },
-      gameStart() {
-        const vm = this;
-        vm.$socket.emit('gameStart', { host: vm.selfId.object.host, roomId: vm.roomData.id });
-      },
-      backToLogin() {
-        const vm = this;
-        vm.$router.push({ name: 'login' });
-      },
     },
     computed: {
       checkRoomIdIsEmptyOrNot() {
@@ -145,6 +172,31 @@
         });
         vm.$emit('updateLoading', false);
       });
+    },
+    methods: {
+      chat() {
+        const vm = this;
+        vm.$socket.emit('InGameChat', { senderName: 'test', content: vm.content });
+      },
+      exitRoom() {
+        const vm = this;
+        vm.$socket.emit('exitRoom', { host: vm.selfId.object.host, roomId: vm.roomData.id, index: vm.selfId.key });
+        vm.$emit('exitRoom', '');
+        vm.$router.push({ name: 'main' });
+      },
+      ready() {
+        const vm = this;
+        vm.roomData.player[vm.selfId.key].readyStatus = !vm.roomData.player[vm.selfId
+          .key].readyStatus;
+      },
+      gameStart() {
+        const vm = this;
+        vm.$socket.emit('gameStart', { host: vm.selfId.object.host, roomId: vm.roomData.id });
+      },
+      backToLogin() {
+        const vm = this;
+        vm.$router.push({ name: 'login' });
+      },
     },
   };
 </script>
