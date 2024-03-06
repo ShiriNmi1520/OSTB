@@ -55,48 +55,37 @@ mainSocket.on('connection', (socket: Socket) => {
     mainSocket.to(socket.id).emit('disconnected')
   })
 
-  socket.on('auth', (data: LoginUser) => {
-    function loginProcess (): any {
-      return new Promise((resolve, reject) => {
-        signInWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
-          .then(() => {
-            const tokenPayload = { email: data.email, password: data.password }
-            const token: string = jwt.sign(tokenPayload, config.jwt.tokenSecret, {
-              expiresIn: config.jwt.tokenExpire
-            })
-            socket.token = token
-            onAuthStateChanged(firebaseAuthInstance, user => {
-              if (user != null) {
-                const userRef = ref(firebaseDatabaseInstance, `/users/${user.uid}/`)
-                onValue(userRef, (snap: any) => {
-                  const transferData: LoginResponse = {
-                    type: 'success',
-                    code: 'default',
-                    token,
-                    nickname: snap.val(),
-                    email: data.email,
-                    uid: user.uid
-                  }
-                  resolve(transferData)
-                })
-              }
-            })
-          })
-        // Todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
-        // todo: 再加一個 uid 感恩。
-          .catch(error => {
-            const errorCode = error.code
-            const transferData: LoginResponse = { type: 'error', code: `${errorCode}` }
-            reject(transferData)
-          })
+  socket.on('auth', async (data: LoginUser) => {
+    try {
+      await signInWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
+      const tokenPayload = { email: data.email, password: data.password }
+      const userToken: string = jwt.sign(tokenPayload, config.jwt.tokenSecret, {
+        expiresIn: config.jwt.tokenExpire
       })
+      socket.token = userToken
+      onAuthStateChanged(firebaseAuthInstance, user => {
+        if (user != null) {
+          const userRef = ref(firebaseDatabaseInstance, `/users/${user.uid}/`)
+          onValue(userRef, (snap: any) => {
+            const transferData: LoginResponse = {
+              type: 'success',
+              code: 'default',
+              token: userToken,
+              nickname: snap.val(),
+              email: data.email,
+              uid: user.uid
+            }
+            mainSocket.to(socket.id).emit('auth', transferData)
+          })
+        }
+      })
+      // Todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
+      // todo: 再加一個 uid 感恩。
+    } catch (loginError: any) {
+      const errorCode = loginError.code
+      const transferData: LoginResponse = { type: 'error', code: `${errorCode}` }
+      mainSocket.to(socket.id).emit('auth', transferData)
     }
-
-    loginProcess().then((fulfilled: any) => {
-      mainSocket.to(socket.id).emit('auth', fulfilled)
-    }).catch((rejected: any) => {
-      mainSocket.to(socket.id).emit('auth', rejected)
-    })
   })
 
   socket.on('register', (data: RegisterUser) => {
