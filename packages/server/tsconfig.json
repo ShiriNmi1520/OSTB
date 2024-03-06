@@ -8,6 +8,9 @@
     "skipDefaultLibCheck": true
   },
   "include": [
-    "./src/*.ts"
+    "./src/**/*.ts"
   ],
+  "exclude": [
+    "**/*.js"
+  ]
 }
