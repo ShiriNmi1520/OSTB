@@ -1,11 +1,10 @@
-///<reference path="node_modules/@types/node/index.d.ts"/>
+///<reference path="../../../node_modules/@types/node/index.d.ts"/>
 import * as giveCard from "./giveCard";
-import * as firebase from "firebase";
+import * as firebase from 'firebase';
 import * as http from "http";
-import io from "socket.io";
-import express = require("express");
-import jwt = require("jsonwebtoken");
-import { platform } from "os";
+import * as io from 'socket.io';
+import * as express from 'express';
+import * as jwt from 'jsonwebtoken';
 
 const app: any = express(),
   FIREBASE_CONFIG: object = {
