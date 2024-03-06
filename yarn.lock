@@ -750,7 +750,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:^4.16.0, @types/express@npm:^4.17.21":
+"@types/express@npm:*, @types/express@npm:^4.17.21":
   version: 4.17.21
   resolution: "@types/express@npm:4.17.21"
   dependencies:
@@ -806,7 +806,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsonwebtoken@npm:^7.2.7":
+"@types/jsonwebtoken@npm:^7.2.8":
   version: 7.2.8
   resolution: "@types/jsonwebtoken@npm:7.2.8"
   dependencies:
@@ -861,19 +861,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0":
+"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0, @types/node@npm:^20.11.24":
   version: 20.11.24
   resolution: "@types/node@npm:20.11.24"
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10/7f34bfae5f9b98b9910230af4b4c52dc7fb2d1e96fdebfbc3d7576f8ab3d100076f193f9469add9e7418b455294155e7e6a028498cc5e98f9d49349875a459cf
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^10.3.0":
-  version: 10.17.60
-  resolution: "@types/node@npm:10.17.60"
-  checksum: 10/f9161493b3284b1d41d5d594c2768625acdd9e33f992f71ccde47861916e662e2ae438d2cc5f1b285053391a31b52a7564ecedc22d485610d236bfad9c7e6a1c
   languageName: node
   linkType: hard
 
@@ -1219,7 +1212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"animate.css@npm:^3.6.1":
+"animate.css@npm:^3.7.2":
   version: 3.7.2
   resolution: "animate.css@npm:3.7.2"
   checksum: 10/3d4fead4c7893aef947810df63b3f47100f244f93c67f340fa4e7ac1bfd466a302dd94ae6ff29b6f1c932ebfda4374494f5cda3d4b2610b7fefc34a9b0360daa
@@ -1724,7 +1717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-core@npm:^6.24.1, babel-core@npm:^6.25.0, babel-core@npm:^6.26.0":
+"babel-core@npm:^6.24.1, babel-core@npm:^6.26.0, babel-core@npm:^6.26.3":
   version: 6.26.3
   resolution: "babel-core@npm:6.26.3"
   dependencies:
@@ -1995,7 +1988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-loader@npm:^7.1.1":
+"babel-loader@npm:^7.1.5":
   version: 7.1.5
   resolution: "babel-loader@npm:7.1.5"
   dependencies:
@@ -2689,7 +2682,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-preset-env@npm:^1.6.0":
+"babel-preset-env@npm:^1.7.0":
   version: 1.7.0
   resolution: "babel-preset-env@npm:1.7.0"
   dependencies:
@@ -2774,7 +2767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-register@npm:^6.24.1, babel-register@npm:^6.26.0":
+"babel-register@npm:^6.26.0":
   version: 6.26.0
   resolution: "babel-register@npm:6.26.0"
   dependencies:
@@ -3045,7 +3038,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap-vue@npm:^2.0.0-rc.12":
+"bootstrap-vue@npm:^2.23.1":
   version: 2.23.1
   resolution: "bootstrap-vue@npm:2.23.1"
   dependencies:
@@ -3058,7 +3051,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap@npm:^4.3.1, bootstrap@npm:^4.6.1":
+"bootstrap@npm:^4.6.1, bootstrap@npm:^4.6.2":
   version: 4.6.2
   resolution: "bootstrap@npm:4.6.2"
   peerDependencies:
@@ -3621,7 +3614,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cfonts@npm:^1.1.3":
+"cfonts@npm:^1.2.0":
   version: 1.2.0
   resolution: "cfonts@npm:1.2.0"
   dependencies:
@@ -4320,7 +4313,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-webpack-plugin@npm:^4.0.1":
+"copy-webpack-plugin@npm:^4.6.0":
   version: 4.6.0
   resolution: "copy-webpack-plugin@npm:4.6.0"
   dependencies:
@@ -4410,7 +4403,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-env@npm:^5.0.5":
+"cross-env@npm:^5.2.1":
   version: 5.2.1
   resolution: "cross-env@npm:5.2.1"
   dependencies:
@@ -5193,7 +5186,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-builder@npm:^19.19.1":
+"electron-builder@npm:^19.56.2":
   version: 19.56.2
   resolution: "electron-builder@npm:19.56.2"
   dependencies:
@@ -5218,7 +5211,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-debug@npm:^1.4.0":
+"electron-debug@npm:^1.5.0":
   version: 1.5.0
   resolution: "electron-debug@npm:1.5.0"
   dependencies:
@@ -5228,7 +5221,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-devtools-installer@npm:^2.2.0":
+"electron-devtools-installer@npm:^2.2.4":
   version: 2.2.4
   resolution: "electron-devtools-installer@npm:2.2.4"
   dependencies:
@@ -5323,7 +5316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^22.3.25":
+"electron@npm:^22.3.27":
   version: 22.3.27
   resolution: "electron@npm:22.3.27"
   dependencies:
@@ -5336,7 +5329,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"element-ui@npm:^2.3.8":
+"element-ui@npm:^2.15.14":
   version: 2.15.14
   resolution: "element-ui@npm:2.15.14"
   dependencies:
@@ -5774,7 +5767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-airbnb-base@npm:^11.2.0":
+"eslint-config-airbnb-base@npm:^11.3.2":
   version: 11.3.2
   resolution: "eslint-config-airbnb-base@npm:11.3.2"
   dependencies:
@@ -5786,12 +5779,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-google@npm:^0.9.1":
-  version: 0.9.1
-  resolution: "eslint-config-google@npm:0.9.1"
+"eslint-config-google@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "eslint-config-google@npm:0.14.0"
   peerDependencies:
-    eslint: ">=4.1.1"
-  checksum: 10/f4e2772c42844b145a6c931c1b5a7d8ddfaa169644a070eaf34e88e75c44d4914369c7fd478eeacb955ad77bf2c94851a386d7f420abe67a59ebfe5c6f7a85d1
+    eslint: ">=5.16.0"
+  checksum: 10/c9b3fb0d32a41e1778a92fb36c1ca54fbc421c36d3c803bfaf5bc7938bbaa05b4809668dc9f0b4a834e63b22d8d5503728893f5aa3dc274ef0e960d30f96a86f
   languageName: node
   linkType: hard
 
@@ -5819,7 +5812,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-import-resolver-webpack@npm:^0.8.1":
+"eslint-import-resolver-webpack@npm:^0.8.4":
   version: 0.8.4
   resolution: "eslint-import-resolver-webpack@npm:0.8.4"
   dependencies:
@@ -5868,7 +5861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-html@npm:^3.1.1":
+"eslint-plugin-html@npm:^3.2.2":
   version: 3.2.2
   resolution: "eslint-plugin-html@npm:3.2.2"
   dependencies:
@@ -5878,7 +5871,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.2.0":
+"eslint-plugin-import@npm:^2.29.1":
   version: 2.29.1
   resolution: "eslint-plugin-import@npm:2.29.1"
   dependencies:
@@ -5929,7 +5922,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^4.19.1, eslint@npm:^4.4.1":
+"eslint@npm:^4.19.1":
   version: 4.19.1
   resolution: "eslint@npm:4.19.1"
   dependencies:
@@ -6176,7 +6169,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:^4.16.3, express@npm:^4.17.3":
+"express@npm:^4.17.3, express@npm:^4.18.3":
   version: 4.18.3
   resolution: "express@npm:4.18.3"
   dependencies:
@@ -6277,7 +6270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"extract-text-webpack-plugin@npm:^3.0.0":
+"extract-text-webpack-plugin@npm:^3.0.2":
   version: 3.0.2
   resolution: "extract-text-webpack-plugin@npm:3.0.2"
   dependencies:
@@ -6523,7 +6516,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase@npm:^7.5.2":
+"firebase@npm:^7.24.0":
   version: 7.24.0
   resolution: "firebase@npm:7.24.0"
   dependencies:
@@ -7547,7 +7540,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-webpack-plugin@npm:^5.5.0":
+"html-webpack-plugin@npm:^5.6.0":
   version: 5.6.0
   resolution: "html-webpack-plugin@npm:5.6.0"
   dependencies:
@@ -7711,10 +7704,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http@npm:0.0.0":
-  version: 0.0.0
-  resolution: "http@npm:0.0.0"
-  checksum: 10/2ac726f97fcee616596703790bc12dde1f65f84bc533a5a3543026c2a18b4c03a4074f2b63ba1c7a8fc5b4996b00607bd799c60b19d0669a8387a1996d2ecba5
+"http@npm:0.0.1-security":
+  version: 0.0.1-security
+  resolution: "http@npm:0.0.1-security"
+  checksum: 10/c45a4e2771b5679b479b24150216e0b423d5bf2f94062c91b4b5e5347ed3f18b8c049e220df6e328c34ac5aab0d020600a05a9ea954bc7a7efc04d8dde7aada0
   languageName: node
   linkType: hard
 
@@ -8626,7 +8619,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.3.1":
+"jquery@npm:^3.7.1":
   version: 3.7.1
   resolution: "jquery@npm:3.7.1"
   checksum: 10/17be9929f5fa37697d9848284f0d108c543318ef79ec794e130cd0c49f6c050d60c803a69e8cfa16fa19f5ff7cdb814a6905cceab0831186560c65ed113cd579
@@ -8813,7 +8806,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonwebtoken@npm:^9.0.0":
+"jsonwebtoken@npm:^9.0.2":
   version: 9.0.2
   resolution: "jsonwebtoken@npm:9.0.2"
   dependencies:
@@ -8986,7 +8979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"less@npm:^3.0.4":
+"less@npm:^3.13.1":
   version: 3.13.1
   resolution: "less@npm:3.13.1"
   dependencies:
@@ -10370,7 +10363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-sass@npm:^7.0.0":
+"node-sass@npm:^7.0.3":
   version: 7.0.3
   resolution: "node-sass@npm:7.0.3"
   dependencies:
@@ -10794,20 +10787,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ostb-backend@workspace:packages/server"
   dependencies:
-    "@types/express": "npm:^4.16.0"
-    "@types/jsonwebtoken": "npm:^7.2.7"
-    "@types/node": "npm:^10.3.0"
+    "@types/express": "npm:^4.17.21"
+    "@types/jsonwebtoken": "npm:^7.2.8"
+    "@types/node": "npm:^20.11.24"
     eslint: "npm:^4.19.1"
-    eslint-config-google: "npm:^0.9.1"
-    express: "npm:^4.16.3"
-    firebase: "npm:^7.5.2"
+    eslint-config-google: "npm:^0.14.0"
+    express: "npm:^4.18.3"
+    firebase: "npm:^7.24.0"
     gts: "npm:^0.6.0"
-    http: "npm:0.0.0"
-    jsonwebtoken: "npm:^9.0.0"
-    socket.io: "npm:^2.1.0"
-    tslint: "npm:^5.10.0"
+    http: "npm:0.0.1-security"
+    jsonwebtoken: "npm:^9.0.2"
+    socket.io: "npm:^2.5.0"
+    tslint: "npm:^5.20.1"
     tslint-react: "npm:^3.6.0"
-    typescript: "npm:~2.8.0"
+    typescript: "npm:~2.8.4"
   languageName: unknown
   linkType: soft
 
@@ -10815,64 +10808,64 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ostb-client@workspace:packages/client"
   dependencies:
-    animate.css: "npm:^3.6.1"
+    animate.css: "npm:^3.7.2"
     axios: "npm:^0.28.0"
-    babel-core: "npm:^6.25.0"
+    babel-core: "npm:^6.26.3"
     babel-eslint: "npm:^7.2.3"
-    babel-loader: "npm:^7.1.1"
+    babel-loader: "npm:^7.1.5"
     babel-plugin-transform-runtime: "npm:^6.23.0"
-    babel-preset-env: "npm:^1.6.0"
+    babel-preset-env: "npm:^1.7.0"
     babel-preset-stage-0: "npm:^6.24.1"
-    babel-register: "npm:^6.24.1"
+    babel-register: "npm:^6.26.0"
     babili-webpack-plugin: "npm:^0.1.2"
-    bootstrap: "npm:^4.3.1"
-    bootstrap-vue: "npm:^2.0.0-rc.12"
-    cfonts: "npm:^1.1.3"
-    chalk: "npm:^2.1.0"
-    copy-webpack-plugin: "npm:^4.0.1"
-    cross-env: "npm:^5.0.5"
+    bootstrap: "npm:^4.6.2"
+    bootstrap-vue: "npm:^2.23.1"
+    cfonts: "npm:^1.2.0"
+    chalk: "npm:^2.4.2"
+    copy-webpack-plugin: "npm:^4.6.0"
+    cross-env: "npm:^5.2.1"
     css-loader: "npm:^6.10.0"
     del: "npm:^3.0.0"
     devtron: "npm:^1.4.0"
-    electron: "npm:^22.3.25"
-    electron-builder: "npm:^19.19.1"
-    electron-debug: "npm:^1.4.0"
-    electron-devtools-installer: "npm:^2.2.0"
-    element-ui: "npm:^2.3.8"
-    eslint: "npm:^4.4.1"
-    eslint-config-airbnb-base: "npm:^11.2.0"
+    electron: "npm:^22.3.27"
+    electron-builder: "npm:^19.56.2"
+    electron-debug: "npm:^1.5.0"
+    electron-devtools-installer: "npm:^2.2.4"
+    element-ui: "npm:^2.15.14"
+    eslint: "npm:^4.19.1"
+    eslint-config-airbnb-base: "npm:^11.3.2"
     eslint-friendly-formatter: "npm:^3.0.0"
-    eslint-import-resolver-webpack: "npm:^0.8.1"
+    eslint-import-resolver-webpack: "npm:^0.8.4"
     eslint-loader: "npm:^1.9.0"
-    eslint-plugin-html: "npm:^3.1.1"
-    eslint-plugin-import: "npm:^2.2.0"
-    extract-text-webpack-plugin: "npm:^3.0.0"
+    eslint-plugin-html: "npm:^3.2.2"
+    eslint-plugin-import: "npm:^2.29.1"
+    extract-text-webpack-plugin: "npm:^3.0.2"
     file-loader: "npm:^0.11.2"
-    html-webpack-plugin: "npm:^5.5.0"
-    jquery: "npm:^3.3.1"
-    less: "npm:^3.0.4"
+    html-webpack-plugin: "npm:^5.6.0"
+    jquery: "npm:^3.7.1"
+    less: "npm:^3.13.1"
     less-loader: "npm:^4.1.0"
     multispinner: "npm:^0.2.1"
     node-loader: "npm:^0.6.0"
-    node-sass: "npm:^7.0.0"
-    popper.js: "npm:^1.14.3"
-    sass-loader: "npm:^7.0.1"
+    node-sass: "npm:^7.0.3"
+    popper.js: "npm:^1.16.1"
+    sass-loader: "npm:^7.3.1"
     style-loader: "npm:^0.18.2"
     url-loader: "npm:^0.5.9"
-    vue: "npm:^2.3.3"
+    vue: "npm:^2.7.16"
     vue-electron: "npm:^1.0.6"
     vue-html-loader: "npm:^1.2.4"
-    vue-i18n: "npm:^7.6.0"
+    vue-i18n: "npm:^7.8.1"
     vue-loader: "npm:^17.4.2"
-    vue-router: "npm:^2.5.3"
+    vue-router: "npm:^2.8.1"
     vue-socket.io: "npm:^3.0.10"
-    vue-style-loader: "npm:^3.0.1"
-    vue-template-compiler: "npm:^2.4.2"
-    vue2-transitions: "npm:^0.2.3"
-    vuex: "npm:^2.3.1"
-    webpack: "npm:^3.5.2"
+    vue-style-loader: "npm:^3.1.2"
+    vue-template-compiler: "npm:^2.7.16"
+    vue2-transitions: "npm:^0.3.0"
+    vuex: "npm:^2.5.0"
+    webpack: "npm:^3.12.0"
     webpack-dev-server: "npm:^5.0.2"
-    webpack-hot-middleware: "npm:^2.18.2"
+    webpack-hot-middleware: "npm:^2.26.1"
   languageName: unknown
   linkType: soft
 
@@ -11368,7 +11361,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"popper.js@npm:^1.14.3, popper.js@npm:^1.16.1":
+"popper.js@npm:^1.16.1":
   version: 1.16.1
   resolution: "popper.js@npm:1.16.1"
   checksum: 10/71338c86faf9b66ce60c3cdd7fb2ed742944e5d2765a188f269239fee2980aa6223b77b41302d1b6eb7d724e611092f9a2576d0048ac2071b605291abc72c0cf
@@ -12520,7 +12513,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass-loader@npm:^7.0.1":
+"sass-loader@npm:^7.3.1":
   version: 7.3.1
   resolution: "sass-loader@npm:7.3.1"
   dependencies:
@@ -12986,7 +12979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io@npm:^2.1.0":
+"socket.io@npm:^2.5.0":
   version: 2.5.0
   resolution: "socket.io@npm:2.5.0"
   dependencies:
@@ -13953,7 +13946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslint@npm:^5.10.0, tslint@npm:^5.9.1":
+"tslint@npm:^5.20.1, tslint@npm:^5.9.1":
   version: 5.20.1
   resolution: "tslint@npm:5.20.1"
   dependencies:
@@ -14125,7 +14118,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:~2.8.0":
+"typescript@npm:~2.8.4":
   version: 2.8.4
   resolution: "typescript@npm:2.8.4"
   bin:
@@ -14135,7 +14128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A~2.8.0#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A~2.8.4#optional!builtin<compat/typescript>":
   version: 2.8.4
   resolution: "typescript@patch:typescript@npm%3A2.8.4#optional!builtin<compat/typescript>::version=2.8.4&hash=3bafbf"
   bin:
@@ -14537,7 +14530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-i18n@npm:^7.6.0":
+"vue-i18n@npm:^7.8.1":
   version: 7.8.1
   resolution: "vue-i18n@npm:7.8.1"
   checksum: 10/2724bafd596c222bfd74cdd2a7ae94209e98353361a59f2940f9232b4241f33bbb0627a4cf7eb18b7d909c1632d22e8f41edf5879c92841c15ffbaa0d2015f3d
@@ -14562,7 +14555,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-router@npm:^2.5.3":
+"vue-router@npm:^2.8.1":
   version: 2.8.1
   resolution: "vue-router@npm:2.8.1"
   checksum: 10/49905871758e70d1727865caf53d0edd85304d49275a475745e905acd4d86508cd30f7a09e81b93a02cae3128d3f8dde87202e1d3969864551f470b78cbb2ef3
@@ -14578,7 +14571,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-style-loader@npm:^3.0.1":
+"vue-style-loader@npm:^3.1.2":
   version: 3.1.2
   resolution: "vue-style-loader@npm:3.1.2"
   dependencies:
@@ -14588,7 +14581,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-template-compiler@npm:^2.4.2":
+"vue-template-compiler@npm:^2.7.16":
   version: 2.7.16
   resolution: "vue-template-compiler@npm:2.7.16"
   dependencies:
@@ -14598,14 +14591,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue2-transitions@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "vue2-transitions@npm:0.2.3"
-  checksum: 10/d8a5b1b5f9868f2d8446c2a3c700c4d1ac2a891b2bb13b9eb59e0126528adeea39965089db114123e7ae1b4cc356713c5fa1aa5d96b5474f324b44fe2a6eacf9
+"vue2-transitions@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "vue2-transitions@npm:0.3.0"
+  checksum: 10/dd7dd15216f38789a3eb28f2a26fce9ba8f5f05cb00b7991dfa9d2ad9515249bc69d57a8350720e2f7d081f841e47f5a5ee39dfbcd5c1c4db5e78c51d248be34
   languageName: node
   linkType: hard
 
-"vue@npm:^2.3.3":
+"vue@npm:^2.7.16":
   version: 2.7.16
   resolution: "vue@npm:2.7.16"
   dependencies:
@@ -14615,7 +14608,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vuex@npm:^2.3.1":
+"vuex@npm:^2.5.0":
   version: 2.5.0
   resolution: "vuex@npm:2.5.0"
   checksum: 10/8c55c6dd6dedf9bbc6ff8d38e37ebc244743d345240bd7fb5db22e44215235e88cdd38133bea1ffd58402af2cce1f816d839ec4525c8b9640ba2cd1e233eb0e8
@@ -14739,7 +14732,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-hot-middleware@npm:^2.18.2":
+"webpack-hot-middleware@npm:^2.26.1":
   version: 2.26.1
   resolution: "webpack-hot-middleware@npm:2.26.1"
   dependencies:
@@ -14760,7 +14753,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^3.5.2":
+"webpack@npm:^3.12.0":
   version: 3.12.0
   resolution: "webpack@npm:3.12.0"
   dependencies:
