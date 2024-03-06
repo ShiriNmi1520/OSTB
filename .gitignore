@@ -1,7 +1,8 @@
 /.idea
 /packages/server/node_modules
-!/client/README.md
-/client/build/*
+!/packages/client/README.md
+/packages/client/build/*
+/packages/client/dist/*
 /node_modules
 
 # debug
