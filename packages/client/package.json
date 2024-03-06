@@ -52,6 +52,7 @@
     }
   },
   "packageManager": "yarn@4.1.0",
+  "private": true,
   "dependencies": {
     "animate.css": "^4.1.1",
     "axios": "^1.6.7",

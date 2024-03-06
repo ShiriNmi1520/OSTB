@@ -6,14 +6,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [
-    "socket-io",
-    "express"
-  ],
   "workspaces": [
     "packages/*"
   ],
   "author": "Y.C.Huang",
   "license": "ISC",
-  "packageManager": "yarn@4.1.0"
+  "packageManager": "yarn@4.1.0",
+  "private": true
 }
