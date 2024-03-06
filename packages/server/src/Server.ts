@@ -12,6 +12,7 @@ import {
 } from 'firebase/database'
 import { Server, type Socket } from 'socket.io'
 import * as jwt from 'jsonwebtoken'
+import config from './config'
 import {
   type CreateRoom,
   type JoinRoom,
@@ -22,12 +23,12 @@ import {
 import { type PlayerStatusArray } from './types/game'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyC6V5XWXQCC_zdGWsXPND4OVpwYGS7VsAE',
-  authDomain: 'buyao-70f4a.firebaseapp.com',
-  databaseURL: 'https://buyao-70f4a.firebaseio.com',
-  projectId: 'buyao-70f4a',
-  storageBucket: 'buyao-70f4a.appspot.com',
-  messagingSenderId: '409751210552'
+  apiKey: config.fireBase.apiKey,
+  authDomain: config.fireBase.authDomain,
+  databaseURL: config.fireBase.databaseURL,
+  projectId: config.fireBase.projectId,
+  storageBucket: config.fireBase.storageBucket,
+  messagingSenderId: config.fireBase.messagingSenderId
 }
 const card: number[] = [0, 1]
 const mainSocket = new Server()
@@ -60,8 +61,8 @@ mainSocket.on('connection', (socket: Socket) => {
         signInWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
           .then(() => {
             const tokenPayload = { email: data.email, password: data.password }
-            const token: string = jwt.sign(tokenPayload, 'token', {
-              expiresIn: process.env.TOKEN_EXPIRE || 60 * 60 * 24
+            const token: string = jwt.sign(tokenPayload, config.jwt.tokenSecret, {
+              expiresIn: config.jwt.tokenExpire
             })
             socket.token = token
             onAuthStateChanged(firebaseAuthInstance, user => {
