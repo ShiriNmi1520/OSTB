@@ -22,7 +22,7 @@ let mainConfig = {
         enforce: 'pre',
         exclude: /node_modules/,
         use: {
-          loader: 'eslint-loader',
+          loader: 'eslint-webpack-plugin',
           options: {
             formatter: require('eslint-friendly-formatter')
           }
