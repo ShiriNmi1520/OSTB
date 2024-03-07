@@ -29,3 +29,5 @@ export interface DefenseAnswer {
   ans: boolean
   usingCard: number
 }
+
+export interface NextTurn extends Pick<DefenseAnswer, 'userInGameId' | 'roomId'> {}
