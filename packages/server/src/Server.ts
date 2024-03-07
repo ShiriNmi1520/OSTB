@@ -453,11 +453,7 @@ mainSocket.on('connection', (socket: Socket) => {
   socket.on('ShutdownSignal', () => {
     socket.emit('Server is going down in five minutes')
     socket.broadcast.emit('Server is going down in five minutes')
-    setTimeout(ShutDownProcess, 300000)
-
-    function ShutDownProcess (): void {
-      process.exit(0)
-    }
+    setTimeout(() => process.exit(0), 300000)
   })
 })
 
