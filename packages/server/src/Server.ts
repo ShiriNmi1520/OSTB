@@ -8,8 +8,9 @@ import {
   signOut
 } from 'firebase/auth'
 import {
-  getDatabase, ref, onValue, update, get, set, push
+  getDatabase, ref, update, get, set, push
 } from 'firebase/database'
+import { FirebaseError } from '@firebase/util'
 import { Server, type Socket } from 'socket.io'
 import * as jwt from 'jsonwebtoken'
 import config from './config'
@@ -57,34 +58,31 @@ mainSocket.on('connection', (socket: Socket) => {
 
   socket.on('auth', async (data: LoginUser) => {
     try {
-      await signInWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
+      const authStatus = await signInWithEmailAndPassword(firebaseAuthInstance, data.email, data.password)
       const tokenPayload = { email: data.email, password: data.password }
       const userToken: string = jwt.sign(tokenPayload, config.jwt.tokenSecret, {
-        expiresIn: config.jwt.tokenExpire
+        expiresIn: config.jwt.tokenExpire,
+        algorithm: 'ES512'
       })
+      const userRef = ref(firebaseDatabaseInstance, `/users/${authStatus.user.uid}/`)
+      const userData = await get(userRef)
       socket.token = userToken
-      onAuthStateChanged(firebaseAuthInstance, user => {
-        if (user != null) {
-          const userRef = ref(firebaseDatabaseInstance, `/users/${user.uid}/`)
-          onValue(userRef, (snap: any) => {
-            const transferData: LoginResponse = {
-              type: 'success',
-              code: 'default',
-              token: userToken,
-              nickname: snap.val(),
-              email: data.email,
-              uid: user.uid
-            }
-            mainSocket.to(socket.id).emit('auth', transferData)
-          })
-        }
-      })
-      // Todo: 登入完之後煩到 firebase 抓取使用者的 nickname 跟 email 再 emit 回來，感恩
-      // todo: 再加一個 uid 感恩。
-    } catch (loginError: any) {
-      const errorCode = loginError.code
-      const transferData: LoginResponse = { type: 'error', code: `${errorCode}` }
-      mainSocket.to(socket.id).emit('auth', transferData)
+      const transferData: LoginResponse = {
+        type: 'success',
+        code: 'default',
+        token: userToken,
+        nickname: userData.val().name,
+        email: data.email,
+        uid: authStatus.user.uid
+      }
+      return mainSocket.to(socket.id).emit('auth', transferData)
+    } catch (loginError: unknown) {
+      if (loginError instanceof FirebaseError) {
+        const errorCode = loginError.code
+        const transferData: LoginResponse = { type: 'error', code: `${errorCode}` }
+        return mainSocket.to(socket.id).emit('auth', transferData)
+      }
+      return mainSocket.to(socket.id).emit('auth', { type: 'error', code: 'unknown' })
     }
   })
 
