@@ -47,7 +47,7 @@ mainSocket.on('connection', (socket: Socket) => {
   socket.token = ''
   socket.GameStatus = ''
 
-  socket.on('test', (data: any) => {
+  socket.on('test', () => {
     mainSocket.to(socket.id).emit(socket.id)
   })
 
