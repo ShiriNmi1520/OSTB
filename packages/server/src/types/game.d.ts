@@ -31,3 +31,7 @@ export interface DefenseAnswer {
 }
 
 export interface NextTurn extends Pick<DefenseAnswer, 'userInGameId' | 'roomId'> {}
+
+export interface UseCard extends Pick<DefenseAnswer, 'userInGameId' | 'roomId' | 'usingCard'> {
+  targetUserInGameId: number
+}
