@@ -413,15 +413,15 @@ mainSocket.on('connection', (socket: Socket) => {
   // Todo: 那個 初始抽牌的部分是根據玩家抽到的角色卡血量來決定應該抽多少張，所以你可能還要再寫一個發角色卡
   // todo: 然後再寫一個每回合的抽卡，感謝。
   // 你可以這樣寫
-  // 	socket.on('DrawCard', (data) => {
-  // 		let CardCount = 0;
-  // 		while(true){
-  // 			let send = card[Math.floor(Math.random() * card.length)];
-  // 			socket.emit('DrawCard', send);
-  // 			cardCount ++;
-  // 			if (CardCount === data.life) break;
-  // 		}
-  // 	});
+  // socket.on('DrawCard', (data) => {
+  //   let CardCount = 0;
+  //   while(true){
+  //     let send = card[Math.floor(Math.random() * card.length)];
+  //     socket.emit('DrawCard', send);
+  //     cardCount ++;
+  //     if (CardCount === data.life) break;
+  //   }
+  // });
   // 另外無窮迴圈盡量少用，感恩。
   // todo: 記得寫個 gameStart ， 它返回使用者在遊戲裡面的id (1~4), emit 給 client 端，感謝。
   // 要丟回來的有 player: [{
