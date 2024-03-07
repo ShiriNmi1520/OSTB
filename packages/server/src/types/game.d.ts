@@ -20,3 +20,12 @@ export interface PlayerStatus {
 }
 
 export type PlayerStatusArray = PlayerStatus[]
+
+export interface DefenseAnswer {
+  uid: string
+  roomId: string
+  socketId: string
+  userInGameId: number
+  ans: boolean
+  usingCard: number
+}
