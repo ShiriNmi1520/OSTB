@@ -4,7 +4,7 @@ export interface RegisterUser {
   nickname: string
 }
 
-export type LoginUser = Omit<RegisterUser, 'nickname'>
+export interface LoginUser extends Omit<RegisterUser, 'nickname'> {}
 
 export interface LoginResponse {
   type: 'success' | 'error'
@@ -15,7 +15,7 @@ export interface LoginResponse {
   uid?: string
 }
 
-export type RegisterResponse = Omit<LoginResponse, 'token'>
+export interface RegisterResponse extends Omit<LoginResponse, 'token'> {}
 
 export interface CreateRoom {
   uid: string
@@ -23,11 +23,10 @@ export interface CreateRoom {
   socketId: string
 }
 
-export type JoinRoom = Omit<CreateRoom, 'uid'> & {
+export interface JoinRoom extends Omit<CreateRoom, 'uid'> {
   userId: string
 }
-
-export type LeaveRoom = Omit<CreateRoom, 'uid' | 'socketId'> & {
+export interface LeaveRoom extends Omit<CreateRoom, 'uid' | 'socketId'> {
   index: number
 }
 
@@ -36,7 +35,9 @@ export interface GameChat {
   content: string
 }
 
-export type StartGame = Omit<CreateRoom, 'socketId'>
+export interface GameStart extends Omit<CreateRoom, 'socketId' | 'uid'> {
+  host: boolean
+}
 
 declare module 'socket.io' {
   interface Socket {
