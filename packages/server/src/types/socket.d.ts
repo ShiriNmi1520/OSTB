@@ -37,6 +37,11 @@ export interface LeaveRoom {
   index: number
 }
 
+export interface GameChat {
+  senderName: string
+  content: string
+}
+
 declare module 'socket.io' {
   interface Socket {
     username: string
