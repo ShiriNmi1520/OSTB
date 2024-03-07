@@ -445,8 +445,8 @@ mainSocket.on('connection', (socket: Socket) => {
   //   handCard: [{id: 1},{id: 2},{id: 3},{id: 4}]
   // }]
   // 以上資料希望可以實時更新，每次有玩家對這場遊戲觸發任何事件都丟回來。
-  socket.on('gameOver', () => {
-    socket.leave(socket.room)
+  socket.on('gameOver', async () => {
+    await socket.leave(socket.room)
     socket.room = ''
   })
 
